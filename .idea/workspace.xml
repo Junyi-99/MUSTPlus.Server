@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e85734b6-3bdc-424c-8883-c6e32289e7cf" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/MUSTPlus.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/MUSTPlus.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MUSTPlus/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/MUSTPlus/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MUSTPlus/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/MUSTPlus/settings.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -29,12 +26,14 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="py" value="18" />
+          <entry key="py" value="23" />
+          <entry key="txt" value="45" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Python" value="18" />
+          <entry key="PLAIN_TEXT" value="45" />
+          <entry key="Python" value="23" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -54,8 +53,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/MUSTPlus/settings.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="266">
-              <caret line="80" column="28" selection-start-line="80" selection-start-column="28" selection-end-line="80" selection-end-column="28" />
+            <state relative-caret-position="247">
+              <caret line="79" column="22" selection-start-line="79" selection-start-column="22" selection-end-line="79" selection-end-column="22" />
             </state>
           </provider>
         </entry>
@@ -182,6 +181,14 @@
       <option name="presentableId" value="Default" />
       <updated>1556202441032</updated>
     </task>
+    <task id="LOCAL-00001" summary="A little setting change on my computer">
+      <created>1556203267333</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1556203267333</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -217,6 +224,10 @@
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="A little setting change on my computer" />
+    <option name="LAST_COMMIT_MESSAGE" value="A little setting change on my computer" />
+  </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/MUSTPlus/urls.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -234,8 +245,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/MUSTPlus/settings.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="266">
-          <caret line="80" column="28" selection-start-line="80" selection-start-column="28" selection-end-line="80" selection-end-column="28" />
+        <state relative-caret-position="247">
+          <caret line="79" column="22" selection-start-line="79" selection-start-column="22" selection-end-line="79" selection-end-column="22" />
         </state>
       </provider>
     </entry>
