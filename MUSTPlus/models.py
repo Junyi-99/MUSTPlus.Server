@@ -41,7 +41,7 @@ class Attachment(models.Model):
 # 科目信息
 class Course(models.Model):
     course_id = models.CharField(max_length=10, primary_key=True)  # 课程ID
-    course_class = models.CharField(max_length=10, primary_key=True)  # 班别
+    course_class = models.CharField(max_length=10)  # 班别
     name_zh = models.CharField(max_length=30)
     name_en = models.CharField(max_length=30)
     name_short = models.CharField(max_length=30)
@@ -81,13 +81,6 @@ class Teacher(models.Model):
     office_room = models.TextField(default="")  # 办公室
     office_hour = models.TextField(default="")  # 办公时间
 
-#科目评论
-class CourseComments(models.Model):
-    student_id = models.ForeignKey(Student, on_delete=models.SET_NULL, to_field=Student.student_id)
-    course_id = models.ForeignKey(Course, on_delete=models.SET_NULL, to_field=Course.course_id)
-    course_class = models.ForeignKey(Course, on_delete=models.SET_NULL, to_field=Course.course_class)
-    thumbs_up = models.IntegerField(default=0)
-    rank = models.IntegerField(default=5)
-    content = models.TextField(default="")
-    publish_time = models.TimeField()
-    visible = models.BooleanField()
+
+# 科目评论
+# 这部分junyi的代码bug有点多，过后重写
