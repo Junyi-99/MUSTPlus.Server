@@ -83,5 +83,11 @@ class Teacher(models.Model):
 
 
 # 科目评论
-class Comment_Course(models.Model):
-    couid = models.ForeignKey(Course, on_delete=models.PROTECT)
+class CommentCourse(models.Model):
+    course_id = models.ForeignKey(Course, on_delete=models.PROTECT)  # 被评论的课程id
+    student_id = models.ForeignKey(Student, on_delete=models.PROTECT)  # 评论者id
+    thumbs_up = models.IntegerField(default=0)  # 点赞数量
+    rank = models.IntegerField(default=3)  # 评分
+    content = models.TextField  # 评论正文
+    timestamp = models.TimeField()  # 发布时间
+    visible = models.BooleanField()  # 是否可见
