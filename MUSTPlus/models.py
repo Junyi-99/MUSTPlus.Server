@@ -83,4 +83,5 @@ class Teacher(models.Model):
 
 
 # 科目评论
-# 这部分junyi的代码bug有点多，过后重写
+class Comment_Course(models.Model):
+    couid = models.ForeignKey(Course, on_delete=models.PROTECT)
