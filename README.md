@@ -14,7 +14,7 @@ Database Management: **MySQL**
 
 Development Language: **Python 3.6.x**
 
-Framework: **Django 2.2**
+Framework: **Django 2.1.4**
 
 ## Deployment
 

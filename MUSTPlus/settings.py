@@ -24,7 +24,7 @@ SECRET_KEY = 'q9ommkxu@d(zp5i_9eg!q&kzsj)3vh)r%7r$820-h&jq@&nza4'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['mp.junyi.pw']
 
 # Application definition
 
@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'API',
+    'MUSTPlus',
 ]
 
 MIDDLEWARE = [
