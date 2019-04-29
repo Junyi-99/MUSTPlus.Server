@@ -24,7 +24,7 @@ SECRET_KEY = 'yfyzhc%840_!g%!#(sqy(ccock4^z4ohl=$-*3xpoe+v^cq)ih'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['mp.junyi.pw']
+ALLOWED_HOSTS = ['mp.junyi.pw', 'localhost', '127.0.0.1']
 
 # Application definition
 
