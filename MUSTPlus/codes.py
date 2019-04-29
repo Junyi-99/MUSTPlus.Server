@@ -2,10 +2,11 @@
 OK = 0  # 正常
 WARNING = 1 # 警告（一般可忽略）
 
+
 AUTH_SIGN_VERIFICATION_FAILED = -1001  # sign 验证失败
 AUTH_TIME_INVALID = -1002  # 请求已过期
 AUTH_TOKEN_INVALID = -1003  # token 无效
-
+AUTH_REQUEST_METHOD_ERROR = -1004 # 请求方法错误
 
 # DELETE /course/comments
 COURSE_COMMENT_ID_NOT_FOUND = -4000 # 未找到课程评论ID
