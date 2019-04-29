@@ -40,7 +40,7 @@ class Attachment(models.Model):
 
 # 科目信息
 class Course(models.Model):
-    course_id = models.CharField(max_length=10, primary_key=True)  # 课程ID
+    course_id = models.CharField(max_length=10)  # 课程ID
     course_class = models.CharField(max_length=10)  # 班别
     name_zh = models.CharField(max_length=30)
     name_en = models.CharField(max_length=30)
@@ -52,6 +52,9 @@ class Course(models.Model):
     date_end = models.DateField()
     time_start = models.TimeField()
     time_end = models.TimeField()
+
+    class Meta:
+        unique_together = (("course_id", "course_class"),)
 
 
 # 学生
@@ -89,5 +92,5 @@ class CommentCourse(models.Model):
     thumbs_up = models.IntegerField(default=0)  # 点赞数量
     rank = models.IntegerField(default=3)  # 评分
     content = models.TextField  # 评论正文
-    timestamp = models.TimeField()  # 发布时间
+    publish_time = models.TimeField()  # 发布时间
     visible = models.BooleanField()  # 是否可见
