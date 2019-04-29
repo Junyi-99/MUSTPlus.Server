@@ -24,7 +24,7 @@ SECRET_KEY = 'yfyzhc%840_!g%!#(sqy(ccock4^z4ohl=$-*3xpoe+v^cq)ih'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*', ]
+ALLOWED_HOSTS = ['mp.junyi.pw']
 
 # Application definition
 
@@ -35,6 +35,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'API',
+    'MUSTPlus'
 ]
 
 MIDDLEWARE = [
@@ -44,8 +46,7 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-]
+    'django.middleware.clickjacking.XFrameOptionsMiddleware', ]
 
 ROOT_URLCONF = 'MUSTPlus.urls'
 
@@ -74,11 +75,11 @@ WSGI_APPLICATION = 'MUSTPlus.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'demo',
-        'HOST': 'localhost',
-        'PORT': '3306',
-        'USER': 'Admin',
-        'PASSWORD': '123456'
+        'NAME': 'must_plus',
+        'USER': 'duzhaolong',
+        'PASSWORD': '%Ad@MRP5RT*nKjw4',
+        'HOST': 'mp.junyi.pw',
+        'PORT': '4486',
     }
 }
 
