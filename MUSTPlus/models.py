@@ -69,7 +69,7 @@ class Student(models.Model):
     sex = models.BooleanField()
     birthday = models.DateField()
     avatar_url = models.TextField(default="")
-    experience = models.IntegerField(max_length=20)  # 用户经验
+    experience = models.IntegerField()  # 用户经验
     token = models.CharField(max_length=64)  # 登录 token
 
 
