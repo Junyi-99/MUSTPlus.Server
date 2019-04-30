@@ -3,9 +3,14 @@ import time
 import requests
 from django.core.exceptions import ObjectDoesNotExist
 
+from MUSTPlus.models import Faculty
 from MUSTPlus.models import Student
+from MUSTPlus.models import Major
 
 
+# Author : Aikov
+# Time :2019/4/30
+# Status:Finished
 def get_token(body):
     token_simple = '49057506de26d2ea640cea1847d7f3d5'
     target = 'org.apache.struts.taglib.html.TOKEN" value="'
@@ -13,6 +18,9 @@ def get_token(body):
     return body[pos:pos + token_simple.__len__()]
 
 
+# Author : Aikov
+# Time :2019/4/30
+# Status:Finished
 def verify(userid, password) -> bool:
     url = 'https://coes-stud.must.edu.mo/coes/login.do'
 
@@ -35,6 +43,9 @@ def verify(userid, password) -> bool:
         return True
 
 
+# Author : Aikov
+# Time :2019/4/30
+# Status:Finished
 def get_cookie(userid, password):
     if verify(userid, password):
         url = 'https://coes-stud.must.edu.mo/coes/login.do'
@@ -53,6 +64,9 @@ def get_cookie(userid, password):
         return 0
 
 
+# Author : Aikov
+# Time :2019/4/30
+# Status:Finished
 def get_info(userid, password):
     try:
         student = Student.objects.get(student_id=userid)
@@ -61,5 +75,52 @@ def get_info(userid, password):
     cookies = get_cookie(userid, password)
     if cookies == 0:
         return 0
+    # Find info on personal info
     url = 'https://coes-stud.must.edu.mo/coes/StudentInfo.do'
-    r = requests.post(url=url, cookies=cookies)
+    r = requests.get(url=url, cookies=cookies)
+    # Find Chinese name
+    tar = 'Name in Chinese:&nbsp;</td> <td class="blackfont"> '
+    pos1 = r.text.find(tar) + tar.__len__()
+    pos2 = r.text.find('  </td>', __start=pos1)
+    student.name_zh = r.text[pos1:pos2]
+    # Find English name
+    tar = 'Name in English:&nbsp;</td> <td class="blackfont"> '
+    pos1 = r.text.find(tar) + tar.__len__()
+    pos2 = r.text.find('  </td>', __start=pos1)
+    student.name_en = r.text[pos1:pos2]
+    # Find sex
+    tar = 'Gender:&nbsp;</td> <td class="blackfont">'
+    pos1 = r.text.find(tar) + tar.__len__()
+    pos2 = r.text.find('</td>', __start=pos1)
+    student.sex = r.text[pos1:pos2]
+    # Find birthday
+    tar = 'Date of Birth:&nbsp;</td> <td class="blackfont">'
+    pos1 = r.text.find(tar) + tar.__len__()
+    pos2 = r.text.find('</td>', __start=pos1)
+    date = r.text[pos1:pos2]
+    date = date.split('/')
+    student.birthday.day = int(date[0])
+    student.birthday.mouth = int(date[1])
+    student.birthday.year = int(date[2])
+    # Find info on study plan
+    url = 'https://coes-stud.must.edu.mo/coes/StudyPlanGroup.do'
+    r = requests.get(url=url, cookies=cookies)
+    # Find Faculty
+    tar = 'Faculty:&nbsp;</td> <td class="blackfont">'
+    pos1 = r.text.find(tar) + tar.__len__()
+    pos2 = r.text.find('</td>', __start=pos1)
+    name = r.text[pos1:pos2]
+    faculty = Faculty.objects.get(name=name)
+    student.faculty_id = faculty.id
+    # Find Major
+    tar = 'Major:&nbsp;'
+    pos = r.text.find(tar)
+    # 不知道为什么两个tar之间在源码里有一个回车，这样规避一下
+    tar = '</td> <td class="blackfont">  '
+    pos1 = r.text.find(tar, __start=pos) + tar.__len__()
+    pos2 = r.text.find('  </td>', __start=pos1)
+    name = r.text[pos1:pos2]
+    major = Major.objects.get(name=name)
+    student.major_id = major.id
+    # 已经从COES爬完了个人信息
+    student.save()
