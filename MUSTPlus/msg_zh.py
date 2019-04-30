@@ -3,6 +3,11 @@ OK_MSG = 'OK'  # 正常
 WARNING_MSG = '警告信息'  # 警告（一般可忽略）
 INTERNAL_ERROR_MSG = 'Caused an unexpected exception, your request has been recorded.' # 内部错误
 
+
+LOGIN_RSA_ERROR_MSG = 'Login failed(Security check failed) You may have been attacked by a man-in-the-middle'
+LOGIN_USERNAME_INVALID_MSG = 'Username Invalid'
+LOGIN_PASSWORD_ERROR_MSG = 'Wrong Password'
+
 AUTH_SIGN_VERIFICATION_FAILED_MSG = 'sign 验证失败'
 AUTH_TIME_INVALID_MSG = '请求已过期'
 AUTH_TOKEN_INVALID_MSG = 'token 无效'
