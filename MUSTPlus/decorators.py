@@ -2,13 +2,17 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 from .codes import *
+from .msg_zh import *
+import json
+
+JSON_REQUEST_METHOD_ERROR_MSG = json.dumps({"code": AUTH_REQUEST_METHOD_ERROR, "msg": AUTH_REQUEST_METHOD_ERROR_MSG})
 
 
 # 强制 POST 方式请求
 def require_post(func):
     def wrapper(*args, **kw):
         if args[0].method != "POST":
-            return HttpResponse({"code": AUTH_REQUEST_METHOD_ERROR, "msg": ""})
+            return HttpResponse(JSON_REQUEST_METHOD_ERROR_MSG)
         else:
             return func(*args, **kw)
 
@@ -19,7 +23,7 @@ def require_post(func):
 def require_get(func):
     def wrapper(*args, **kw):
         if args[0].method != "GET":
-            return HttpResponse({"code": AUTH_REQUEST_METHOD_ERROR, "msg": ""})
+            return HttpResponse(JSON_REQUEST_METHOD_ERROR_MSG)
         else:
             return func(*args, **kw)
 

@@ -18,5 +18,7 @@ from django.urls import path
 from API import Authentication
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/hash/', Authentication.hash)
+    path('api/hash/', Authentication.hash),
+    path('api/login/', Authentication.login),
+    path('api/logout/', Authentication.logout),
 ]
