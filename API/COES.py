@@ -124,3 +124,5 @@ def get_info(userid, password):
     student.major_id = major.id
     # 已经从COES爬完了个人信息
     student.save()
+    url = 'https://coes-stud.must.edu.mo/coes/logout.do'
+    requests.post(url=url, cookies=r.cookies)
