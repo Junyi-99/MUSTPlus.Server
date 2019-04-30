@@ -1,6 +1,7 @@
 # ALL API
 OK = 0  # 正常
 WARNING = 1  # 警告（一般可忽略）
+INTERNAL_ERROR = 2 # 内部错误
 
 AUTH_SIGN_VERIFICATION_FAILED = -1001  # sign 验证失败
 AUTH_TIME_INVALID = -1002  # 请求已过期

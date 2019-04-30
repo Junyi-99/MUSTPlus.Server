@@ -1,6 +1,7 @@
 # ALL API
-OK_MSG = 0  # 正常
-WARNING_MSG = 1  # 警告（一般可忽略）
+OK_MSG = 'OK'  # 正常
+WARNING_MSG = '警告信息'  # 警告（一般可忽略）
+INTERNAL_ERROR_MSG = 'Caused an unexpected exception, your request has been recorded.' # 内部错误
 
 AUTH_SIGN_VERIFICATION_FAILED_MSG = 'sign 验证失败'
 AUTH_TIME_INVALID_MSG = '请求已过期'

@@ -13,8 +13,9 @@ def get_token(body):
     return body[pos:pos + token_simple.__len__()]
 
 
-def verify(userid, password):
+def verify(userid, password) -> bool:
     url = 'https://coes-stud.must.edu.mo/coes/login.do'
+
     r = requests.get(url=url)
     token = get_token(r.text)
     data = {
@@ -24,6 +25,7 @@ def verify(userid, password):
         'org.apache.struts.taglib.html.TOKEN': token
     }
     time.sleep(3.0)
+
     r = requests.post(url=url, data=data)
     url = 'https://coes-stud.must.edu.mo/coes/logout.do'
     requests.post(url=url, cookies=r.cookies)

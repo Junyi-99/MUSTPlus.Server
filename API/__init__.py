@@ -14,3 +14,6 @@ try:
 except FileNotFoundError as e:
     print("[ERROR] Can not find private_key.pem or public_key.pem")
     exit(-1)
+
+def decrypt(message):
+    return rsa.decrypt(message, private_key).decode()
