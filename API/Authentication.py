@@ -8,5 +8,6 @@ def hash(request):
 def login(request):
     return HttpResponse("")
 
+
 def logout(request):
     return HttpResponse("")

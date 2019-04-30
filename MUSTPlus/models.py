@@ -97,7 +97,7 @@ class CommentCourse(models.Model):
 
 
 class Ftp:
-    ftpid = models.AutoField(primary_key=True)
+    ftp_id = models.AutoField(primary_key=True)
     username = models.CharField(max_length=32, default='')  # ftp的用户名
     password = models.CharField(max_length=32, default='')  # ftp的密码
     course_id = models.ForeignKey(Course, on_delete=models.PROTECT)  # ftp的所属课程
