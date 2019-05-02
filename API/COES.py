@@ -79,6 +79,11 @@ def get_cookie(userid, password, lang):
         return 0
 
 
+def coes_logout(cookies):
+    url = 'https://coes-stud.must.edu.mo/coes/logout.do'
+    requests.post(url=url, cookies=cookies)
+
+
 # Author : Aikov
 # Time :2019/4/30
 # Status:Finished
@@ -87,15 +92,14 @@ def get_info(userid, password, lang):
         student = Student.objects.get(student_id=userid)
     except ObjectDoesNotExist:
         student = Student.objects.create(student_id=userid)
-    cookies = get_cookie(userid, password, lang)
+    cookies = get_cookie(userid, password, lang == 'ch')
     if cookies == 0:
         return 0
     # Find info on personal info
     url = 'https://coes-stud.must.edu.mo/coes/StudentInfo.do'
     r = requests.get(url=url, cookies=cookies)
 
-    url = 'https://coes-stud.must.edu.mo/coes/logout.do'
-    requests.post(url=url, cookies=r.cookies)
+    coes_logout(r.cookies)
     # Find Chinese name
     tar = 'Name in Chinese:&nbsp;</td> <td class="blackfont"> '
     pos1 = r.text.find(tar) + tar.__len__()
@@ -129,44 +133,63 @@ def get_info(userid, password, lang):
 
     # Find info on study plan
     url = 'https://coes-stud.must.edu.mo/coes/StudyPlanGroup.do'
+    cookies = get_cookie(userid, password, lang)
     r = requests.get(url=url, cookies=cookies)
+    coes_logout(r.cookies)
 
     # Find Faculty
-    tar = 'Faculty:&nbsp;</td> <td class="blackfont">'
-    pos1 = r.text.find(tar) + tar.__len__()
-    pos2 = r.text.find('</td>', __start=pos1)
-    name = r.text[pos1:pos2]
-    try:
-        if lang == 'en':
+    if lang == 'en':
+        tar = 'Faculty:&nbsp;</td> <td class="blackfont">'
+        pos1 = r.text.find(tar) + tar.__len__()
+        pos2 = r.text.find('</td>', __start=pos1)
+        name = r.text[pos1:pos2]
+        try:
             faculty = Faculty.objects.get(name_en=name)
-        elif lang == 'zh':
-            faculty = Faculty.objects.get(name_zh=name)
-        else:
+        except ObjectDoesNotExist:
             return codes.OTHER_ARGUMENT_INVALID
-    except ObjectDoesNotExist:
-        return codes.OTHER_ARGUMENT_INVALID
-    student.faculty_id = faculty.id
+        student.faculty_id = faculty.id
 
-    # Find Major
-    tar = 'Major:&nbsp;'
-    pos = r.text.find(tar)
-    # 不知道为什么两个tar之间在源码里有一个回车，这样规避一下
-    tar = '</td> <td class="blackfont">  '
-    pos1 = r.text.find(tar, __start=pos) + tar.__len__()
-    pos2 = r.text.find('  </td>', __start=pos1)
-    name = r.text[pos1:pos2]
-    try:
-        if lang == 'en':
+        # Find Major
+        tar = 'Major:&nbsp;'
+        pos = r.text.find(tar)
+        # 不知道为什么两个tar之间在源码里有一个回车，这样规避一下
+        tar = '</td> <td class="blackfont">  '
+        pos1 = r.text.find(tar, __start=pos) + tar.__len__()
+        pos2 = r.text.find('  </td>', __start=pos1)
+        name = r.text[pos1:pos2]
+        try:
             major = Major.objects.get(name_en=name)
-        elif lang == 'zh':
-            major = Major.objects.get(name_zh=name)
-        else:
+        except ObjectDoesNotExist:
             return codes.OTHER_ARGUMENT_INVALID
-    except ObjectDoesNotExist:
-        return codes.OTHER_ARGUMENT_INVALID
-    student.major_id = major.id
-    # 已经从COES爬完了个人信息
-    student.save()
+        student.major_id = major.id
+        # 已经从COES爬完了个人信息
+        student.save()
+    elif lang == 'zh':
+        tar = '學院:&nbsp;</td> <td class="blackfont">'
+        pos1 = r.text.find(tar) + tar.__len__()
+        pos2 = r.text.find('</td>', __start=pos1)
+        name = r.text[pos1:pos2]
+        try:
+            faculty = Faculty.objects.get(name_zh=name)
+        except ObjectDoesNotExist:
+            return codes.OTHER_ARGUMENT_INVALID
+        student.faculty_id = faculty.id
+
+        # Find Major
+        tar = '課程專業:&nbsp;'
+        pos = r.text.find(tar)
+        # 不知道为什么两个tar之间在源码里有一个回车，这样规避一下
+        tar = '</td> <td class="blackfont">  '
+        pos1 = r.text.find(tar, __start=pos) + tar.__len__()
+        pos2 = r.text.find('  </td>', __start=pos1)
+        name = r.text[pos1:pos2]
+        try:
+            major = Major.objects.get(name_zh=name)
+        except ObjectDoesNotExist:
+            return codes.OTHER_ARGUMENT_INVALID
+        student.major_id = major.id
+    else:
+        return codes.LANG_ARGUMENT_INVALID
 
 
 # Author:Aikov
