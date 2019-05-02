@@ -3,17 +3,20 @@ from django.db import models
 
 # 部门
 class Department(models.Model):
-    name = models.CharField(max_length=30)
+    name_en = models.CharField(max_length=30)
+    name_ch = models.CharField(max_length=50)
 
 
 # 学院
 class Faculty(models.Model):
-    name = models.CharField(max_length=30)
+    name_en = models.CharField(max_length=30)
+    name_ch = models.CharField(max_length=50)
 
 
 # 专业
 class Major(models.Model):
-    name = models.CharField(max_length=30)
+    name_en = models.CharField(max_length=30)
+    name_ch = models.CharField(max_length=50)
     faculty_id = models.ForeignKey(Faculty, on_delete=models.CASCADE)
 
 
