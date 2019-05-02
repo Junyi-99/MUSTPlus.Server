@@ -124,7 +124,8 @@ def get_info(userid, password):
     try:
         faculty = Faculty.objects.get(name_en=name)
     except ObjectDoesNotExist:
-        faculty = Faculty.objects.get(name_zh=name) #TODO: 如果这里也 raise 了一个 ObjectDoesNotExist 怎么办； get_info这个函数被调用的时候就应该已经知道请求的语言(language)了
+        faculty = Faculty.objects.get(
+            name_zh=name)  # TODO: 如果这里也 raise 了一个 ObjectDoesNotExist 怎么办； get_info这个函数被调用的时候就应该已经知道请求的语言(language)了
     student.faculty_id = faculty.id
 
     # Find Major
@@ -138,14 +139,16 @@ def get_info(userid, password):
     try:
         major = Major.objects.get(name_en=name)
     except ObjectDoesNotExist:
-        major = Major.objects.get(name_zh=name) #TODO: 同理。可能逻辑上不是中文就是英文，但是实际情况非常复杂，COES可能会出问题，那么COES显示不全的时候这里就会爆炸。还有可能学校加新的major数据库里没有，也会导致崩溃
-        #TODO: 在这里不要取巧，该 catch 的 Exception 最好都 catch 到
+        major = Major.objects.get(
+            name_zh=name)  # TODO: 同理。可能逻辑上不是中文就是英文，但是实际情况非常复杂，COES可能会出问题，那么COES显示不全的时候这里就会爆炸。还有可能学校加新的major数据库里没有，也会导致崩溃
+        # TODO: 在这里不要取巧，该 catch 的 Exception 最好都 catch 到
     student.major_id = major.id
     # 已经从COES爬完了个人信息
     student.save()
-    url = 'https://coes-stud.must.edu.mo/coes/logout.do' # TODO: 如果上面text.find部分出了差错，就无法退出COES了。不要相信COES是稳定的，要认为所有东西都不可靠，我们要保证用户使用我们的服务不会出现问题。
+    url = 'https://coes-stud.must.edu.mo/coes/logout.do'  # TODO: 如果上面text.find部分出了差错，就无法退出COES了。不要相信COES是稳定的，要认为所有东西都不可靠，我们要保证用户使用我们的服务不会出现问题。
     requests.post(url=url, cookies=r.cookies)
-    #TODO: 可以尝试使用修饰器去修饰这些函数，ensure_logout
+    # TODO: 可以尝试使用修饰器去修饰这些函数，ensure_logout
+
 
 # Author:Aikov
 # Time:2019/5/2
@@ -185,51 +188,44 @@ def get_class(userid, password, intake):
 # Time:2019/5/2
 # Status:Unfinished
 def process_timetable(body):
-    pos1 = body.find('var timetable = new TimeTable();') + 'var timetable = new TimeTable();'.__len__()
+    pos1 = body.find('var timetable = new TimeTable();')
     pos2 = body.find(' timetable.drawTimeTable();')
-    body = body[pos1:pos2]
+    body = body[pos1 + 32:pos2]
+    body = body.replace('timetable.add(', '')
+    body = body.replace('\n ', '')
     body = body.replace('\n', '')
     body = body.replace('+\' - \'+', ',')
     body = body.replace('&quot;', '')
-    body = body.replace('timetable.add(', '')
     body = body.replace('\'', '')
-    body = body.split(');')
-    for count in range(0, body.__len__()):
-        temp = body[count].split(',')
+    body = body[:-3].split(');')  # 防止split出空元素
+
+    for e in body:
+        temp = e.split(',')
         try:
             course = Course.objects.get(course_id=temp[3], course_class=temp[5])
         except ObjectDoesNotExist:
             course = Course.objects.create(course_id=temp[3], course_class=temp[5])
-            course.date_start.month = date_switch(temp[8])[0]
-            course.date_start.day = date_switch(temp[8])[1]
-            course.date_end.month = date_switch(temp[9])[0]
-            course.date_end.day = date_switch(temp[9])[1]
+            course.date_start.month,course.date_start.day = date_switch(temp[8])
+            course.date_end.month, course.date_end.day = date_switch(temp[9])
             classroom = ClassRoom.objects.get(name_en=temp[6])
             course.classroom_id = classroom.id
-            course.time_start.hour = time_switch(temp[1])[0]
-            course.time_start.minute = time_switch(temp[1])[1]
-            course.time_end.hour = time_switch(temp[2])[0]
-            course.time_end.minute = time_switch(temp[2])[1]
+            course.time_start.hour, course.time_start.minute  = time_switch(temp[1])
+            course.time_end.hour, course.time_end.minute = time_switch(temp[2])
             course.save()
 
 
-def date_switch(body) -> list:
+def date_switch(body) -> tuple:
     month = body[0:3]
-    day = body[3:]
-    day = int(day)
-
+    day = int(body[3:])
     t = ('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec')
     for i in range(0, 12):
         if month == t[i]:
             month = i + 1
-
-    a = [month, day]
-    return a
+    return month, day
 
 
-def time_switch(body) -> list:
+def time_switch(body) -> tuple:
     _time = body.split(':')
     h = int(_time[0])
     m = int(_time[1])
-    a = [h, m]
-    return a
+    return h, m
