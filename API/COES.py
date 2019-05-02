@@ -112,7 +112,10 @@ def get_info(userid, password):
     pos1 = r.text.find(tar) + tar.__len__()
     pos2 = r.text.find('</td>', __start=pos1)
     name = r.text[pos1:pos2]
-    faculty = Faculty.objects.get(name=name)
+    try:
+        faculty = Faculty.objects.get(name_en=name)
+    except ObjectDoesNotExist:
+        faculty = Faculty.objects.get(name_ch=name)
     student.faculty_id = faculty.id
     # Find Major
     tar = 'Major:&nbsp;'
@@ -122,7 +125,10 @@ def get_info(userid, password):
     pos1 = r.text.find(tar, __start=pos) + tar.__len__()
     pos2 = r.text.find('  </td>', __start=pos1)
     name = r.text[pos1:pos2]
-    major = Major.objects.get(name=name)
+    try:
+        major = Major.objects.get(name_en=name)
+    except ObjectDoesNotExist:
+        major = Major.objects.get(name_ch=name)
     student.major_id = major.id
     # 已经从COES爬完了个人信息
     student.save()
@@ -130,6 +136,9 @@ def get_info(userid, password):
     requests.post(url=url, cookies=r.cookies)
 
 
+# Author:Aikov
+# Time:2019/5/2
+# Status:Unfinished
 def get_class(userid, password, intake):
     cookies = get_cookie(userid, password)
     if cookies == 0:
@@ -139,7 +148,7 @@ def get_class(userid, password, intake):
     token = get_token(r.text)
     data = {
         'formAction': 'Timetable',
-        'intake': 'intake',
+        'intake': intake,
         'org.apache.struts.taglib.html.TOKEN': token
     }
     r = requests.post(url=url, data=data, cookies=cookies)
@@ -154,9 +163,22 @@ def get_class(userid, password, intake):
             'formAction': 'Timetable',
             'intake': 'intake',
             'org.apache.struts.taglib.html.TOKEN': get_token(r.text),
-            'week':str(week)
+            'week': str(week)
         }
-        r = requests.post(url=url,data=data)
+        r = requests.post(url=url, data=data)
         # 这里缺一个对课程表处理的函数
         week = week + 1
 
+
+# Author:Aikov
+# Time:2019/5/2
+# Status:Unfinished
+def process_timetable(body, lang):
+    pos1 = body.find('var timetable = new TimeTable();') + 'var timetable = new TimeTable();'.__len__()
+    pos2 = body.find(' timetable.drawTimeTable();')
+    body = body[pos1:pos2]
+    body = body.replace('\n', '')
+    body = body.replace('+\' - \'+', '')
+    body = body.replace('&quot;', '')
+    body = body.replace('timetable.add(', '')
+    body = body.split(');')
