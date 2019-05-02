@@ -214,33 +214,15 @@ def process_timetable(body):
 
 
 def date_switch(body) -> list:
-    month = body[0:2]
+    month = body[0:3]
     day = body[3:]
     day = int(day)
-    if month == 'Jan':
-        month = 1
-    elif month == 'Feb':
-        month = 2
-    elif month == 'Mar':
-        month = 3
-    elif month == 'Apr':
-        month = 4
-    elif month == 'May':
-        month = 5
-    elif month == 'Jun':
-        month = 6
-    elif month == 'Jul':
-        month = 7
-    elif month == 'Aug':
-        month = 8
-    elif month == 'Sep':
-        month = 9
-    elif month == 'Oct':
-        month = 10
-    elif month == 'Nov':
-        month = 11
-    elif month == 'Dec':
-        month = 12
+
+    t = ('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec')
+    for i in range(0, 12):
+        if month == t[i]:
+            month = i + 1
+
     a = [month, day]
     return a
 
