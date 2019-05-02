@@ -153,7 +153,7 @@ def get_class(userid, password, intake):
         data = {
             'formAction': 'Timetable',
             'intake': 'intake',
-            'org.apache.struts.taglib.html.TOKEN': get_token(r.text)
+            'org.apache.struts.taglib.html.TOKEN': get_token(r.text),
             'week':str(week)
         }
         r = requests.post(url=url,data=data)
