@@ -3,23 +3,27 @@ from django.db import models
 
 # 部门
 class Department(models.Model):
-    name = models.CharField(max_length=30)
+    name_zh = models.CharField(max_length=32)
+    name_en = models.CharField(max_length=64)
 
 
 # 学院
 class Faculty(models.Model):
-    name = models.CharField(max_length=30)
+    name_zh = models.CharField(max_length=32)
+    name_en = models.CharField(max_length=64)
 
 
 # 专业
 class Major(models.Model):
-    name = models.CharField(max_length=30)
+    name_zh = models.CharField(max_length=32)
+    name_en = models.CharField(max_length=64)
     faculty_id = models.ForeignKey(Faculty, on_delete=models.CASCADE)
 
 
 # 教师
 class ClassRoom(models.Model):
-    name = models.CharField(max_length=30)
+    name_zh = models.CharField(max_length=32)
+    name_en = models.CharField(max_length=64)
 
 
 # 通告
