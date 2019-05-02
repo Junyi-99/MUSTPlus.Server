@@ -70,7 +70,7 @@ class Student(models.Model):
     major_id = models.ForeignKey(Major, on_delete=models.PROTECT)
     nickname = models.CharField(max_length=64)
     sign = models.CharField(max_length=256)  # 个性签名
-    sex = models.BooleanField()
+    sex = models.BooleanField()  # 性别 男性为True
     birthday = models.DateField()
     avatar_url = models.TextField(default="")
     experience = models.IntegerField()  # 用户经验
