@@ -5,6 +5,8 @@ import time
 import requests
 from django.core.exceptions import ObjectDoesNotExist
 
+from MUSTPlus.models import ClassRoom
+from MUSTPlus.models import Course
 from MUSTPlus.models import Faculty
 from MUSTPlus.models import Major
 from MUSTPlus.models import Student
@@ -115,7 +117,7 @@ def get_info(userid, password):
     try:
         faculty = Faculty.objects.get(name_en=name)
     except ObjectDoesNotExist:
-        faculty = Faculty.objects.get(name_ch=name)
+        faculty = Faculty.objects.get(name_zh=name)
     student.faculty_id = faculty.id
     # Find Major
     tar = 'Major:&nbsp;'
@@ -128,7 +130,7 @@ def get_info(userid, password):
     try:
         major = Major.objects.get(name_en=name)
     except ObjectDoesNotExist:
-        major = Major.objects.get(name_ch=name)
+        major = Major.objects.get(name_zh=name)
     student.major_id = major.id
     # 已经从COES爬完了个人信息
     student.save()
@@ -138,7 +140,7 @@ def get_info(userid, password):
 
 # Author:Aikov
 # Time:2019/5/2
-# Status:Unfinished
+# Status:Finished
 def get_class(userid, password, intake):
     cookies = get_cookie(userid, password)
     if cookies == 0:
@@ -166,19 +168,81 @@ def get_class(userid, password, intake):
             'week': str(week)
         }
         r = requests.post(url=url, data=data)
-        # 这里缺一个对课程表处理的函数
+        process_timetable(r.text)
         week = week + 1
 
 
 # Author:Aikov
 # Time:2019/5/2
 # Status:Unfinished
-def process_timetable(body, lang):
+def process_timetable(body):
     pos1 = body.find('var timetable = new TimeTable();') + 'var timetable = new TimeTable();'.__len__()
     pos2 = body.find(' timetable.drawTimeTable();')
     body = body[pos1:pos2]
     body = body.replace('\n', '')
-    body = body.replace('+\' - \'+', '')
+    body = body.replace('+\' - \'+', ',')
     body = body.replace('&quot;', '')
     body = body.replace('timetable.add(', '')
+    body = body.replace('\'', '')
     body = body.split(');')
+    for count in range(0, body.__len__()):
+        temp = body[count].split(',')
+        try:
+            course = Course.objects.get(course_id=temp[3], course_class=temp[5])
+        except ObjectDoesNotExist:
+            course = Course.objects.create(course_id=temp[3], course_class=temp[5])
+            course.date_start.month = date_switch(temp[8])[0]
+            course.date_start.day = date_switch(temp[8])[1]
+            course.date_end.month = date_switch(temp[9])[0]
+            course.date_end.day = date_switch(temp[9])[1]
+            classroom = ClassRoom.objects.get(name_en=temp[6])
+            course.classroom_id = classroom.id
+            course.time_start.hour = time_switch(temp[1])[0]
+            course.time_start.minute = time_switch(temp[1])[1]
+            course.time_end.hour = time_switch(temp[2])[0]
+            course.time_end.minute = time_switch(temp[2])[1]
+            course.save()
+
+
+def date_switch(body) -> list:
+    month = body[0:2]
+    day = body[3:]
+    day = int(day)
+    if month == 'Jan':
+        month = 1
+    elif month == 'Feb':
+        month = 2
+    elif month == 'Mar':
+        month = 3
+    elif month == 'Apr':
+        month = 4
+    elif month == 'May':
+        month = 5
+    elif month == 'Jun':
+        month = 6
+    elif month == 'Jul':
+        month = 7
+    elif month == 'Aug':
+        month = 8
+    elif month == 'Sep':
+        month = 9
+    elif month == 'Oct':
+        month = 10
+    elif month == 'Nov':
+        month = 11
+    elif month == 'Dec':
+        month = 12
+    a = [month, day]
+    return a
+
+
+def time_switch(body) -> list:
+    _time = body.split(':')
+    h = int(_time[0])
+    m = int(_time[1])
+    a = [h, m]
+    return a
+
+
+
+
