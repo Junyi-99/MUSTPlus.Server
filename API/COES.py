@@ -1,11 +1,13 @@
+# 这个文件主要是与COES连接的部分，现在包括COES的登录
+# 个人信息和课程表的获取，现在课程表的获取还没有完成
 import time
 
 import requests
 from django.core.exceptions import ObjectDoesNotExist
 
 from MUSTPlus.models import Faculty
-from MUSTPlus.models import Student
 from MUSTPlus.models import Major
+from MUSTPlus.models import Student
 
 
 # Author : Aikov
@@ -126,3 +128,35 @@ def get_info(userid, password):
     student.save()
     url = 'https://coes-stud.must.edu.mo/coes/logout.do'
     requests.post(url=url, cookies=r.cookies)
+
+
+def get_class(userid, password, intake):
+    cookies = get_cookie(userid, password)
+    if cookies == 0:
+        return 0
+    url = 'https://coes-stud.must.edu.mo/coes/AcademicRecordsForm.do'
+    r = requests.get(url=url)
+    token = get_token(r.text)
+    data = {
+        'formAction': 'Timetable',
+        'intake': 'intake',
+        'org.apache.struts.taglib.html.TOKEN': token
+    }
+    r = requests.post(url=url, data=data, cookies=cookies)
+    pos = r.text.find('<option value="')
+    count = 0
+    while r.text.find('<option value=', __start=pos) != -1:
+        pos = r.text.find('<option value=', __start=pos)
+        count = count + 1
+    week = 1
+    while week != count:
+        data = {
+            'formAction': 'Timetable',
+            'intake': 'intake',
+            'org.apache.struts.taglib.html.TOKEN': get_token(r.text)
+            'week':str(week)
+        }
+        r = requests.post(url=url,data=data)
+        # 这里缺一个对课程表处理的函数
+        week = week + 1
+
