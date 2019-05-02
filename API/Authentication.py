@@ -20,7 +20,7 @@ def hash(request):
 
 
 # TODO: finish this check function
-def username_check(username):
+def username_check(username: str):
     if len(username) != 18:
         return False
 

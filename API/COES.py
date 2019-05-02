@@ -82,21 +82,26 @@ def get_info(userid, password):
     # Find info on personal info
     url = 'https://coes-stud.must.edu.mo/coes/StudentInfo.do'
     r = requests.get(url=url, cookies=cookies)
+
     # Find Chinese name
     tar = 'Name in Chinese:&nbsp;</td> <td class="blackfont"> '
     pos1 = r.text.find(tar) + tar.__len__()
     pos2 = r.text.find('  </td>', __start=pos1)
     student.name_zh = r.text[pos1:pos2]
+
     # Find English name
     tar = 'Name in English:&nbsp;</td> <td class="blackfont"> '
     pos1 = r.text.find(tar) + tar.__len__()
     pos2 = r.text.find('  </td>', __start=pos1)
     student.name_en = r.text[pos1:pos2]
+
     # Find sex
     tar = 'Gender:&nbsp;</td> <td class="blackfont">'
     pos1 = r.text.find(tar) + tar.__len__()
     pos2 = r.text.find('</td>', __start=pos1)
     student.sex = r.text[pos1:pos2]
+    # TODO: student.sex 是 Boolean 属性，r.text[:] 是 str
+
     # Find birthday
     tar = 'Date of Birth:&nbsp;</td> <td class="blackfont">'
     pos1 = r.text.find(tar) + tar.__len__()
@@ -106,9 +111,11 @@ def get_info(userid, password):
     student.birthday.day = int(date[0])
     student.birthday.mouth = int(date[1])
     student.birthday.year = int(date[2])
+
     # Find info on study plan
     url = 'https://coes-stud.must.edu.mo/coes/StudyPlanGroup.do'
     r = requests.get(url=url, cookies=cookies)
+
     # Find Faculty
     tar = 'Faculty:&nbsp;</td> <td class="blackfont">'
     pos1 = r.text.find(tar) + tar.__len__()
@@ -117,8 +124,9 @@ def get_info(userid, password):
     try:
         faculty = Faculty.objects.get(name_en=name)
     except ObjectDoesNotExist:
-        faculty = Faculty.objects.get(name_zh=name)
+        faculty = Faculty.objects.get(name_zh=name) #TODO: 如果这里也 raise 了一个 ObjectDoesNotExist 怎么办； get_info这个函数被调用的时候就应该已经知道请求的语言(language)了
     student.faculty_id = faculty.id
+
     # Find Major
     tar = 'Major:&nbsp;'
     pos = r.text.find(tar)
@@ -130,13 +138,14 @@ def get_info(userid, password):
     try:
         major = Major.objects.get(name_en=name)
     except ObjectDoesNotExist:
-        major = Major.objects.get(name_zh=name)
+        major = Major.objects.get(name_zh=name) #TODO: 同理。可能逻辑上不是中文就是英文，但是实际情况非常复杂，COES可能会出问题，那么COES显示不全的时候这里就会爆炸。还有可能学校加新的major数据库里没有，也会导致崩溃
+        #TODO: 在这里不要取巧，该 catch 的 Exception 最好都 catch 到
     student.major_id = major.id
     # 已经从COES爬完了个人信息
     student.save()
-    url = 'https://coes-stud.must.edu.mo/coes/logout.do'
+    url = 'https://coes-stud.must.edu.mo/coes/logout.do' # TODO: 如果上面text.find部分出了差错，就无法退出COES了。不要相信COES是稳定的，要认为所有东西都不可靠，我们要保证用户使用我们的服务不会出现问题。
     requests.post(url=url, cookies=r.cookies)
-
+    #TODO: 可以尝试使用修饰器去修饰这些函数，ensure_logout
 
 # Author:Aikov
 # Time:2019/5/2
@@ -242,7 +251,3 @@ def time_switch(body) -> list:
     m = int(_time[1])
     a = [h, m]
     return a
-
-
-
-
