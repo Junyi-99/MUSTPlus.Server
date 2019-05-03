@@ -42,5 +42,4 @@ def check_signature(func):
 def check_sensitive_words(func):
     def wrapper(*args, **kw):
         return func(*args, **kw)
-
     return wrapper

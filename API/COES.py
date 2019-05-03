@@ -50,28 +50,22 @@ def verify(userid, password) -> bool:
 
 # Author : Aikov
 # Time :2019/4/30
-# Status:Finished
+# Status: Need to improve
 def get_cookie(userid, password, lang):
+    # TODO: 改掉这部分的逻辑。verify了之后就已经登陆成功了不用再登陆一遍
     if verify(userid, password):
         url = 'https://coes-stud.must.edu.mo/coes/login.do'
+        #TODO: 这种URL应该弄成当前文件的全局常量
         r = requests.get(url=url)
         token = get_token(r.text)
-        if lang == 'en':
-            data = {
-                'userid': userid,
-                'password': password,
-                'submit': 'Login',
-                'org.apache.struts.taglib.html.TOKEN': token
-            }
-        elif lang == 'zh':
-            data = {
-                'userid': userid,
-                'password': password,
-                'submit': '登入',
-                'org.apache.struts.taglib.html.TOKEN': token
-            }
-        else:
-            return 0
+
+        data = {
+            'userid': userid,
+            'password': password,
+            'submit': 'Login' if lang == 'en' else '登入', # 要优雅，不要有不必要的 redundant
+            'org.apache.struts.taglib.html.TOKEN': token,
+        }
+
         time.sleep(3.0)
         r = requests.post(url=url, data=data)
         return r.cookies
@@ -86,7 +80,7 @@ def coes_logout(cookies):
 
 # Author : Aikov
 # Time :2019/4/30
-# Status:Finished
+# Status: Unfinished
 def get_info(userid, password, lang):
     try:
         student = Student.objects.get(student_id=userid)
@@ -130,7 +124,7 @@ def get_info(userid, password, lang):
     student.birthday.day = int(date[0])
     student.birthday.mouth = int(date[1])
     student.birthday.year = int(date[2])
-
+    # TODO: TOO MUCH redundant, Hardly read codes.
     # Find info on study plan
     url = 'https://coes-stud.must.edu.mo/coes/StudyPlanGroup.do'
     cookies = get_cookie(userid, password, lang)
@@ -205,7 +199,7 @@ def get_class(userid, password, intake, lang):
     data = {
         'formAction': 'Timetable',
         'intake': intake,
-        'org.apache.struts.taglib.html.TOKEN': token
+        'org.apache.struts.taglib.html.TOKEN': token,
     }
     r = requests.post(url=url, data=data, cookies=cookies)
     pos = r.text.find('<option value="')
@@ -214,21 +208,25 @@ def get_class(userid, password, intake, lang):
         pos = r.text.find('<option value=', __start=pos)
         count = count + 1
     week = 1
+    #TODO: 请解释一下
+    # 1、下面的代码的目的
+    # 2、count和week的关系
+
     while week != count:
         data = {
             'formAction': 'Timetable',
             'intake': 'intake',
             'org.apache.struts.taglib.html.TOKEN': get_token(r.text),
-            'week': str(week)
+            'week': str(week),
         }
         r = requests.post(url=url, data=data)
         process_timetable(r.text)
         week = week + 1
 
 
-# Author:Aikov
-# Time:2019/5/2
-# Status:Unfinished
+# Author: Aikov and Junyi
+# Time: 2019/5/2
+# Status: Unfinished
 def process_timetable(body):
     pos1 = body.find('var timetable = new TimeTable();')
     pos2 = body.find(' timetable.drawTimeTable();')
@@ -255,7 +253,9 @@ def process_timetable(body):
             course.time_end.hour, course.time_end.minute = time_switch(temp[2])
             course.save()
 
-
+# Author: Junyi, Aikov
+# Time: 2019/5/3
+# Status: finished
 def date_switch(body) -> tuple:
     month = body[0:3]
     day = int(body[3:])
@@ -265,7 +265,9 @@ def date_switch(body) -> tuple:
             month = i + 1
     return month, day
 
-
+# Author: Aikov and Junyi
+# Time: 2019/5/3
+# Status: finished
 def time_switch(body) -> tuple:
     _time = body.split(':')
     h = int(_time[0])
