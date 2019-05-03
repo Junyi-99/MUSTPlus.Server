@@ -6,7 +6,7 @@ import requests
 from django.core.exceptions import ObjectDoesNotExist
 
 from MUSTPlus import codes
-from MUSTPlus import coes_url
+from MUSTPlus import external_url
 from MUSTPlus.models import ClassRoom
 from MUSTPlus.models import Course
 from MUSTPlus.models import Faculty
@@ -34,7 +34,7 @@ def get_token(body):
 # Time :2019/4/30
 # Status: Need to improve
 def get_cookie(userid, password, lang):
-    r = requests.get(url=coes_url.LOGIN_URL)
+    r = requests.get(url=external_url.LOGIN_URL)
     token = get_token(r.text)
     data = {
         'userid': userid,
@@ -44,7 +44,7 @@ def get_cookie(userid, password, lang):
     }
     time.sleep(3.0)
 
-    r = requests.post(url=coes_url.LOGIN_URL, data=data)
+    r = requests.post(url=external_url.LOGIN_URL, data=data)
     if r.text.find('<!--COES VERSION ') == -1:
         return False, 0
     else:
@@ -52,7 +52,7 @@ def get_cookie(userid, password, lang):
 
 
 def coes_logout(cookies):
-    requests.post(url=coes_url.LOGOUT_URL, cookies=cookies)
+    requests.post(url=external_url.LOGOUT_URL, cookies=cookies)
 
 
 # Author : Aikov
@@ -67,8 +67,8 @@ def get_info(userid, password, lang):
     if cookies == 0:
         return 0
     # Find info on personal info
-    r = requests.get(url=coes_url.STUDENT_INFO_URL, cookies=cookies)
-    r2 = requests.get(url=coes_url.STUDY_PLAN_GROUP_URL, cookies=cookies)
+    r = requests.get(url=external_url.STUDENT_INFO_URL, cookies=cookies)
+    r2 = requests.get(url=external_url.STUDY_PLAN_GROUP_URL, cookies=cookies)
     coes_logout(r.cookies)
     # Find Chinese name
     tar = 'Name in Chinese:&nbsp;</td> <td class="blackfont"> ' if lang == 'en' \
@@ -145,14 +145,14 @@ def get_class(userid, password, intake, lang):
     cookies = get_cookie(userid, password, lang)[1]
     if cookies == 0:
         return 0
-    r = requests.get(url=coes_url.TIME_TABLE_URL)
+    r = requests.get(url=external_url.TIME_TABLE_URL)
     token = get_token(r.text)
     data = {
         'formAction': 'Timetable',
         'intake': intake,
         'org.apache.struts.taglib.html.TOKEN': token,
     }
-    r = requests.post(url=coes_url.TIME_TABLE_URL, data=data, cookies=cookies)
+    r = requests.post(url=external_url.TIME_TABLE_URL, data=data, cookies=cookies)
     pos = r.text.find('<option value="')
     count = 0
     while r.text.find('<option value=', __start=pos) != -1:
@@ -170,7 +170,7 @@ def get_class(userid, password, intake, lang):
             'org.apache.struts.taglib.html.TOKEN': get_token(r.text),
             'week': str(week),
         }
-        r = requests.post(url=coes_url.TIME_TABLE_URL, data=data)
+        r = requests.post(url=external_url.TIME_TABLE_URL, data=data)
         process_timetable(r.text)
         week = week + 1
 
