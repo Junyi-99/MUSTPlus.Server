@@ -68,8 +68,8 @@ def get_info(userid, password, lang):
     if cookies == 0:
         return 0
     # Find info on personal info
-    r = requests.get(url=coes_url.STUDENTINFO_URL, cookies=cookies)
-    r2 = requests.get(url=coes_url.STUDYPLANGROUP_URL, cookies=cookies)
+    r = requests.get(url=coes_url.STUDENT_INFO_URL, cookies=cookies)
+    r2 = requests.get(url=coes_url.STUDY_PLAN_GROUP_URL, cookies=cookies)
     coes_logout(r.cookies)
     # Find Chinese name
     tar = 'Name in Chinese:&nbsp;</td> <td class="blackfont"> ' if lang == 'en' \
@@ -146,14 +146,14 @@ def get_class(userid, password, intake, lang):
     cookies = get_cookie(userid, password, lang)
     if cookies == 0:
         return 0
-    r = requests.get(url=coes_url.TABLETIME_URL)
+    r = requests.get(url=coes_url.TIME_TABLE_URL)
     token = get_token(r.text)
     data = {
         'formAction': 'Timetable',
         'intake': intake,
         'org.apache.struts.taglib.html.TOKEN': token,
     }
-    r = requests.post(url=coes_url.TABLETIME_URL, data=data, cookies=cookies)
+    r = requests.post(url=coes_url.TIME_TABLE_URL, data=data, cookies=cookies)
     pos = r.text.find('<option value="')
     count = 0
     while r.text.find('<option value=', __start=pos) != -1:
@@ -171,7 +171,7 @@ def get_class(userid, password, intake, lang):
             'org.apache.struts.taglib.html.TOKEN': get_token(r.text),
             'week': str(week),
         }
-        r = requests.post(url=coes_url.TABLETIME_URL, data=data)
+        r = requests.post(url=coes_url.TIME_TABLE_URL, data=data)
         process_timetable(r.text)
         week = week + 1
 
