@@ -27,7 +27,13 @@ def get_token(body):
 # Author : Aikov
 # Time :2019/4/30
 # Status:Finished
-def verify(userid, password, lang):
+# def verify(userid, password, lang):
+
+
+# Author : Aikov
+# Time :2019/4/30
+# Status: Need to improve
+def get_cookie(userid, password, lang):
     r = requests.get(url=coes_url.LOGIN_URL)
     token = get_token(r.text)
     data = {
@@ -45,13 +51,6 @@ def verify(userid, password, lang):
         return True, r.cookies
 
 
-# Author : Aikov
-# Time :2019/4/30
-# Status: Need to improve
-def get_cookie(userid, password, lang):
-    return verify(userid, password, lang)[1]
-
-
 def coes_logout(cookies):
     requests.post(url=coes_url.LOGOUT_URL, cookies=cookies)
 
@@ -64,7 +63,7 @@ def get_info(userid, password, lang):
         student = Student.objects.get(student_id=userid)
     except ObjectDoesNotExist:
         student = Student.objects.create(student_id=userid)
-    cookies = get_cookie(userid, password, lang)
+    cookies = get_cookie(userid, password, lang)[1]
     if cookies == 0:
         return 0
     # Find info on personal info
@@ -143,7 +142,7 @@ def get_info(userid, password, lang):
 # Time:2019/5/2
 # Status:Finished
 def get_class(userid, password, intake, lang):
-    cookies = get_cookie(userid, password, lang)
+    cookies = get_cookie(userid, password, lang)[1]
     if cookies == 0:
         return 0
     r = requests.get(url=coes_url.TIME_TABLE_URL)
@@ -164,7 +163,7 @@ def get_class(userid, password, intake, lang):
     # 1、下面的代码的目的     这一段代码是为了逐周获取课表
     # 2、count和week的关系   count是一共有多少个周，week是当前正在获取的周
 
-    while week != count:
+    while week <= count:
         data = {
             'formAction': 'Timetable',
             'intake': 'intake',
