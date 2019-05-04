@@ -17,7 +17,7 @@ class Faculty(models.Model):
 class Major(models.Model):
     name_zh = models.CharField(max_length=32)
     name_en = models.CharField(max_length=64)
-    faculty_id = models.ForeignKey(Faculty, on_delete=models.CASCADE)
+    faculty_id = models.ForeignKey(Faculty, on_delete=models.CASCADE) # belongs to which faculty
 
 
 # 教师
