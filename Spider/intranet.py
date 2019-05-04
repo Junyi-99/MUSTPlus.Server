@@ -2,6 +2,9 @@ import requests
 import json
 import re
 from lxml import etree
+from MUSTPlus.models import Document
+from MUSTPlus.models import Attachment
+from MUSTPlus.models import Announcement
 
 INTRANET_LOGIN = 'https://intranet.must.edu.mo/student/LoginServlet'
 INTRANET_LOGOUT = 'https://intranet.must.edu.mo/student/Logout'
@@ -28,7 +31,7 @@ def login(username, password):
     r = requests.post(url=INTRANET_LOGIN, data=data, headers=headers)
     if 'mmLoadMenus' in r.text:
         print("Login successful")
-        #TODO: Logger
+        # TODO: Logger
         return r.cookies
     else:
         print("Login failed.")
