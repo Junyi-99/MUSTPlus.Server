@@ -7,8 +7,9 @@ from MUSTPlus.decorators import *
 from django.http import HttpResponse
 
 from . import private_key, public_key_content, decrypt
-from MUSTPlus.codes import *
-from MUSTPlus.msg_zh import *
+from MUSTPlus import codes
+from MUSTPlus import msg_zh
+
 
 
 # Author: Junyi
@@ -39,13 +40,13 @@ def login(request):
         print("password:", password)
 
         if not username_check(username):
-            return HttpResponse(json.dumps({"code": LOGIN_USERNAME_INVALID, "msg": LOGIN_USERNAME_INVALID_MSG}))
+            return HttpResponse(json.dumps({"code": codes.LOGIN_USERNAME_INVALID, "msg": msg_zh.LOGIN_USERNAME_INVALID_MSG}))
         # TODO: CHECK PASSWORD
     except Exception as e:
         # TODO: Using Logger to record the dangerous behavior
         if str(e) == "Incorrect padding":
-            return HttpResponse(json.dumps({"code": LOGIN_RSA_ERROR, "msg": LOGIN_RSA_ERROR_MSG}))
-        return HttpResponse(json.dumps({"code": INTERNAL_ERROR, "msg": INTERNAL_ERROR_MSG}))
+            return HttpResponse(json.dumps({"code": codes.LOGIN_RSA_ERROR, "msg": msg_zh.LOGIN_RSA_ERROR_MSG}))
+        return HttpResponse(json.dumps({"code": codes.INTERNAL_ERROR, "msg": msg_zh.INTERNAL_ERROR_MSG}))
 
     return HttpResponse(username + ", " + password)
 

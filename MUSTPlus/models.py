@@ -25,8 +25,16 @@ class ClassRoom(models.Model):
     name_zh = models.CharField(max_length=32)
     name_en = models.CharField(max_length=64)
 
+# 文件（适用于 downContent ）
+class Document(models.Model):
+    department_id = models.ForeignKey(Department, on_delete=models.PROTECT)  # 来自部门
+    faculty_id = models.ForeignKey(Faculty, on_delete=models.PROTECT)  # 来自学院
+    title = models.CharField(max_length=128) # 文件标题
+    publish_time = models.TimeField()  # 通知发布时间
+    url = models.TextField()  # URL
 
-# 通告
+
+# 通告（适用于 viewContent ）
 class Announcement(models.Model):
     department_id = models.ForeignKey(Department, on_delete=models.PROTECT)  # 来自部门
     faculty_id = models.ForeignKey(Faculty, on_delete=models.PROTECT)  # 来自学院
