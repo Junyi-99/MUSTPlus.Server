@@ -27,23 +27,23 @@ class ClassRoom(models.Model):
 
 # 文件（适用于 downContent ）
 class Document(models.Model):
-    department_id = models.ForeignKey(Department, on_delete=models.PROTECT)  # 来自部门
-    faculty_id = models.ForeignKey(Faculty, on_delete=models.PROTECT)  # 来自学院
+    department_id = models.ForeignKey(Department, on_delete=models.PROTECT, null=True)  # 来自部门
+    faculty_id = models.ForeignKey(Faculty, on_delete=models.PROTECT, null=True)  # 来自学院
     title = models.CharField(max_length=128) # 文件标题
-    publish_time = models.TimeField()  # 通知发布时间
+    publish_time = models.DateField()  # 通知发布时间
     url = models.TextField()  # URL
 
 
 # 通告（适用于 viewContent ）
 class Announcement(models.Model):
-    department_id = models.ForeignKey(Department, on_delete=models.PROTECT)  # 来自部门
-    faculty_id = models.ForeignKey(Faculty, on_delete=models.PROTECT)  # 来自学院
+    department_id = models.ForeignKey(Department, on_delete=models.PROTECT, null=True)  # 来自部门
+    faculty_id = models.ForeignKey(Faculty, on_delete=models.PROTECT, null=True)  # 来自学院
     title = models.CharField(max_length=128)  # 通知标题
     content = models.TextField()  # 通知内容
-    publish_time = models.TimeField()  # 通知发布时间
+    publish_time = models.DateField()  # 通知发布时间
 
 
-# 附件
+# 附件(适用于 viewContent中的附件)
 class Attachment(models.Model):
     title = models.CharField(max_length=128)  # 附件标题
     url = models.TextField()  # URL
@@ -107,9 +107,8 @@ class CommentCourse(models.Model):
     publish_time = models.TimeField()  # 发布时间
     visible = models.BooleanField()  # 是否可见
 
-
-class Ftp:
-    ftp_id = models.AutoField(primary_key=True)
+# FTP
+class FTP(models.Model):
     username = models.CharField(max_length=32, default='')  # ftp的用户名
     password = models.CharField(max_length=32, default='')  # ftp的密码
     course_id = models.ForeignKey(Course, on_delete=models.PROTECT)  # ftp的所属课程

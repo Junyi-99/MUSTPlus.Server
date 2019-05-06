@@ -15,10 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+
+from Spider import intranet
 from API import Authentication
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/hash', Authentication.hash),
     path('api/login', Authentication.login),
     path('api/logout', Authentication.logout),
+    path('api/intranet', intranet.intranet),
 ]
