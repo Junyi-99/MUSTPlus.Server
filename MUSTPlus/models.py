@@ -6,7 +6,7 @@ class Department(models.Model):
     name_zh = models.CharField(max_length=32)
     name_en = models.CharField(max_length=64)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name_zh
 
 
@@ -15,7 +15,7 @@ class Faculty(models.Model):
     name_zh = models.CharField(max_length=32)
     name_en = models.CharField(max_length=64)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name_zh
 
 
@@ -25,7 +25,7 @@ class Major(models.Model):
     name_en = models.CharField(max_length=64)
     faculty_id = models.ForeignKey(Faculty, on_delete=models.CASCADE)  # belongs to which faculty
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name_zh
 
 
@@ -34,7 +34,7 @@ class ClassRoom(models.Model):
     name_zh = models.CharField(max_length=32)
     name_en = models.CharField(max_length=64)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name_zh
 
 
@@ -46,7 +46,7 @@ class Document(models.Model):
     publish_time = models.DateField()  # 通知发布时间
     url = models.TextField()  # URL
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
 
@@ -58,7 +58,7 @@ class Announcement(models.Model):
     content = models.TextField()  # 通知内容
     publish_time = models.DateField()  # 通知发布时间
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
 
@@ -68,7 +68,7 @@ class Attachment(models.Model):
     url = models.TextField()  # URL
     belongs_to = models.ForeignKey(Announcement, on_delete=models.CASCADE)  # 属于哪个 Announcement
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
 
@@ -87,7 +87,7 @@ class Course(models.Model):
     time_start = models.TimeField()
     time_end = models.TimeField()
 
-    def __unicode__(self):
+    def __str__(self):
         return self.course_id + " " + self.name_zh
 
     class Meta:
@@ -109,7 +109,7 @@ class Student(models.Model):
     experience = models.IntegerField()  # 用户经验
     token = models.CharField(max_length=64)  # 登录 token
 
-    def __unicode__(self):
+    def __str__(self):
         return self.student_id + "(" + self.name_zh + "_"
 
 
@@ -124,7 +124,7 @@ class Teacher(models.Model):
     office_room = models.TextField(default="")  # 办公室
     office_hour = models.TextField(default="")  # 办公时间
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name_zh
 
 
