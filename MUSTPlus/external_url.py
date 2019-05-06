@@ -6,3 +6,4 @@ TIME_TABLE_URL = 'https://coes-stud.must.edu.mo/coes/AcademicRecordsForm.do'
 
 INTRANET_LOGIN_URL = 'https://intranet.must.edu.mo/student/LoginServlet'
 INTRANET_LOGOUT_URL = 'https://intranet.must.edu.mo/student/Logout'
+# .
