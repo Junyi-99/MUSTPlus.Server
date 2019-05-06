@@ -36,4 +36,45 @@
 
 ## Step 3 部署 Python
 
+安装 virtualenv
 
+`pip3 install virtualenv`
+
+创建 virtualenv 目录
+
+`virtualenv venv`
+
+进入 venv 环境
+
+`source ./venv/bin/active`
+
+安装 requirements
+
+`pip3 install -r requirements.txt`
+
+## Step 4 配置服务器
+
+请确保 Settings 符合下面的文件夹结构：
+```
+├─Settings
+│      Database.py
+│      Server.py
+│      URLS.py
+│      __init__.py
+```
+（其中，`Database.py` 和 `Server.py` **不应**出现在 git 中）
+
+这两个文件应由开发者自己编写，对于 `Database.py`，内容如下：
+
+```
+NAME = ''
+USER = ''
+PASSWORD = ''
+HOST = ''
+PORT = ''
+```
+
+对于 `Server.py`，内容如下： 
+```
+SECRET_KEY = 'yfyzhc%840_!g%!#(sqy(ccock4^z4ohl=$-*3xpoe+v^cq)ih'
+```

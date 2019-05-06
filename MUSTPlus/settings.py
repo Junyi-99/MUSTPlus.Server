@@ -19,7 +19,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'yfyzhc%840_!g%!#(sqy(ccock4^z4ohl=$-*3xpoe+v^cq)ih'
+from Settings import Server
+SECRET_KEY = Server.SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -73,14 +74,15 @@ WSGI_APPLICATION = 'MUSTPlus.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
+from Settings import Database
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'must_plus',
-        'USER': 'duzhaolong',
-        'PASSWORD': '%Ad@MRP5RT*nKjw4',
-        'HOST': 'mp.junyi.pw',
-        'PORT': '4486',
+        'NAME': Database.NAME,
+        'USER': Database.USER,
+        'PASSWORD': Database.PASSWORD,
+        'HOST': Database.HOST,
+        'PORT': Database.PORT,
     }
 }
 
