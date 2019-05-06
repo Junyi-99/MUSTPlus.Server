@@ -6,18 +6,27 @@ class Department(models.Model):
     name_zh = models.CharField(max_length=32)
     name_en = models.CharField(max_length=64)
 
+    def __unicode__(self):
+        return self.name_zh
+
 
 # 学院
 class Faculty(models.Model):
     name_zh = models.CharField(max_length=32)
     name_en = models.CharField(max_length=64)
 
+    def __unicode__(self):
+        return self.name_zh
+
 
 # 专业
 class Major(models.Model):
     name_zh = models.CharField(max_length=32)
     name_en = models.CharField(max_length=64)
-    faculty_id = models.ForeignKey(Faculty, on_delete=models.CASCADE) # belongs to which faculty
+    faculty_id = models.ForeignKey(Faculty, on_delete=models.CASCADE)  # belongs to which faculty
+
+    def __unicode__(self):
+        return self.name_zh
 
 
 # 教师
@@ -25,13 +34,20 @@ class ClassRoom(models.Model):
     name_zh = models.CharField(max_length=32)
     name_en = models.CharField(max_length=64)
 
+    def __unicode__(self):
+        return self.name_zh
+
+
 # 文件（适用于 downContent ）
 class Document(models.Model):
     department_id = models.ForeignKey(Department, on_delete=models.PROTECT, null=True)  # 来自部门
     faculty_id = models.ForeignKey(Faculty, on_delete=models.PROTECT, null=True)  # 来自学院
-    title = models.CharField(max_length=128) # 文件标题
+    title = models.CharField(max_length=128)  # 文件标题
     publish_time = models.DateField()  # 通知发布时间
     url = models.TextField()  # URL
+
+    def __unicode__(self):
+        return self.title
 
 
 # 通告（适用于 viewContent ）
@@ -42,12 +58,18 @@ class Announcement(models.Model):
     content = models.TextField()  # 通知内容
     publish_time = models.DateField()  # 通知发布时间
 
+    def __unicode__(self):
+        return self.title
+
 
 # 附件(适用于 viewContent中的附件)
 class Attachment(models.Model):
     title = models.CharField(max_length=128)  # 附件标题
     url = models.TextField()  # URL
     belongs_to = models.ForeignKey(Announcement, on_delete=models.CASCADE)  # 属于哪个 Announcement
+
+    def __unicode__(self):
+        return self.title
 
 
 # 科目信息
@@ -64,6 +86,9 @@ class Course(models.Model):
     date_end = models.DateField()
     time_start = models.TimeField()
     time_end = models.TimeField()
+
+    def __unicode__(self):
+        return self.course_id + " " + self.name_zh
 
     class Meta:
         unique_together = (("course_id", "course_class"),)
@@ -84,6 +109,9 @@ class Student(models.Model):
     experience = models.IntegerField()  # 用户经验
     token = models.CharField(max_length=64)  # 登录 token
 
+    def __unicode__(self):
+        return self.student_id + "(" + self.name_zh + "_"
+
 
 # 老师
 class Teacher(models.Model):
@@ -96,6 +124,9 @@ class Teacher(models.Model):
     office_room = models.TextField(default="")  # 办公室
     office_hour = models.TextField(default="")  # 办公时间
 
+    def __unicode__(self):
+        return self.name_zh
+
 
 # 科目评论
 class CommentCourse(models.Model):
@@ -106,6 +137,7 @@ class CommentCourse(models.Model):
     content = models.TextField  # 评论正文
     publish_time = models.TimeField()  # 发布时间
     visible = models.BooleanField()  # 是否可见
+
 
 # FTP
 class FTP(models.Model):
