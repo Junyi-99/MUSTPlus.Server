@@ -26,13 +26,7 @@ def get_token(body):
 
 # Author : Aikov
 # Time :2019/4/30
-# Status:Finished
-# def verify(userid, password, lang):
-
-
-# Author : Aikov
-# Time :2019/4/30
-# Status: Need to improve
+# Status: Finished
 def get_cookie(userid, password, lang):
     r = requests.get(url=external_url.LOGIN_URL)
     token = get_token(r.text)
@@ -117,7 +111,7 @@ def get_info(userid, password, lang):
     # Find Major
     tar = 'Major:&nbsp;' \
         if lang == 'en' else '課程專業:&nbsp;'
-    pos = r.text.find(tar)
+    pos = r2.text.find(tar)
     # 不知道为什么两个tar之间在源码里有一个回车，这样规避一下
     tar = '</td> <td class="blackfont">  '
     pos1 = r2.text.find(tar, __start=pos) + tar.__len__()
