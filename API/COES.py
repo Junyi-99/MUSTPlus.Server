@@ -5,13 +5,13 @@ import time
 import requests
 from django.core.exceptions import ObjectDoesNotExist
 
-from Settings import Codes
-from Settings import URLS
 from MUSTPlus.models import ClassRoom
 from MUSTPlus.models import Course
 from MUSTPlus.models import Faculty
 from MUSTPlus.models import Major
 from MUSTPlus.models import Student
+from Settings import Codes
+from Settings import URLS
 
 
 # Author : Aikov
@@ -82,7 +82,7 @@ def get_info(username, password, lang):
         else '中文姓名:&nbsp;</td> <td class="blackfont"> '
     pos1 = r1.find(tar) + tar.__len__()
     pos2 = r1.find('  </td>', __start=pos1)
-    student.name_zh = r.text[pos1:pos2]
+    student.name_zh = r1[pos1:pos2]
 
     # Find English name
     tar = 'Name in English:&nbsp;</td> <td class="blackfont"> ' if lang == 'en' \
@@ -94,9 +94,9 @@ def get_info(username, password, lang):
     # Find sex
     tar = 'Gender:&nbsp;</td> <td class="blackfont">' if lang == 'en' \
         else '性別:&nbsp;</td> <td class="blackfont">'
-    pos1 = r.text.find(tar) + tar.__len__()
-    pos2 = r.text.find('</td>', __start=pos1)
-    sex = r.text[pos1:pos2]
+    pos1 = r1.find(tar) + tar.__len__()
+    pos2 = r1.find('</td>', __start=pos1)
+    sex = r1[pos1:pos2]
     if sex == 'Male' or sex == '男':
         student.sex = True
     else:
@@ -104,9 +104,9 @@ def get_info(username, password, lang):
     # Find birthday
     tar = 'Date of Birth:&nbsp;</td> <td class="blackfont">' if lang == 'en' \
         else '出生日期:&nbsp;</td> <td class="blackfont">'
-    pos1 = r.text.find(tar) + tar.__len__()
-    pos2 = r.text.find('</td>', __start=pos1)
-    date = r.text[pos1:pos2]
+    pos1 = r1.find(tar) + tar.__len__()
+    pos2 = r1.find('</td>', __start=pos1)
+    date = r1[pos1:pos2]
     date = date.split('/')
     student.birthday.day = int(date[0])
     student.birthday.mouth = int(date[1])
@@ -117,9 +117,9 @@ def get_info(username, password, lang):
     # Find Faculty
     tar = 'Faculty:&nbsp;</td> <td class="blackfont">' \
         if lang == 'en' else '學院:&nbsp;</td> <td class="blackfont">'
-    pos1 = r2.text.find(tar) + tar.__len__()
-    pos2 = r2.text.find('</td>', __start=pos1)
-    name_f = r2.text[pos1:pos2]
+    pos1 = r2.find(tar) + tar.__len__()
+    pos2 = r2.find('</td>', __start=pos1)
+    name_f = r2[pos1:pos2]
 
     # Find Major
     tar = 'Major:&nbsp;' \
@@ -127,9 +127,9 @@ def get_info(username, password, lang):
     pos = r2.text.find(tar)
     # 不知道为什么两个tar之间在源码里有一个回车，这样规避一下
     tar = '</td> <td class="blackfont">  '
-    pos1 = r2.text.find(tar, __start=pos) + tar.__len__()
-    pos2 = r2.text.find('  </td>', __start=pos1)
-    name_m = r2.text[pos1:pos2]
+    pos1 = r2.find(tar, __start=pos) + tar.__len__()
+    pos2 = r2.find('  </td>', __start=pos1)
+    name_m = r2[pos1:pos2]
     try:
         if lang == 'en':
             faculty = Faculty.objects.get(name_en=name_f)
