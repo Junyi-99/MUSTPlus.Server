@@ -5,18 +5,19 @@ import time
 import requests
 from django.core.exceptions import ObjectDoesNotExist
 
-from MUSTPlus import codes
-from MUSTPlus import external_url
 from MUSTPlus.models import ClassRoom
 from MUSTPlus.models import Course
 from MUSTPlus.models import Faculty
 from MUSTPlus.models import Major
 from MUSTPlus.models import Student
+from Settings import Codes
+from Settings import URLS
 
 
 # Author : Aikov
 # Time :2019/4/30
 # Status:Finished
+# 获取 Apache Token
 def get_token(body):
     token_simple = '49057506de26d2ea640cea1847d7f3d5'
     target = 'org.apache.struts.taglib.html.TOKEN" value="'
@@ -27,63 +28,75 @@ def get_token(body):
 # Author : Aikov
 # Time :2019/4/30
 # Status: Finished
-def get_cookie(userid, password, lang):
-    r = requests.get(url=external_url.LOGIN_URL)
+# 登录 COES ，登录成功返回 cookie，失败返回 None
+def login(username, password, lang):
+    r = requests.get(url=URLS.LOGIN_URL)
     token = get_token(r.text)
     data = {
-        'userid': userid,
+        'userid': username,
         'password': password,
         'submit': 'Login' if lang == 'en' else '登入',
         'org.apache.struts.taglib.html.TOKEN': token
     }
     time.sleep(3.0)
 
-    r = requests.post(url=external_url.LOGIN_URL, data=data)
+    r = requests.post(url=URLS.LOGIN_URL, data=data)
     if r.text.find('<!--COES VERSION ') == -1:
-        return False, 0
+        return None
     else:
-        return True, r.cookies
+        return r.cookies
 
 
-def coes_logout(cookies):
-    requests.post(url=external_url.LOGOUT_URL, cookies=cookies)
+# 退出 COES
+def logout(cookies):
+    requests.post(url=URLS.LOGOUT_URL, cookies=cookies)
 
 
 # Author : Aikov
 # Time :2019/4/30
 # Status: Unfinished
-def get_info(userid, password, lang):
+def get_info(username, password, lang):
+    cookies = login(username, password, lang)
+
+    if cookies is None:
+        return None
+
+    # 登录成功后再创建 Student 实例
+    # 不然可以伪造一堆垃圾请求导致垃圾数据充满数据库
     try:
-        student = Student.objects.get(student_id=userid)
+        student = Student.objects.get(student_id=username)
     except ObjectDoesNotExist:
-        student = Student.objects.create(student_id=userid)
-    cookies = get_cookie(userid, password, lang)[1]
-    if cookies == 0:
-        return 0
-    # Find info on personal info
-    r = requests.get(url=external_url.STUDENT_INFO_URL, cookies=cookies)
-    r2 = requests.get(url=external_url.STUDY_PLAN_GROUP_URL, cookies=cookies)
-    coes_logout(r.cookies)
+        student = Student.objects.create(student_id=username)
+    except Exception as e:
+        logout(cookies)
+
+    try:
+        r1 = requests.get(url=URLS.STUDENT_INFO_URL, cookies=cookies, headers=URLS.headers).text
+        r2 = requests.get(url=URLS.STUDY_PLAN_GROUP_URL, cookies=cookies, headers=URLS.headers).text
+    except Exception as e:
+        logout(cookies)
+        return None
+
     # Find Chinese name
     tar = 'Name in Chinese:&nbsp;</td> <td class="blackfont"> ' if lang == 'en' \
         else '中文姓名:&nbsp;</td> <td class="blackfont"> '
-    pos1 = r.text.find(tar) + tar.__len__()
-    pos2 = r.text.find('  </td>', __start=pos1)
-    student.name_zh = r.text[pos1:pos2]
+    pos1 = r1.find(tar) + tar.__len__()
+    pos2 = r1.find('  </td>', __start=pos1)
+    student.name_zh = r1[pos1:pos2]
 
     # Find English name
     tar = 'Name in English:&nbsp;</td> <td class="blackfont"> ' if lang == 'en' \
         else '英文姓名:&nbsp;</td> <td class="blackfont"> '
-    pos1 = r.text.find(tar) + tar.__len__()
-    pos2 = r.text.find('  </td>', __start=pos1)
-    student.name_en = r.text[pos1:pos2]
+    pos1 = r1.find(tar) + tar.__len__()
+    pos2 = r1.find('  </td>', __start=pos1)
+    student.name_en = r1[pos1:pos2]
 
     # Find sex
     tar = 'Gender:&nbsp;</td> <td class="blackfont">' if lang == 'en' \
         else '性別:&nbsp;</td> <td class="blackfont">'
-    pos1 = r.text.find(tar) + tar.__len__()
-    pos2 = r.text.find('</td>', __start=pos1)
-    sex = r.text[pos1:pos2]
+    pos1 = r1.find(tar) + tar.__len__()
+    pos2 = r1.find('</td>', __start=pos1)
+    sex = r1[pos1:pos2]
     if sex == 'Male' or sex == '男':
         student.sex = True
     else:
@@ -91,9 +104,9 @@ def get_info(userid, password, lang):
     # Find birthday
     tar = 'Date of Birth:&nbsp;</td> <td class="blackfont">' if lang == 'en' \
         else '出生日期:&nbsp;</td> <td class="blackfont">'
-    pos1 = r.text.find(tar) + tar.__len__()
-    pos2 = r.text.find('</td>', __start=pos1)
-    date = r.text[pos1:pos2]
+    pos1 = r1.find(tar) + tar.__len__()
+    pos2 = r1.find('</td>', __start=pos1)
+    date = r1[pos1:pos2]
     date = date.split('/')
     student.birthday.day = int(date[0])
     student.birthday.mouth = int(date[1])
@@ -104,9 +117,9 @@ def get_info(userid, password, lang):
     # Find Faculty
     tar = 'Faculty:&nbsp;</td> <td class="blackfont">' \
         if lang == 'en' else '學院:&nbsp;</td> <td class="blackfont">'
-    pos1 = r2.text.find(tar) + tar.__len__()
-    pos2 = r2.text.find('</td>', __start=pos1)
-    name_f = r2.text[pos1:pos2]
+    pos1 = r2.find(tar) + tar.__len__()
+    pos2 = r2.find('</td>', __start=pos1)
+    name_f = r2[pos1:pos2]
 
     # Find Major
     tar = 'Major:&nbsp;' \
@@ -114,9 +127,9 @@ def get_info(userid, password, lang):
     pos = r2.text.find(tar)
     # 不知道为什么两个tar之间在源码里有一个回车，这样规避一下
     tar = '</td> <td class="blackfont">  '
-    pos1 = r2.text.find(tar, __start=pos) + tar.__len__()
-    pos2 = r2.text.find('  </td>', __start=pos1)
-    name_m = r2.text[pos1:pos2]
+    pos1 = r2.find(tar, __start=pos) + tar.__len__()
+    pos2 = r2.find('  </td>', __start=pos1)
+    name_m = r2[pos1:pos2]
     try:
         if lang == 'en':
             faculty = Faculty.objects.get(name_en=name_f)
@@ -125,7 +138,7 @@ def get_info(userid, password, lang):
             faculty = Faculty.objects.get(name_zh=name_f)
             major = Major.objects.get(name_en=name_m)
     except ObjectDoesNotExist:
-        return codes.OTHER_ARGUMENT_INVALID
+        return Codes.OTHER_ARGUMENT_INVALID
     student.faculty_id = faculty.id
     student.major_id = major.id
     # 已经从COES爬完了个人信息
@@ -136,17 +149,17 @@ def get_info(userid, password, lang):
 # Time:2019/5/2
 # Status:Finished
 def get_class(userid, password, intake, lang):
-    cookies = get_cookie(userid, password, lang)[1]
+    cookies = login(userid, password, lang)[1]
     if cookies == 0:
         return 0
-    r = requests.get(url=external_url.TIME_TABLE_URL)
+    r = requests.get(url=URLS.TIME_TABLE_URL)
     token = get_token(r.text)
     data = {
         'formAction': 'Timetable',
         'intake': intake,
         'org.apache.struts.taglib.html.TOKEN': token,
     }
-    r = requests.post(url=external_url.TIME_TABLE_URL, data=data, cookies=cookies)
+    r = requests.post(url=URLS.TIME_TABLE_URL, data=data, cookies=cookies)
     pos = r.text.find('<option value="')
     count = 0
     while r.text.find('<option value=', __start=pos) != -1:
@@ -164,7 +177,7 @@ def get_class(userid, password, intake, lang):
             'org.apache.struts.taglib.html.TOKEN': get_token(r.text),
             'week': str(week),
         }
-        r = requests.post(url=external_url.TIME_TABLE_URL, data=data)
+        r = requests.post(url=URLS.TIME_TABLE_URL, data=data)
         process_timetable(r.text)
         week = week + 1
 

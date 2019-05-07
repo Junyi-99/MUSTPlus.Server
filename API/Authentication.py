@@ -1,4 +1,3 @@
-import json
 import base64
 
 from django.views.decorators.csrf import csrf_exempt
@@ -6,10 +5,8 @@ from django.views.decorators.csrf import csrf_exempt
 from MUSTPlus.decorators import *
 from django.http import HttpResponse
 
-from . import private_key, public_key_content, decrypt
-from MUSTPlus import codes
-from MUSTPlus import msg_zh
-
+from . import public_key_content, decrypt
+from Settings import Codes, Messages
 
 
 # Author: Junyi
@@ -40,13 +37,13 @@ def login(request):
         print("password:", password)
 
         if not username_check(username):
-            return HttpResponse(json.dumps({"code": codes.LOGIN_USERNAME_INVALID, "msg": msg_zh.LOGIN_USERNAME_INVALID_MSG}))
+            return HttpResponse(json.dumps({"code": Codes.LOGIN_USERNAME_INVALID, "msg": Messages.LOGIN_USERNAME_INVALID_MSG}))
         # TODO: CHECK PASSWORD
     except Exception as e:
         # TODO: Using Logger to record the dangerous behavior
         if str(e) == "Incorrect padding":
-            return HttpResponse(json.dumps({"code": codes.LOGIN_RSA_ERROR, "msg": msg_zh.LOGIN_RSA_ERROR_MSG}))
-        return HttpResponse(json.dumps({"code": codes.INTERNAL_ERROR, "msg": msg_zh.INTERNAL_ERROR_MSG}))
+            return HttpResponse(json.dumps({"code": Codes.LOGIN_RSA_ERROR, "msg": Messages.LOGIN_RSA_ERROR_MSG}))
+        return HttpResponse(json.dumps({"code": Codes.INTERNAL_ERROR, "msg": Messages.INTERNAL_ERROR_MSG}))
 
     return HttpResponse(username + ", " + password)
 

@@ -1,8 +1,7 @@
 # 使用此装饰器，请保证函数的第一个参数为request
 from django.http import HttpResponse
-from django.shortcuts import render
-from .codes import *
-from .msg_zh import *
+from Settings.Codes import *
+from Settings.Messages import *
 import json
 
 JSON_REQUEST_METHOD_ERROR_MSG = json.dumps({"code": AUTH_REQUEST_METHOD_ERROR, "msg": AUTH_REQUEST_METHOD_ERROR_MSG})

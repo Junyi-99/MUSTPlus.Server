@@ -1,13 +1,12 @@
 import requests
 import json
-import re
 from datetime import datetime
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
 from lxml import etree
 
-from MUSTPlus import codes, msg_zh
+from Settings import Codes, Messages, URLS
 from MUSTPlus.models import Faculty
 from MUSTPlus.models import Department
 from MUSTPlus.models import Document
@@ -21,11 +20,6 @@ INTRANET_MORE_NEWS = 'https://intranet.must.edu.mo/student/jumpMoreXtgNews.jsp'
 INTRANET_VIEW_CONTENT = 'https://intranet.must.edu.mo/student/InfoServlet'
 INTRANET_DOWN_CONTENT = 'https://intranet.must.edu.mo/student/DownloadFile'
 
-# 职业素养
-headers = {
-    'User-Agent': 'MUSTPlus/5.0 (Server Spider 1.0; Ubuntu; x64)',
-}
-
 
 # such as: 1709853di011002
 def login(username, password):
@@ -36,7 +30,7 @@ def login(username, password):
         'submit': '提交'
     }
 
-    r = requests.post(url=INTRANET_LOGIN, data=data, headers=headers)
+    r = requests.post(url=INTRANET_LOGIN, data=data, headers=URLS.headers)
     if 'mmLoadMenus' in r.text:
         print("Login successful")
         # TODO: Logger
@@ -48,13 +42,13 @@ def login(username, password):
 
 # 获取更多通告
 def get_more_news(cookies):
-    ret = requests.get(url=INTRANET_MORE_NEWS, headers=headers, cookies=cookies)
+    ret = requests.get(url=INTRANET_MORE_NEWS, headers=URLS.headers, cookies=cookies)
     return ret.text
 
 
 # 获取通告
 def get_news(cookies):
-    ret = requests.get(url=INTRANET_NEWS, headers=headers, cookies=cookies)
+    ret = requests.get(url=INTRANET_NEWS, headers=URLS.headers, cookies=cookies)
     return ret.text
 
 
@@ -144,6 +138,7 @@ def down(faculty, department, title, publish_time, url, dId, filename, cookies) 
         print("Exception in intranet.down", e)
         return False
 
+
 def proc_news_list(news_list, cookies):
     for e in news_list:
         if e['link'][0] == 'v':  # if viewContent()
@@ -159,7 +154,8 @@ def proc_news_list(news_list, cookies):
             down(e['fac_dep'], e['fac_dep'], e['title'].strip(),
                  e['date'], "", dId, e['title'].strip(), cookies)
 
-        #print("Processed:", e['title'].strip())
+        # print("Processed:", e['title'].strip())
+
 
 def proc_more_news(s, cookies):
     html = etree.HTML(s)
@@ -213,7 +209,7 @@ def intranet(request):
     proc_more_news(s, c)
     # s = get_news(c)
     # proc_news(s, c)
-    return HttpResponse(json.dumps({"code": codes.OK, "msg": msg_zh.OK_MSG}))
+    return HttpResponse(json.dumps({"code": Codes.OK, "msg": Messages.OK_MSG}))
 
 # s = getMoreNews(c)
 # proc_more_news(s)
