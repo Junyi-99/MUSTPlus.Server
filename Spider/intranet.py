@@ -128,7 +128,8 @@ def down(faculty, department, title, publish_time, url, dId, filename, cookies) 
             document.save()
         return True
         # # save file
-        # for k, v in target:
+
+        # for k, v in target.items():
         #     filename = filename.replace(k, v)
         # filename += '.pdf'
         # r = requests.post(INTRANET_DOWN_CONTENT,
