@@ -52,19 +52,27 @@ def get_news(cookies):
     return ret.text
 
 
+# Get Faculty object by giving name
 def faculty_name_id(name_zh):
     try:
         faculty = Faculty.objects.get(name_zh=name_zh)
         return faculty
     except ObjectDoesNotExist:
         return None
+    except Exception as e:
+        print("Exception in faculty_name_id(%s): %s" % (name_zh, e))
+        return None
 
 
+# Get a Department object by giving name
 def department_name_id(name_zh):
     try:
         department = Department.objects.get(name_zh=name_zh)
         return department
     except ObjectDoesNotExist:
+        return None
+    except Exception as e:
+        print("Exception in department_name_id(%s): %s" % (name_zh, e))
         return None
 
 
@@ -74,15 +82,13 @@ def view(faculty, department, date, id, news, deptType, lang, viewname, cookies)
         ret = requests.post(INTRANET_VIEW_CONTENT,
                             data={'id': id, 'infoType': news,
                                   'deptType': deptType, 'langType': lang},
-                            headers=headers, cookies=cookies)
+                            headers=URLS.headers, cookies=cookies)
         html = etree.HTML(ret.text)
-        r = html.xpath('//body/table/tr/td/table/tr[4]/td/table/tr[2]/td/table')
-        r = r[0]
-
-        title = r.xpath("./tr[1]/td/b/font/text()")[0]
-        content = r.xpath("./tr[2]/td")[0]
+        table = html.xpath('//body/table/tr/td/table/tr[4]/td/table/tr[2]/td/table')[0]
+        title = table.xpath("./tr[1]/td/b/font/text()")[0]
+        content = table.xpath("./tr[2]/td")[0]
         content = etree.tostring(content, encoding='unicode')
-        downloads = r.xpath("./tr/td/a")
+        downloads = table.xpath("./tr/td/a")
 
         try:
             date = datetime.strptime(date, "%Y-%m-%d")
@@ -92,6 +98,7 @@ def view(faculty, department, date, id, news, deptType, lang, viewname, cookies)
             announcement = Announcement(title=title, content=content, faculty_id=faculty_name_id(faculty),
                                         department_id=department_name_id(department), publish_time=date)
             announcement.save()
+            # print("New Announcement saved:" + title, announcement.id)
 
         for d in downloads:
             try:
@@ -99,7 +106,7 @@ def view(faculty, department, date, id, news, deptType, lang, viewname, cookies)
             except ObjectDoesNotExist:
                 attachment = Attachment(title=d.text.strip(), url=d.attrib['onclick'], belongs_to=announcement)
                 attachment.save()
-
+                # print("New Attachment saved:" + title, attachment.id)
         return True
     except Exception as e:
         print("Exception in intranet.view", e)
@@ -115,11 +122,12 @@ def down(faculty, department, title, publish_time, url, dId, filename, cookies) 
             document = Document.objects.get(faculty_id=faculty_name_id(faculty),
                                             department_id=department_name_id(department), title=title,
                                             publish_time=publish_time, url=url)
-        except ObjectDoesNotExist as e:
+        except ObjectDoesNotExist:
             document = Document(faculty_id=faculty_name_id(faculty),
                                 department_id=department_name_id(department), title=title,
                                 publish_time=publish_time, url=url)
             document.save()
+            # print("New Document saved:" + title, document.id)
         return True
         # # save file
 
@@ -139,24 +147,27 @@ def down(faculty, department, title, publish_time, url, dId, filename, cookies) 
         return False
 
 
+# 处理 news_list 列表
 def proc_news_list(news_list, cookies):
     for e in news_list:
-        if e['link'][0] == 'v':  # if viewContent()
-            e['link'] = e['link'][13:-3].replace("'", "")
-            args = e['link'].split(", ")
-            print(datetime.strptime(e['date'], "%Y-%m-%d"))
-            datetime.strptime(e['date'], "%Y-%m-%d")
-            view(e['fac_dep'], e['fac_dep'], e['date'], args[0],
-                 args[1], args[2], args[3], e['title'].strip(), cookies)
-        if e['link'][0] == 'd':  # if downContent()
-            dId = e['link'][13:-3]
-            print(datetime.strptime(e['date'], "%Y-%m-%d"))
-            down(e['fac_dep'], e['fac_dep'], e['title'].strip(),
-                 e['date'], "", dId, e['title'].strip(), cookies)
+        url = e['url']
+        fd = e['fac_dep']
+        title = e['title'].strip()
+        date = e['date']
 
-        # print("Processed:", e['title'].strip())
+        if url[0] == 'v':  # if viewContent('', '', '');
+            url = url[13:-3].replace("'", "")
+            # Explain: [13:-3]
+            # len("viewContent('") = 13, len("');") = 3
+            args = url.split(", ")
+            view(fd, fd, date, args[0], args[1], args[2], args[3], title, cookies)
+
+        if url[0] == 'd':  # if downContent('');
+            d_id = url[13:-3]
+            down(fd, fd, title, date, url, d_id, title, cookies)
 
 
+# 爬取 “更多” 通告（返回内容较多，intranet 响应速度较慢）
 def proc_more_news(s, cookies):
     html = etree.HTML(s)
     news = html.xpath("//span[@class='link_b']/a")
@@ -169,12 +180,13 @@ def proc_more_news(s, cookies):
             'fac_dep': title[1:pos1],  # faculties or departments
             'title': title[pos1 + 2:pos2],
             'date': title[pos2 + 2:],
-            'link': e.attrib['onclick'],
+            'url': e.attrib['onclick'],
         })
 
     proc_news_list(news_list, cookies)
 
 
+# 爬取 一般 通告（内容较少，intranet 响应速度较快）
 def proc_news(s, cookies):
     html = etree.HTML(s)
 
@@ -183,33 +195,33 @@ def proc_news(s, cookies):
     links = html.xpath("//tr/td[2]/span/a/@onclick")
     dates = html.xpath("//tr/td[3]/text()")
 
-    numbers = len(faculties_departments)
-    if numbers != len(titles):
-        raise Exception("Spider Error.")
-    if numbers != len(links):
-        raise Exception("Spider Error.")
-    if numbers != len(dates):
-        raise Exception("Spider Error.")
-
     news_list = []
     for i in range(0, len(faculties_departments)):
         news_list.append({
             'fac_dep': faculties_departments[i],  # faculties or departments
-            'title': titles[i].strip(),
+            'title': titles[i],
             'date': dates[i],
-            'link': links[i],
+            'url': links[i],
         })
 
     proc_news_list(news_list, cookies)
 
 
-def intranet(request):
-    c = login()
-    s = get_more_news(c)
-    proc_more_news(s, c)
-    # s = get_news(c)
-    # proc_news(s, c)
-    return HttpResponse(json.dumps({"code": Codes.OK, "msg": Messages.OK_MSG}))
+def intranet_update_normal(request):
+    try:
+        c = login(request.GET['username'], request.GET['password'])
+        s = get_news(c)
+        proc_news(s, c)
+        return HttpResponse(json.dumps({"code": Codes.OK, "msg": Messages.OK_MSG}))
+    except Exception as e:
+        return HttpResponse(json.dumps({"code": Codes.INTERNAL_ERROR, "msg": Messages.INTERNAL_ERROR_MSG}))
 
-# s = getMoreNews(c)
-# proc_more_news(s)
+
+def intranet_update_more(request):
+    try:
+        c = login(request.GET['username'], request.GET['password'])
+        s = get_more_news(c)
+        proc_more_news(s, c)
+        return HttpResponse(json.dumps({"code": Codes.OK, "msg": Messages.OK_MSG}))
+    except Exception as e:
+        return HttpResponse(json.dumps({"code": Codes.INTERNAL_ERROR, "msg": Messages.INTERNAL_ERROR_MSG}))
