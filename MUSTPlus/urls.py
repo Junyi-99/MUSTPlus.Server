@@ -17,13 +17,19 @@ from django.contrib import admin
 from django.urls import path
 
 from Spider import intranet
-from API import Authentication, Intranet
+from API import Authentication, News
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/hash', Authentication.hash),
-    path('api/login', Authentication.login),
-    path('api/logout', Authentication.logout),
-    path('api/intranet/update/normal', intranet.intranet_update_normal),
-    path('api/intranet/update/more', intranet.intranet_update_more),
-    path('api/news/all', Intranet.news_all),
+    path('hash', Authentication.hash),
+    path('login', Authentication.login),
+    path('logout', Authentication.logout),
+    path('intranet/update/normal', intranet.intranet_update_normal),
+    path('intranet/update/more', intranet.intranet_update_more),
+
+    path('news/faculty/<int:faculty_id>/', News.news_faculty, name='faculty news'),
+    path('news/department/<int:department_id>/', News.news_department, name='department news'),
+    path('news/banners', News.news_banners, name='news banners'),
+    path('news/all', News.news_all, name='all news'),
+
 ]

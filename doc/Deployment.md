@@ -52,6 +52,8 @@
 
 `pip3 install -r requirements.txt`
 
+
+
 ## Step 4 配置服务器
 
 请确保 Settings 符合下面的文件夹结构：

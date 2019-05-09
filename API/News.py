@@ -9,33 +9,36 @@ from Settings import Codes
 from Settings import Messages
 
 
-@csrf_exempt
-def news_all(request):
-    try:
-        begin = int(request.GET['from'])
-        count = int(request.GET['count'])
-    except Exception as e:
-        begin = 0
-        count = 20
-
-    announcements = Announcement.objects.all().order_by('-publish_time')  # 按照发布时间从最近到最远排序
-    documents = Document.objects.all().order_by('-publish_time')  # 按照发布时间从最近到最远排序
+# 选择 [begin, begin+count] 范围的数据
+# begin ∈ [1, n]
+# department 和 faculty 谁不为 None 表示选择谁
+# 如果二者都为 None 说明选择的是全部
+def news_argument(begin: int, count: int, department: int = None, faculty: int = None) -> dict:
+    if department is not None:
+        ann = Announcement.objects.filter(department_id_id=department).order_by('-publish_time')  # 按照发布时间从最近到最远排序
+        doc = Document.objects.filter(department_id_id=department).order_by('-publish_time')  # 按照发布时间从最近到最远排序
+    elif faculty is not None:
+        ann = Announcement.objects.filter(faculty_id_id=faculty).order_by('-publish_time')  # 按照发布时间从最近到最远排序
+        doc = Document.objects.filter(faculty_id_id=faculty).order_by('-publish_time')  # 按照发布时间从最近到最远排序
+    else:
+        ann = Announcement.objects.all().order_by('-publish_time')  # 按照发布时间从最近到最远排序
+        doc = Document.objects.all().order_by('-publish_time')  # 按照发布时间从最近到最远排序
 
     # 按照时间对 Announcement 和 Document 排序
-    i, j, i_length, j_length = 0, 0, len(announcements), len(documents)
+    i, j, i_length, j_length = 0, 0, len(ann), len(doc)
     result = []
     while i < i_length and j < j_length:  # 先一起排序
-        if announcements[i].publish_time > documents[j].publish_time:
-            result.append(announcements[i])
+        if ann[i].publish_time > doc[j].publish_time:
+            result.append(ann[i])
             i = i + 1
         else:
-            result.append(documents[j])
+            result.append(doc[j])
             j = j + 1
     while i < i_length:  # 如果 Announcement 没排完，把剩下的 Announcement 附在后面
-        result.append(announcements[i])
+        result.append(ann[i])
         i = i + 1
     while j < j_length:  # 如果 Document 没排完，把剩下的 Document 附在后面
-        result.append(documents[i])
+        result.append(doc[j])
         j = j + 1
 
     # 参数过滤，防止请求超出数据范围
@@ -92,4 +95,42 @@ def news_all(request):
         "records": i_length + j_length,
         "news": news,
     }
+    return ret
+
+
+def news_department(request, department_id):
+    try:
+        begin = int(request.GET['from'])
+        count = int(request.GET['count'])
+    except Exception as e:
+        begin = 0
+        count = 20
+    ret = news_argument(begin, count, department_id, None)
     return HttpResponse(json.dumps(ret))
+
+
+def news_faculty(request, faculty_id):
+    try:
+        begin = int(request.GET['from'])
+        count = int(request.GET['count'])
+    except Exception as e:
+        begin = 0
+        count = 20
+    ret = news_argument(begin, count, None, faculty_id)
+    return HttpResponse(json.dumps(ret))
+
+
+def news_all(request):
+    try:
+        begin = int(request.GET['from'])
+        count = int(request.GET['count'])
+    except Exception as e:
+        begin = 0
+        count = 20
+    ret = news_argument(begin, count, None, None)
+    return HttpResponse(json.dumps(ret))
+
+
+def news_banners(request):
+    pass
+    return HttpResponse(json.dumps({"code": Codes.OK, "msg": Messages.OK_MSG}))

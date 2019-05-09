@@ -14,7 +14,7 @@ from Settings import Codes, Messages
 # Status: finished
 @require_get
 def hash(request):
-    return HttpResponse(json.dumps({"code": 0, "msg": "", "key": public_key_content}))
+    return HttpResponse(json.dumps({"code": Codes.OK, "msg": Messages.OK_MSG, "key": public_key_content}))
 
 
 # TODO: finish this check function
