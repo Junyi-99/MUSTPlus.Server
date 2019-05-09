@@ -128,15 +128,40 @@ class Teacher(models.Model):
         return self.name_zh
 
 
+# 老师教什么课
+class TeacherTeachCourse(models.Model):
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+
+
+# 学生选什么课
+class StudentTakeCourse(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+
+
 # 科目评论
 class CommentCourse(models.Model):
     course_id = models.ForeignKey(Course, on_delete=models.PROTECT)  # 被评论的课程id
-    student_id = models.ForeignKey(Student, on_delete=models.PROTECT)  # 评论者id
+    student_id = models.ForeignKey(Student, on_delete=models.PROTECT)  # 评论发布者id
     thumbs_up = models.IntegerField(default=0)  # 点赞数量
+    thumbs_down = models.IntegerField(default=0)  # 点赞数量
     rank = models.IntegerField(default=3)  # 评分
     content = models.TextField  # 评论正文
     publish_time = models.TimeField()  # 发布时间
     visible = models.BooleanField()  # 是否可见
+
+
+# 哪个学生认为哪条评论赞
+class StudentThumbsUpCommentCourse(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    comment = models.ForeignKey(CommentCourse, on_delete=models.CASCADE)
+
+
+# 哪个学生认为哪条评论差
+class StudentThumbsDownCommentCourse(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    comment = models.ForeignKey(CommentCourse, on_delete=models.CASCADE)
 
 
 # FTP
@@ -144,3 +169,4 @@ class FTP(models.Model):
     username = models.CharField(max_length=32, default='')  # ftp的用户名
     password = models.CharField(max_length=32, default='')  # ftp的密码
     course_id = models.ForeignKey(Course, on_delete=models.PROTECT)  # ftp的所属课程
+    provide_by = models.ForeignKey(Student, on_delete=models.CASCADE())  # 由哪个学生提供
