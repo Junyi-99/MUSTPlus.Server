@@ -30,7 +30,7 @@ def get_token(body):
 # Status: Finished
 # 登录 COES ，登录成功返回 cookie，失败返回 None
 def login(username, password, lang):
-    r = requests.get(url=URLS.LOGIN_URL)
+    r = requests.get(url=URLS.COES_LOGIN)
     token = get_token(r.text)
     data = {
         'userid': username,
@@ -40,7 +40,7 @@ def login(username, password, lang):
     }
     time.sleep(3.0)
 
-    r = requests.post(url=URLS.LOGIN_URL, data=data)
+    r = requests.post(url=URLS.COES_LOGIN, data=data)
     if r.text.find('<!--COES VERSION ') == -1:
         return None
     else:
@@ -49,7 +49,7 @@ def login(username, password, lang):
 
 # 退出 COES
 def logout(cookies):
-    requests.post(url=URLS.LOGOUT_URL, cookies=cookies)
+    requests.post(url=URLS.COES_LOGOUT, cookies=cookies)
 
 
 # Author : Aikov
@@ -71,8 +71,8 @@ def get_info(username, password, lang):
         logout(cookies)
 
     try:
-        r1 = requests.get(url=URLS.STUDENT_INFO_URL, cookies=cookies, headers=URLS.headers).text
-        r2 = requests.get(url=URLS.STUDY_PLAN_GROUP_URL, cookies=cookies, headers=URLS.headers).text
+        r1 = requests.get(url=URLS.COES_STUDENT_INFO_NAME_AND_BIRTHDAY, cookies=cookies, headers=URLS.headers).text
+        r2 = requests.get(url=URLS.COES_STUDENT_INFO_FACULTY_AND_MAJOR, cookies=cookies, headers=URLS.headers).text
     except Exception as e:
         logout(cookies)
         return None
@@ -152,14 +152,14 @@ def get_class(userid, password, intake, lang):
     cookies = login(userid, password, lang)[1]
     if cookies == 0:
         return 0
-    r = requests.get(url=URLS.TIME_TABLE_URL)
+    r = requests.get(url=URLS.COES_TIMETABLE)
     token = get_token(r.text)
     data = {
         'formAction': 'Timetable',
         'intake': intake,
         'org.apache.struts.taglib.html.TOKEN': token,
     }
-    r = requests.post(url=URLS.TIME_TABLE_URL, data=data, cookies=cookies)
+    r = requests.post(url=URLS.COES_TIMETABLE, data=data, cookies=cookies)
     pos = r.text.find('<option value="')
     count = 0
     while r.text.find('<option value=', __start=pos) != -1:
@@ -177,7 +177,7 @@ def get_class(userid, password, intake, lang):
             'org.apache.struts.taglib.html.TOKEN': get_token(r.text),
             'week': str(week),
         }
-        r = requests.post(url=URLS.TIME_TABLE_URL, data=data)
+        r = requests.post(url=URLS.COES_TIMETABLE, data=data)
         process_timetable(r.text)
         week = week + 1
 

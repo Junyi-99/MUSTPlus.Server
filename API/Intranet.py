@@ -8,6 +8,7 @@ from MUSTPlus.models import Attachment
 from Settings import Codes
 from Settings import Messages
 
+
 @csrf_exempt
 def news_all(request):
     try:

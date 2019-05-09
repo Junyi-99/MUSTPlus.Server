@@ -13,12 +13,7 @@ from MUSTPlus.models import Document
 from MUSTPlus.models import Attachment
 from MUSTPlus.models import Announcement
 
-INTRANET_LOGIN = 'https://intranet.must.edu.mo/student/LoginServlet'
-INTRANET_LOGOUT = 'https://intranet.must.edu.mo/student/Logout'
-INTRANET_NEWS = 'https://intranet.must.edu.mo/student/jumpXtgNews.jsp'
-INTRANET_MORE_NEWS = 'https://intranet.must.edu.mo/student/jumpMoreXtgNews.jsp'
-INTRANET_VIEW_CONTENT = 'https://intranet.must.edu.mo/student/InfoServlet'
-INTRANET_DOWN_CONTENT = 'https://intranet.must.edu.mo/student/DownloadFile'
+
 
 
 # such as: 1709853di011002
@@ -30,7 +25,7 @@ def login(username, password):
         'submit': '提交'
     }
 
-    r = requests.post(url=INTRANET_LOGIN, data=data, headers=URLS.headers)
+    r = requests.post(url=URLS.INTRANET_LOGIN, data=data, headers=URLS.headers)
     if 'mmLoadMenus' in r.text:
         print("Login successful")
         # TODO: Logger
@@ -42,13 +37,13 @@ def login(username, password):
 
 # 获取更多通告
 def get_more_news(cookies):
-    ret = requests.get(url=INTRANET_MORE_NEWS, headers=URLS.headers, cookies=cookies)
+    ret = requests.get(url=URLS.INTRANET_MORE_NEWS, headers=URLS.headers, cookies=cookies)
     return ret.text
 
 
 # 获取通告
 def get_news(cookies):
-    ret = requests.get(url=INTRANET_NEWS, headers=URLS.headers, cookies=cookies)
+    ret = requests.get(url=URLS.INTRANET_NEWS, headers=URLS.headers, cookies=cookies)
     return ret.text
 
 
@@ -79,7 +74,7 @@ def department_name_id(name_zh):
 # modified
 def view(faculty, department, date, id, news, deptType, lang, viewname, cookies) -> bool:
     try:
-        ret = requests.post(INTRANET_VIEW_CONTENT,
+        ret = requests.post(URLS.INTRANET_VIEW_CONTENT,
                             data={'id': id, 'infoType': news,
                                   'deptType': deptType, 'langType': lang},
                             headers=URLS.headers, cookies=cookies)
@@ -168,6 +163,7 @@ def proc_news_list(news_list, cookies):
 
 
 # 爬取 “更多” 通告（返回内容较多，intranet 响应速度较慢）
+#结果直接存在数据库里（proc_news_list实现了自动去重，不用担心数据库元素重复）
 def proc_more_news(s, cookies):
     html = etree.HTML(s)
     news = html.xpath("//span[@class='link_b']/a")
@@ -187,6 +183,7 @@ def proc_more_news(s, cookies):
 
 
 # 爬取 一般 通告（内容较少，intranet 响应速度较快）
+#结果直接存在数据库里（proc_news_list实现了自动去重，不用担心数据库元素重复）
 def proc_news(s, cookies):
     html = etree.HTML(s)
 

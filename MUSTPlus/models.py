@@ -169,4 +169,4 @@ class FTP(models.Model):
     username = models.CharField(max_length=32, default='')  # ftp的用户名
     password = models.CharField(max_length=32, default='')  # ftp的密码
     course_id = models.ForeignKey(Course, on_delete=models.PROTECT)  # ftp的所属课程
-    provide_by = models.ForeignKey(Student, on_delete=models.CASCADE())  # 由哪个学生提供
+    provide_by = models.ForeignKey(Student, on_delete=models.CASCADE)  # 由哪个学生提供
