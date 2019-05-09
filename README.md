@@ -18,7 +18,7 @@ Framework: **Django 2.1.4**
 
 ## Deployment
 
-Please follow the instructions
+Please follow the following instructions
 
 ### Prerequisites
 You may need to install the Python and MySQL development headers and libraries like so:
