@@ -2,7 +2,7 @@
 OK_MSG = 'OK'  # 正常
 WARNING_MSG = '警告信息'  # 警告（一般可忽略）
 INTERNAL_ERROR_MSG = 'Caused an unexpected exception, your request has been recorded.' # 内部错误
-
+PAGE_NOT_FOUND = '404'
 
 LOGIN_RSA_ERROR_MSG = 'Login failed(Security check failed) You may have been attacked by a man-in-the-middle'
 LOGIN_USERNAME_INVALID_MSG = 'Username Invalid'

@@ -13,9 +13,12 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+import json
 from django.contrib import admin
+from django.http import HttpResponse
 from django.urls import path
 
+from Settings import Codes, Messages
 from Spider import intranet
 from API import Authentication, News
 
@@ -33,3 +36,15 @@ urlpatterns = [
     path('news/all', News.news_all, name='all news'),
 
 ]
+
+
+def handle_500(request):
+    return HttpResponse(json.dumps({"code": Codes.INTERNAL_ERROR, "msg": Messages.INTERNAL_ERROR_MSG}))
+
+
+def handle_404(request):
+    return HttpResponse(json.dumps({"code": Codes.PAGE_NOT_FOUND, "msg": Messages.PAGE_NOT_FOUND}))
+
+
+handler404 = handle_404
+handler500 = handle_500

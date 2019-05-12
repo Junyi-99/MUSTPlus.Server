@@ -2,6 +2,7 @@
 OK = 0  # 正常
 WARNING = 1  # 警告（一般可忽略）
 INTERNAL_ERROR = 2  # 内部错误
+PAGE_NOT_FOUND = 3 # 页面未找到 （404）
 
 LOGIN_RSA_ERROR = -1000  # 登录 RSA 校验失败
 LOGIN_USERNAME_INVALID = -999  # 登录用户名无效
