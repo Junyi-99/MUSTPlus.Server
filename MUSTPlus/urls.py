@@ -16,25 +16,18 @@ Including another URLconf
 import json
 from django.contrib import admin
 from django.http import HttpResponse
-from django.urls import path
 
+from django.urls import include, path
 from Settings import Codes, Messages
 from Spider import intranet
-from API import Authentication, News
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('hash', Authentication.hash),
-    path('login', Authentication.login),
-    path('logout', Authentication.logout),
     path('intranet/update/normal', intranet.intranet_update_normal),
     path('intranet/update/more', intranet.intranet_update_more),
-
-    path('news/faculty/<int:faculty_id>/', News.news_faculty, name='faculty news'),
-    path('news/department/<int:department_id>/', News.news_department, name='department news'),
-    path('news/banners', News.news_banners, name='news banners'),
-    path('news/all', News.news_all, name='all news'),
-
+    path('auth/', include('Services.Authentication.urls')),
+    path('news/', include('Services.News.urls')),
 ]
 
 

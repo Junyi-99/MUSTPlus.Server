@@ -20,11 +20,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 from Settings import Server
+
 SECRET_KEY = Server.SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
-
+DEBUG = True
+#
 ALLOWED_HOSTS = ['mp.junyi.pw', 'localhost', '127.0.0.1']
 
 # Application definition
@@ -36,7 +37,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'API',
+    'Services.Authentication',
+    'Services.News',
+    'Services.Admin',
+    'Services.Basic',
+    'Services.Comment',
+    'Services.Moments',
+    'Services.Timetable',
     'MUSTPlus',
     'Spider',
 ]
@@ -75,6 +82,7 @@ WSGI_APPLICATION = 'MUSTPlus.wsgi.application'
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 from Settings import Database
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',

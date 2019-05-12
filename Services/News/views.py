@@ -1,12 +1,7 @@
 import json
 from django.http import HttpResponse
-from django.views.decorators.csrf import csrf_exempt
-
-from MUSTPlus.models import Document
-from MUSTPlus.models import Announcement
-from MUSTPlus.models import Attachment
-from Settings import Codes
-from Settings import Messages
+from Settings import Codes, Messages
+from Services.News.models import Announcement, Document, Attachment
 
 
 # 选择 [begin, begin+count] 范围的数据

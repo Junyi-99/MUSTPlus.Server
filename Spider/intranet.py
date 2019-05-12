@@ -4,16 +4,13 @@ from datetime import datetime
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
+from django.utils.html import escape
 from lxml import etree
+from bs4 import BeautifulSoup
 
+from Services.Basic.models import Department, Faculty
+from Services.News.models import Document, Announcement, Attachment
 from Settings import Codes, Messages, URLS
-from MUSTPlus.models import Faculty
-from MUSTPlus.models import Department
-from MUSTPlus.models import Document
-from MUSTPlus.models import Attachment
-from MUSTPlus.models import Announcement
-
-
 
 
 # such as: 1709853di011002
@@ -80,7 +77,8 @@ def view(faculty, department, date, id, news, deptType, lang, viewname, cookies)
                             headers=URLS.headers, cookies=cookies)
         html = etree.HTML(ret.text)
         table = html.xpath('//body/table/tr/td/table/tr[4]/td/table/tr[2]/td/table')[0]
-        title = table.xpath("./tr[1]/td/b/font/text()")[0]
+        #title = table.xpath("./tr[1]/td/b/font/text()")[0]
+        title = viewname
         content = table.xpath("./tr[2]/td")[0]
         content = etree.tostring(content, encoding='unicode')
         downloads = table.xpath("./tr/td/a")
@@ -147,9 +145,8 @@ def proc_news_list(news_list, cookies):
     for e in news_list:
         url = e['url']
         fd = e['fac_dep']
-        title = e['title'].strip()
+        title = e['title']
         date = e['date']
-
         if url[0] == 'v':  # if viewContent('', '', '');
             url = url[13:-3].replace("'", "")
             # Explain: [13:-3]
@@ -163,27 +160,31 @@ def proc_news_list(news_list, cookies):
 
 
 # 爬取 “更多” 通告（返回内容较多，intranet 响应速度较慢）
-#结果直接存在数据库里（proc_news_list实现了自动去重，不用担心数据库元素重复）
+# 结果直接存在数据库里（proc_news_list实现了自动去重，不用担心数据库元素重复）
 def proc_more_news(s, cookies):
-    html = etree.HTML(s)
-    news = html.xpath("//span[@class='link_b']/a")
+    soup = BeautifulSoup(s, 'html.parser')
+    ret = soup.find_all(attrs={'class': 'link_b'})
+
     news_list = []
-    for e in news:
-        title = e.text.strip().replace('\xa0', ' ')
+    for e in ret:
+        e = e.find('a')
+        t = str(e)
+        pos1 = t.find('>')
+        pos2 = t.rfind('<')
+        title = t[pos1 + 1:pos2].replace('\xa0', '').strip()
+        #print(title)
         pos1 = title.find(')')
-        pos2 = title.rfind('  20')
         news_list.append({
             'fac_dep': title[1:pos1],  # faculties or departments
-            'title': title[pos1 + 2:pos2],
-            'date': title[pos2 + 2:],
-            'url': e.attrib['onclick'],
+            'title': title[pos1 + 1:-10].strip(),
+            'date': title[-10:],
+            'url': str(e['onclick']),
         })
-
     proc_news_list(news_list, cookies)
 
 
 # 爬取 一般 通告（内容较少，intranet 响应速度较快）
-#结果直接存在数据库里（proc_news_list实现了自动去重，不用担心数据库元素重复）
+# 结果直接存在数据库里（proc_news_list实现了自动去重，不用担心数据库元素重复）
 def proc_news(s, cookies):
     html = etree.HTML(s)
 
@@ -221,4 +222,5 @@ def intranet_update_more(request):
         proc_more_news(s, c)
         return HttpResponse(json.dumps({"code": Codes.OK, "msg": Messages.OK_MSG}))
     except Exception as e:
+        print(e)
         return HttpResponse(json.dumps({"code": Codes.INTERNAL_ERROR, "msg": Messages.INTERNAL_ERROR_MSG}))

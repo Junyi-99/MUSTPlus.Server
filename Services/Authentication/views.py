@@ -1,17 +1,14 @@
 import base64
+import json
 
 from django.views.decorators.csrf import csrf_exempt
 
-from MUSTPlus.decorators import *
-from django.http import HttpResponse
-
 from . import public_key_content, decrypt
 from Settings import Codes, Messages
+from MUSTPlus.decorators import require_get, require_post
+from django.http import HttpResponse
 
 
-# Author: Junyi
-# Time: 2019/4/30
-# Status: finished
 @require_get
 def hash(request):
     return HttpResponse(json.dumps({"code": Codes.OK, "msg": Messages.OK_MSG, "key": public_key_content}))
@@ -37,7 +34,8 @@ def login(request):
         print("password:", password)
 
         if not username_check(username):
-            return HttpResponse(json.dumps({"code": Codes.LOGIN_USERNAME_INVALID, "msg": Messages.LOGIN_USERNAME_INVALID_MSG}))
+            return HttpResponse(
+                json.dumps({"code": Codes.LOGIN_USERNAME_INVALID, "msg": Messages.LOGIN_USERNAME_INVALID_MSG}))
         # TODO: CHECK PASSWORD
     except Exception as e:
         # TODO: Using Logger to record the dangerous behavior

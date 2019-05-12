@@ -1,3 +1,11 @@
+"""
+Authentication:
+
+Summary
+This module is used to verify user tokens and record user's behavior, including:
+request URL, parameters, frequency, etc.
+"""
+
 import rsa
 import os
 
@@ -14,6 +22,7 @@ try:
 except FileNotFoundError as e:
     print("[ERROR] Can not find private_key.pem or public_key.pem")
     exit(-1)
+
 
 def decrypt(message):
     return rsa.decrypt(message, private_key).decode()
