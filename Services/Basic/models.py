@@ -3,7 +3,7 @@ from django.db import models
 
 # 部门
 class Department(models.Model):
-    name_zh = models.CharField(max_length=32)
+    name_zh = models.CharField(max_length=32, primary_key=True)
     name_en = models.CharField(max_length=64)
 
     def __str__(self):
@@ -12,7 +12,7 @@ class Department(models.Model):
 
 # 学院
 class Faculty(models.Model):
-    name_zh = models.CharField(max_length=32)
+    name_zh = models.CharField(max_length=32, primary_key=True)
     name_en = models.CharField(max_length=64)
 
     def __str__(self):
@@ -21,7 +21,7 @@ class Faculty(models.Model):
 
 # 专业
 class Major(models.Model):
-    name_zh = models.CharField(max_length=32)
+    name_zh = models.CharField(max_length=32, primary_key=True)
     name_en = models.CharField(max_length=64)
     faculty_id = models.ForeignKey(Faculty, on_delete=models.CASCADE)  # belongs to which faculty
 
@@ -31,7 +31,7 @@ class Major(models.Model):
 
 # 教师
 class ClassRoom(models.Model):
-    name_zh = models.CharField(max_length=32)
+    name_zh = models.CharField(max_length=32, primary_key=True)
     name_en = models.CharField(max_length=64)
 
     def __str__(self):

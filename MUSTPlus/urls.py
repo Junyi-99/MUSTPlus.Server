@@ -16,17 +16,17 @@ Including another URLconf
 import json
 from django.contrib import admin
 from django.http import HttpResponse
-
 from django.urls import include, path
+
 from Settings import Codes, Messages
 from Spider import intranet
-
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('intranet/update/normal', intranet.intranet_update_normal),
     path('intranet/update/more', intranet.intranet_update_more),
     path('auth/', include('Services.Authentication.urls')),
+    path('basic/', include('Services.Basic.urls')),
     path('news/', include('Services.News.urls')),
 ]
 
