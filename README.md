@@ -5,6 +5,7 @@ Macau University of Science and Technology Campus Application ( Server )
 
 ## Documentation
 
+Please refer the `doc` folder.
 
 ## Environments
 
@@ -18,10 +19,10 @@ Framework: **Django 2.1.4**
 
 ## Deployment
 
-Please follow the following instructions
+Please follow the instructions
 
 ### Prerequisites
-You may need to install the Python and MySQL development headers and libraries like so:
+You may need to install the Python and MySQL development headers and libraries like:
 
 `sudo apt install python3-dev default-libmysqlclient-dev`
 
