@@ -42,11 +42,13 @@ departments = {
 }
 
 
+# 初始化 faculty 表的 value
 def init_faculties(request):
     for k, v in faculties.items():
         d = Faculty(name_zh=k, name_en=v)
         d.save()
     return HttpResponse("")
+
 
 def init_departments(request):
     for k, v in departments.items():

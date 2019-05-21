@@ -13,8 +13,8 @@ class Banner(models.Model):
 
 # 文件（适用于 downContent ）
 class Document(models.Model):
-    department_id = models.ForeignKey(Department, on_delete=models.PROTECT, null=True)  # 来自部门
-    faculty_id = models.ForeignKey(Faculty, on_delete=models.PROTECT, null=True)  # 来自学院
+    department = models.ForeignKey(Department, on_delete=models.PROTECT, null=True)  # 来自部门
+    faculty = models.ForeignKey(Faculty, on_delete=models.PROTECT, null=True)  # 来自学院
     title = models.CharField(max_length=128)  # 文件标题
     publish_time = models.DateField()  # 通知发布时间
     url = models.TextField()  # URL
@@ -25,8 +25,8 @@ class Document(models.Model):
 
 # 通告（适用于 viewContent ）
 class Announcement(models.Model):
-    department_id = models.ForeignKey(Department, on_delete=models.PROTECT, null=True)  # 来自部门
-    faculty_id = models.ForeignKey(Faculty, on_delete=models.PROTECT, null=True)  # 来自学院
+    department = models.ForeignKey(Department, on_delete=models.PROTECT, null=True)  # 来自部门
+    faculty = models.ForeignKey(Faculty, on_delete=models.PROTECT, null=True)  # 来自学院
     title = models.CharField(max_length=128)  # 通知标题
     content = models.TextField()  # 通知内容
     publish_time = models.DateField()  # 通知发布时间

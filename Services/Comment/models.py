@@ -6,8 +6,8 @@ from Services.Timetable.models import Course
 
 # 科目评论
 class CommentCourse(models.Model):
-    course_id = models.ForeignKey(Course, on_delete=models.PROTECT)  # 被评论的课程id
-    student_id = models.ForeignKey(Student, on_delete=models.PROTECT)  # 评论发布者id
+    course = models.ForeignKey(Course, on_delete=models.PROTECT)  # 被评论的课程id
+    student = models.ForeignKey(Student, on_delete=models.PROTECT)  # 评论发布者id
     thumbs_up = models.IntegerField(default=0)  # 点赞数量
     thumbs_down = models.IntegerField(default=0)  # 点赞数量
     rank = models.IntegerField(default=3)  # 评分

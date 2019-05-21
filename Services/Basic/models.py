@@ -23,7 +23,7 @@ class Faculty(models.Model):
 class Major(models.Model):
     name_zh = models.CharField(max_length=32, primary_key=True)
     name_en = models.CharField(max_length=64)
-    faculty_id = models.ForeignKey(Faculty, on_delete=models.CASCADE)  # belongs to which faculty
+    faculty = models.ForeignKey(Faculty, on_delete=models.CASCADE)  # belongs to which faculty
 
     def __str__(self):
         return self.name_zh
@@ -42,8 +42,8 @@ class Student(models.Model):
     student_id = models.CharField(max_length=18, primary_key=True)
     name_zh = models.CharField(max_length=16)
     name_en = models.CharField(max_length=16)
-    faculty_id = models.ForeignKey(Faculty, on_delete=models.PROTECT)
-    major_id = models.ForeignKey(Major, on_delete=models.PROTECT)
+    faculty = models.ForeignKey(Faculty, on_delete=models.PROTECT)
+    major = models.ForeignKey(Major, on_delete=models.PROTECT)
     nickname = models.CharField(max_length=64)
     sign = models.CharField(max_length=256)  # 个性签名
     sex = models.BooleanField()  # 性别 男性为True
@@ -59,7 +59,7 @@ class Student(models.Model):
 class Teacher(models.Model):
     name_zh = models.CharField(max_length=16)  # 中文名
     name_en = models.CharField(max_length=64)  # 英文名
-    faculty_id = models.ForeignKey(Faculty, on_delete=models.PROTECT)
+    faculty = models.ForeignKey(Faculty, on_delete=models.PROTECT)
     avatar_url = models.TextField(default="")  # 头像
     position = models.CharField(max_length=32)  # 职位
     email = models.CharField(max_length=64)  # 电子邮件地址
