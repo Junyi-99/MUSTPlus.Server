@@ -212,6 +212,7 @@ def intranet_update_normal(request):
         proc_news(s, c)
         return HttpResponse(json.dumps({"code": Codes.OK, "msg": Messages.OK_MSG}))
     except Exception as e:
+        print(e)
         return HttpResponse(json.dumps({"code": Codes.INTERNAL_ERROR, "msg": Messages.INTERNAL_ERROR_MSG}))
 
 

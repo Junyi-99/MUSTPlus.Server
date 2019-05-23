@@ -10,11 +10,11 @@ from Services.News.models import Announcement, Document, Attachment
 # 如果二者都为 None 说明选择的是全部
 def news_argument(begin: int, count: int, department: int = None, faculty: int = None) -> dict:
     if department is not None:
-        ann = Announcement.objects.filter(department_id_id=department).order_by('-publish_time')  # 按照发布时间从最近到最远排序
-        doc = Document.objects.filter(department_id_id=department).order_by('-publish_time')  # 按照发布时间从最近到最远排序
+        ann = Announcement.objects.filter(department_id=department).order_by('-publish_time')  # 按照发布时间从最近到最远排序
+        doc = Document.objects.filter(department_id=department).order_by('-publish_time')  # 按照发布时间从最近到最远排序
     elif faculty is not None:
-        ann = Announcement.objects.filter(faculty_id_id=faculty).order_by('-publish_time')  # 按照发布时间从最近到最远排序
-        doc = Document.objects.filter(faculty_id_id=faculty).order_by('-publish_time')  # 按照发布时间从最近到最远排序
+        ann = Announcement.objects.filter(faculty_id=faculty).order_by('-publish_time')  # 按照发布时间从最近到最远排序
+        doc = Document.objects.filter(faculty_id=faculty).order_by('-publish_time')  # 按照发布时间从最近到最远排序
     else:
         ann = Announcement.objects.all().order_by('-publish_time')  # 按照发布时间从最近到最远排序
         doc = Document.objects.all().order_by('-publish_time')  # 按照发布时间从最近到最远排序
@@ -51,10 +51,10 @@ def news_argument(begin: int, count: int, department: int = None, faculty: int =
     news = []  # 存放结果
     for i in range(begin - 1, begin - 1 + count):
         r = result[i]
-        if r.department_id is not None:
-            fac_dep = r.department_id.name_zh
-        elif r.faculty_id is not None:
-            fac_dep = r.faculty_id.name_zh
+        if r.department is not None:
+            fac_dep = r.department.name_zh
+        elif r.faculty is not None:
+            fac_dep = r.faculty.name_zh
         else:
             fac_dep = "Unknown"
 

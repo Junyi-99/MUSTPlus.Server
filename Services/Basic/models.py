@@ -37,6 +37,7 @@ class ClassRoom(models.Model):
     def __str__(self):
         return self.name_zh
 
+
 # 学生
 class Student(models.Model):
     student_id = models.CharField(max_length=18, primary_key=True)
@@ -51,9 +52,11 @@ class Student(models.Model):
     avatar_url = models.TextField(default="")
     experience = models.IntegerField()  # 用户经验
     token = models.CharField(max_length=64)  # 登录 token
+    cookie = models.TextField(default="")
 
     def __str__(self):
         return self.student_id + "(" + self.name_zh + "_"
+
 
 # 老师
 class Teacher(models.Model):
@@ -68,4 +71,3 @@ class Teacher(models.Model):
 
     def __str__(self):
         return self.name_zh
-
