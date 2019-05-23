@@ -86,7 +86,7 @@ def news_argument(begin: int, count: int, department: int = None, faculty: int =
 
     ret = {
         "code": Codes.OK,
-        "msg": Messages.OK_MSG,
+        "msg": Messages.OK,
         "records": i_length + j_length,
         "news": news,
     }
@@ -128,4 +128,4 @@ def news_all(request):
 
 def news_banners(request):
     pass
-    return HttpResponse(json.dumps({"code": Codes.OK, "msg": Messages.OK_MSG}))
+    return HttpResponse(json.dumps({"code": Codes.OK, "msg": Messages.OK}))

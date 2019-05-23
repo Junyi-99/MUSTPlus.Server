@@ -41,21 +41,22 @@ class ClassRoom(models.Model):
 # 学生
 class Student(models.Model):
     student_id = models.CharField(max_length=18, primary_key=True)
-    name_zh = models.CharField(max_length=16)
-    name_en = models.CharField(max_length=16)
-    faculty = models.ForeignKey(Faculty, on_delete=models.PROTECT)
-    major = models.ForeignKey(Major, on_delete=models.PROTECT)
-    nickname = models.CharField(max_length=64)
-    sign = models.CharField(max_length=256)  # 个性签名
-    sex = models.BooleanField()  # 性别 男性为True
-    birthday = models.DateField()
-    avatar_url = models.TextField(default="")
-    experience = models.IntegerField()  # 用户经验
-    token = models.CharField(max_length=64)  # 登录 token
-    cookie = models.TextField(default="")
+    name_zh = models.CharField(max_length=16, null=True)
+    name_en = models.CharField(max_length=16, null=True)
+    faculty = models.ForeignKey(Faculty, on_delete=models.PROTECT, null=True)
+    major = models.ForeignKey(Major, on_delete=models.PROTECT, null=True)
+    nickname = models.CharField(max_length=64, null=True)
+    sign = models.CharField(max_length=256, null=True)  # 个性签名
+    sex = models.BooleanField(null=True)  # 性别 男性为True
+    birthday = models.DateField(null=True)
+    avatar_url = models.TextField(null=True)
+    experience = models.IntegerField(null=True)  # 用户经验
+    token = models.CharField(max_length=36)  # MUST+ token
+    coes_cookie = models.TextField(default="")  # COES cookie
+    token_expired_time = models.DateTimeField()  # token expired time
 
     def __str__(self):
-        return self.student_id + "(" + self.name_zh + "_"
+        return "%s(%s)" % (self.name_zh, self.student_id)
 
 
 # 老师

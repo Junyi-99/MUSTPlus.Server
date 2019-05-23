@@ -32,7 +32,7 @@ urlpatterns = [
 
 
 def handle_500(request):
-    return HttpResponse(json.dumps({"code": Codes.INTERNAL_ERROR, "msg": Messages.INTERNAL_ERROR_MSG}))
+    return HttpResponse(json.dumps({"code": Codes.INTERNAL_ERROR, "msg": Messages.INTERNAL_ERROR}))
 
 
 def handle_404(request):

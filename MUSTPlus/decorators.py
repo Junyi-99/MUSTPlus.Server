@@ -1,17 +1,19 @@
 # 使用此装饰器，请保证函数的第一个参数为request
 from django.http import HttpResponse
-from Settings.Codes import *
-from Settings.Messages import *
+
+from Settings import Codes, Messages
+
 import json
 
-JSON_REQUEST_METHOD_ERROR_MSG = json.dumps({"code": AUTH_REQUEST_METHOD_ERROR, "msg": AUTH_REQUEST_METHOD_ERROR_MSG})
+JSON_REQUEST_METHOD_ERROR = json.dumps(
+    {"code": Codes.AUTH_REQUEST_METHOD_ERROR, "msg": Messages.AUTH_REQUEST_METHOD_ERROR})
 
 
 # 强制 POST 方式请求
 def require_post(func):
     def wrapper(*args, **kw):
         if args[0].method != "POST":
-            return HttpResponse(JSON_REQUEST_METHOD_ERROR_MSG)
+            return HttpResponse(JSON_REQUEST_METHOD_ERROR)
         else:
             return func(*args, **kw)
 
@@ -22,7 +24,7 @@ def require_post(func):
 def require_get(func):
     def wrapper(*args, **kw):
         if args[0].method != "GET":
-            return HttpResponse(JSON_REQUEST_METHOD_ERROR_MSG)
+            return HttpResponse(JSON_REQUEST_METHOD_ERROR)
         else:
             return func(*args, **kw)
 

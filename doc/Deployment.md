@@ -80,3 +80,13 @@ PORT = ''
 ```
 SECRET_KEY = 'yfyzhc%840_!g%!#(sqy(ccock4^z4ohl=$-*3xpoe+v^cq)ih'
 ```
+
+## Database
+
+数据库：
+
+must_plus
+
+编码字符集：
+
+utf8mb4_unicode_ci

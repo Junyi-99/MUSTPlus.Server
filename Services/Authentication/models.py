@@ -3,12 +3,8 @@ from django.db import models
 from Services.Basic.models import Student
 
 
-class StudentToken(models.Model):
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)
-    token = models.CharField(max_length=32)
-    expired_time = models.DateTimeField()
 
-
+# Student Login Attempt Records
 class StudentLogin(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     time = models.DateTimeField()

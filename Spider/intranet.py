@@ -210,10 +210,10 @@ def intranet_update_normal(request):
         c = login(request.GET['username'], request.GET['password'])
         s = get_news(c)
         proc_news(s, c)
-        return HttpResponse(json.dumps({"code": Codes.OK, "msg": Messages.OK_MSG}))
+        return HttpResponse(json.dumps({"code": Codes.OK, "msg": Messages.OK}))
     except Exception as e:
         print(e)
-        return HttpResponse(json.dumps({"code": Codes.INTERNAL_ERROR, "msg": Messages.INTERNAL_ERROR_MSG}))
+        return HttpResponse(json.dumps({"code": Codes.INTERNAL_ERROR, "msg": Messages.INTERNAL_ERROR}))
 
 
 def intranet_update_more(request):
@@ -221,7 +221,7 @@ def intranet_update_more(request):
         c = login(request.GET['username'], request.GET['password'])
         s = get_more_news(c)
         proc_more_news(s, c)
-        return HttpResponse(json.dumps({"code": Codes.OK, "msg": Messages.OK_MSG}))
+        return HttpResponse(json.dumps({"code": Codes.OK, "msg": Messages.OK}))
     except Exception as e:
         print(e)
-        return HttpResponse(json.dumps({"code": Codes.INTERNAL_ERROR, "msg": Messages.INTERNAL_ERROR_MSG}))
+        return HttpResponse(json.dumps({"code": Codes.INTERNAL_ERROR, "msg": Messages.INTERNAL_ERROR}))
