@@ -19,7 +19,7 @@ Framework: **Django 2.1.4**
 
 ## Deployment
 
-Please follow the instructions
+Please follow the [instructions](https://github.com/Military-Doctor/MUSTPlus.Server/blob/master/doc/Deployment.md)
 
 ### Prerequisites
 You may need to install the Python and MySQL development headers and libraries like:
