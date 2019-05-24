@@ -3,6 +3,7 @@ OK = 'OK'  # 正常
 WARNING = '警告信息'  # 警告（一般可忽略）
 INTERNAL_ERROR = 'Caused an unexpected exception, your request has been recorded.' # 内部错误
 PAGE_NOT_FOUND = '404'
+MISSING_FIELD = 'Missing Field'
 
 LOGIN_RSA_ERROR = 'Login failed(Security check failed) You may have been attacked by a man-in-the-middle'
 LOGIN_USERNAME_INVALID = 'Username Invalid'
@@ -47,7 +48,8 @@ TEACHER_ID_NOT_FOUNT = '未找到教师ID'
 PROFILE_NICKNAME_ILLEGAL = '昵称非法'
 PROFILE_SIGNATURE_ILLEGAL = '个性签名非法'
 PROFILE_AVATAR_INVALID = '头像URL不合法'
-
+PROFILE_REFRESH_USER_NOT_FOUND = '从COES获取最新信息失败：找不到用户'
+PROFILE_REFRESH_COOKIES_EXPIRED = '从COES获取最新信息失败：用户Cookie失效'
 # GET /my/timetable
 TIMETABLE_SEMESTER_INVALID = '学期无效'
 TIMETABLE_WEEK_INVALID = '周数无效'

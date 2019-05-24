@@ -19,6 +19,15 @@ class Faculty(models.Model):
         return self.name_zh
 
 
+# 课程
+class Program(models.Model):
+    name_zh = models.CharField(max_length=128, primary_key=True)
+    name_en = models.CharField(max_length=128)
+
+    def __str__(self):
+        return self.name_zh
+
+
 # 专业
 class Major(models.Model):
     name_zh = models.CharField(max_length=32, primary_key=True)
@@ -44,11 +53,14 @@ class Student(models.Model):
     name_zh = models.CharField(max_length=16, null=True)
     name_en = models.CharField(max_length=16, null=True)
     faculty = models.ForeignKey(Faculty, on_delete=models.PROTECT, null=True)
+    program = models.ForeignKey(Program, on_delete=models.PROTECT, null=True)
     major = models.ForeignKey(Major, on_delete=models.PROTECT, null=True)
     nickname = models.CharField(max_length=64, null=True)
     sign = models.CharField(max_length=256, null=True)  # 个性签名
-    sex = models.BooleanField(null=True)  # 性别 男性为True
+    gender = models.BooleanField(null=True)  # 性别 男性为True
     birthday = models.DateField(null=True)
+    birthplace = models.TextField(null=True)
+    nationality = models.TextField(null=True)
     avatar_url = models.TextField(null=True)
     experience = models.IntegerField(null=True)  # 用户经验
     token = models.CharField(max_length=36)  # MUST+ token
