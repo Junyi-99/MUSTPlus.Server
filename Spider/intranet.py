@@ -4,11 +4,10 @@ from datetime import datetime
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
-from django.utils.html import escape
 from lxml import etree
 from bs4 import BeautifulSoup
 
-from Services.Basic.models import Department, Faculty
+from Services.Basic.query import get_faculty, get_department
 from Services.News.models import Document, Announcement, Attachment
 from Settings import Codes, Messages, URLS
 
@@ -44,30 +43,6 @@ def get_news(cookies):
     return ret.text
 
 
-# Get Faculty object by giving name
-def faculty_name_id(name_zh):
-    try:
-        faculty = Faculty.objects.get(name_zh=name_zh)
-        return faculty
-    except ObjectDoesNotExist:
-        return None
-    except Exception as e:
-        print("Exception in faculty_name_id(%s): %s" % (name_zh, e))
-        return None
-
-
-# Get a Department object by giving name
-def department_name_id(name_zh):
-    try:
-        department = Department.objects.get(name_zh=name_zh)
-        return department
-    except ObjectDoesNotExist:
-        return None
-    except Exception as e:
-        print("Exception in department_name_id(%s): %s" % (name_zh, e))
-        return None
-
-
 # modified
 def view(faculty, department, date, id, news, deptType, lang, viewname, cookies) -> bool:
     try:
@@ -77,7 +52,6 @@ def view(faculty, department, date, id, news, deptType, lang, viewname, cookies)
                             headers=URLS.headers, cookies=cookies)
         html = etree.HTML(ret.text)
         table = html.xpath('//body/table/tr/td/table/tr[4]/td/table/tr[2]/td/table')[0]
-        #title = table.xpath("./tr[1]/td/b/font/text()")[0]
         title = viewname
         content = table.xpath("./tr[2]/td")[0]
         content = etree.tostring(content, encoding='unicode')
@@ -85,13 +59,12 @@ def view(faculty, department, date, id, news, deptType, lang, viewname, cookies)
 
         try:
             date = datetime.strptime(date, "%Y-%m-%d")
-            announcement = Announcement.objects.get(title=title, content=content, faculty_id=faculty_name_id(faculty),
-                                                    department_id=department_name_id(department), publish_time=date)
+            announcement = Announcement.objects.get(title=title, content=content, faculty_id=get_faculty(faculty,False),
+                                                    department_id=get_department(department,False), publish_time=date)
         except ObjectDoesNotExist:
-            announcement = Announcement(title=title, content=content, faculty_id=faculty_name_id(faculty),
-                                        department_id=department_name_id(department), publish_time=date)
+            announcement = Announcement(title=title, content=content, faculty_id=get_faculty(faculty,False),
+                                        department_id=get_department(department,False), publish_time=date)
             announcement.save()
-            # print("New Announcement saved:" + title, announcement.id)
 
         for d in downloads:
             try:
@@ -112,12 +85,12 @@ def down(faculty, department, title, publish_time, url, dId, filename, cookies) 
                   '?': '？', '"': '\'', '<': '《', '>': '》', '|': '｜'}
         try:
             publish_time = datetime.strptime(publish_time, "%Y-%m-%d")
-            document = Document.objects.get(faculty_id=faculty_name_id(faculty),
-                                            department_id=department_name_id(department), title=title,
+            document = Document.objects.get(faculty_id=get_faculty(faculty,False),
+                                            department_id=get_department(department,False), title=title,
                                             publish_time=publish_time, url=url)
         except ObjectDoesNotExist:
-            document = Document(faculty_id=faculty_name_id(faculty),
-                                department_id=department_name_id(department), title=title,
+            document = Document(faculty_id=get_faculty(faculty,False),
+                                department_id=get_department(department,False), title=title,
                                 publish_time=publish_time, url=url)
             document.save()
             # print("New Document saved:" + title, document.id)
@@ -172,7 +145,6 @@ def proc_more_news(s, cookies):
         pos1 = t.find('>')
         pos2 = t.rfind('<')
         title = t[pos1 + 1:pos2].replace('\xa0', '').strip()
-        #print(title)
         pos1 = title.find(')')
         news_list.append({
             'fac_dep': title[1:pos1],  # faculties or departments

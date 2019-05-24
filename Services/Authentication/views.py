@@ -2,12 +2,12 @@ import base64
 import json
 import uuid
 import re
-import traceback
 from datetime import datetime, timedelta
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.decorators.csrf import csrf_exempt
 
-from Services.Basic.models import Student, Faculty, Major, Program
+from Services.Basic.models import Student, Faculty
+from Services.Basic.query import get_faculty, get_program, get_major
 from . import public_key_content, decrypt
 from Settings import Codes, Messages
 from MUSTPlus.decorators import require_get, require_post
@@ -43,18 +43,6 @@ def username_check(username: str):
         return False
 
 
-def get_faculty_by_name(faculty: str) -> Faculty:
-    try:
-        r = Faculty.objects.get(name_zh=faculty)
-        return r
-    except ObjectDoesNotExist:
-        print("!!! Not found Faculty")  # 写到日志里去
-        return None
-    except Exception as e:
-        print(e)
-        return None
-
-
 @csrf_exempt
 @require_post
 def refresh(request):
@@ -68,30 +56,19 @@ def refresh(request):
 def refresh_student_information(username):
     try:
         stu = Student.objects.get(student_id=username)
-        print("COES:COOKIE:", stu.coes_cookie)
         ret = COES.student_information(stu.coes_cookie)
-        print(ret['name_zh'], ret['name_en'], ret['birthplace'])
+
         stu.name_zh = ret['name_zh']
         stu.name_en = ret['name_en']
         stu.gender = True if ret['gender'] == '男' else False
-
         stu.birthday = datetime.strptime(ret['birthday'], '%d/%m/%Y')
         stu.birthplace = ret['birthplace']
         stu.nationality = ret['nationality']
-        try:
-            stu.faculty = Faculty.objects.get(name_zh=ret['faculty'])
-        except ObjectDoesNotExist:
-            stu.faculty = None
-            print("Can not find " + ret['faculty'])
-        try:
-            stu.program = Program.objects.get(name_zh=ret['program'])
-        except ObjectDoesNotExist:
-            stu.program = None
-        try:
-            stu.major = Major.objects.get(name_zh=ret['major'])
-        except ObjectDoesNotExist:
-            stu.major = None
 
+        # 检查faculty、program、major是否存在，不存在则自动创建
+        stu.faculty = get_faculty(ret['faculty'], True)
+        stu.program = get_program(ret['program'], True, stu.faculty)
+        stu.major = get_major(ret['major'], True, stu.program)
         stu.save()
 
     except ObjectDoesNotExist:
