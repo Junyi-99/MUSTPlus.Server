@@ -1,18 +1,19 @@
 import base64
 import json
-import uuid
 import re
+import uuid
 from datetime import datetime, timedelta
+
 from django.core.exceptions import ObjectDoesNotExist
+from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
-from Services.Basic.models import Student, Faculty
-from Services.Basic.query import get_faculty, get_program, get_major
-from . import public_key_content, decrypt
-from Settings import Codes, Messages
 from MUSTPlus.decorators import require_get, require_post
-from django.http import HttpResponse
 from Services.Authentication.COES import COES
+from Services.Basic.models import Student
+from Services.Basic.query import get_faculty, get_program, get_major
+from Settings import Codes, Messages
+from . import public_key_content, decrypt
 
 
 @require_get
@@ -53,6 +54,8 @@ def refresh(request):
     return refresh_student_information(username)
 
 
+# 刷新用户信息
+# Feature: 自动更新 Faculty Program Major 之间的关系（不存在自动创建，且保证依赖关系正确）
 def refresh_student_information(username):
     try:
         stu = Student.objects.get(student_id=username)
@@ -89,6 +92,7 @@ def refresh_student_information(username):
 @csrf_exempt
 @require_post
 def login(request):
+    cookies = ""
     try:
         username = request.POST.get('username', None)
         password = request.POST.get('password', None)
