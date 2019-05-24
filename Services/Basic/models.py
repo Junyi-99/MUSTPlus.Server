@@ -23,6 +23,7 @@ class Faculty(models.Model):
 class Program(models.Model):
     name_zh = models.CharField(max_length=128, primary_key=True)
     name_en = models.CharField(max_length=128)
+    faculty = models.ForeignKey(Faculty, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name_zh
@@ -32,7 +33,7 @@ class Program(models.Model):
 class Major(models.Model):
     name_zh = models.CharField(max_length=32, primary_key=True)
     name_en = models.CharField(max_length=64)
-    faculty = models.ForeignKey(Faculty, on_delete=models.CASCADE)  # belongs to which faculty
+    program = models.ForeignKey(Program, on_delete=models.CASCADE)  # belongs to which faculty
 
     def __str__(self):
         return self.name_zh

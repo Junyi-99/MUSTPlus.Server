@@ -16,8 +16,10 @@ LOGIN_OTHER_ERROR = 10
 
 # 获取 token 和 cookie
 def get_token_cookies():
-    r = requests.get(url='https://coes-stud.must.edu.mo/coes/locale.do?language=zh_TW')
-    r = requests.get(url="https://coes-stud.must.edu.mo/coes/login.do", cookies=r.cookies)
+    headers = URLS.headers
+    headers['Accept-Language'] = 'zh-CN,zh;q=0.9,en;q=0.8,zh-TW;q=0.7'
+
+    r = requests.get(url="https://coes-stud.must.edu.mo/coes/login.do", headers=headers)
     p1 = r.text.find('org.apache.struts.taglib.html.TOKEN') + 44  # 44 代表 这里面一大串和外面的value=" 的长度
     p2 = r.text.find('">', p1)
 
@@ -37,7 +39,7 @@ def captcha(cookies):
 def student_information(cookies):
     headers = URLS.headers
     headers['Cookie'] = cookies
-
+    headers['Accept-Language'] = 'zh-CN,zh;q=0.9,en;q=0.8,zh-TW;q=0.7'
     result = {}  # 结果字典
 
     title = ('student_id', 'name_zh', 'name_en', 'gender',

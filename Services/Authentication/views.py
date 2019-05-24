@@ -82,6 +82,7 @@ def refresh_student_information(username):
             stu.faculty = Faculty.objects.get(name_zh=ret['faculty'])
         except ObjectDoesNotExist:
             stu.faculty = None
+            print("Can not find " + ret['faculty'])
         try:
             stu.program = Program.objects.get(name_zh=ret['program'])
         except ObjectDoesNotExist:
