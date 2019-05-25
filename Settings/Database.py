@@ -1,0 +1,5 @@
+NAME = 'must_plus'
+USER = 'duzhaolong'
+PASSWORD = '%Ad@MRP5RT*nKjw4'
+HOST = 'mp.junyi.pw'
+PORT = '4486'

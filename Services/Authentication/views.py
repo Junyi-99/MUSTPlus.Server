@@ -9,7 +9,7 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
 from MUSTPlus.decorators import require_get, require_post
-from Services.Authentication.COES import COES
+from Services.Authentication.COES import Login, StudentInfo
 from Services.Basic.models import Student
 from Services.Basic.query import get_faculty, get_program, get_major
 from Settings import Codes, Messages
@@ -18,8 +18,8 @@ from . import public_key_content, decrypt
 
 @require_get
 def hash(request):
-    token, cookies = COES.get_token_cookies()
-    captcha = COES.captcha(cookies)
+    token, cookies = Login.get_token_cookies()
+    captcha = Login.captcha(cookies)
     ret = {
         "code": Codes.OK,
         "msg": Messages.OK,
@@ -59,7 +59,7 @@ def refresh(request):
 def refresh_student_information(username):
     try:
         stu = Student.objects.get(student_id=username)
-        ret = COES.student_information(stu.coes_cookie)
+        ret = StudentInfo.student_information(stu.coes_cookie)
 
         stu.name_zh = ret['name_zh']
         stu.name_en = ret['name_en']
@@ -121,9 +121,9 @@ def login(request):
             return HttpResponse(
                 json.dumps({"code": Codes.LOGIN_USERNAME_INVALID, "msg": Messages.LOGIN_USERNAME_INVALID}))
 
-        ret = COES.login(username, password, token, cookies, captcha)
+        ret = Login.login(username, password, token, cookies, captcha)
 
-        if ret == COES.LOGIN_SUCCESSFUL:
+        if ret == Login.LOGIN_SUCCESSFUL:
             print("User: %s, Login Successful" % (username,))
             try:
                 stu = Student.objects.get(student_id=username)
@@ -140,7 +140,7 @@ def login(request):
                 )
                 stu.save()
                 refresh_student_information(username)
-            COES.logout(cookies)
+            Login.logout(cookies)
             return HttpResponse(json.dumps({"code": Codes.OK, "msg": Messages.OK}))
         else:
             print("Login failed")
@@ -153,7 +153,7 @@ def login(request):
             return HttpResponse(json.dumps({"code": Codes.LOGIN_RSA_ERROR, "msg": Messages.LOGIN_RSA_ERROR}))
         if str(e) == "Decryption failed":
             return HttpResponse(json.dumps({"code": Codes.LOGIN_RSA_ERROR, "msg": Messages.LOGIN_RSA_ERROR}))
-        COES.logout(cookies)
+        Login.logout(cookies)
         return HttpResponse(json.dumps({"code": Codes.INTERNAL_ERROR, "msg": Messages.INTERNAL_ERROR}))
 
 
