@@ -5,7 +5,7 @@ Macau University of Science and Technology Campus Application ( Server )
 
 ## Documentation
 
-Please refer the `doc` folder.
+Please check the `doc` folder.
 
 ## Environments
 
