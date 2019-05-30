@@ -31,3 +31,4 @@ You may need to install the Python and MySQL development headers and libraries l
 ## License
 
 The MUSTPlus.Server is released under version 3.0 of the [GNU GENERAL PUmaster/LICENSE).BLIC LICENSE](https://github.com/Military-Doctor/MUSTPlus.Server/blob/
+
