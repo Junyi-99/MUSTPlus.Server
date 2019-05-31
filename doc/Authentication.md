@@ -1,13 +1,33 @@
 # Authentication
 
+To validate a request, we have a decorator named `validate` in Services.Authentication.decorators
+
+**Usage:**
+```python
+from Services.Authentication.decorators import validate
+
+@validate
+def foo(request, other_args):
+    return HttpResponse("OK")
+
+```
+
+Every function **MUST** put `request` as their **first** argument.
+
 Every request **MUST** have 3 GET parameters:
 * token
 * time
 * sign
 
-Algorithm:
+So the decorator can apply the algorithm by `arg[0].GET.get('token')` , etc.
 
-```Python
+Tips: You can refer to the `Services/Authentication/decorators.py` to understand the implementation.
+
+
+
+**Algorithm:**
+
+```python
 param_list = sorted(get_param_list) + sorted(post_param_list)
 sign = md5(param_list+secret_key)
 ```
