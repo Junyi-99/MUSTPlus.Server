@@ -1,8 +1,14 @@
 import json
-
+import time
+import hashlib
+from datetime import datetime
+import pytz
+from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
+from django.utils import timezone
 from django.utils.datastructures import MultiValueDictKeyError
 
+from Services.Basic.models import Student
 from Services.News.models import Announcement, Document, Attachment
 from Settings import Codes, Messages
 
@@ -131,26 +137,56 @@ def news_all(request):
 
 def news_banners(request):
     try:
-        token = request.GET['token']
-        time = request.GET['time']
-        sign = request.GET['sign']
-        print(sorted(request.GET))
+        token_get = str(request.GET.get('token', None))
+        time_get = int(request.GET.get('time', 0))
+        sign_get = str(request.GET.get('sign', None))
+        print(token_get, time_get, sign_get)
+        # sort GET parameter list
         get_para = ""
         for e in sorted(request.GET):
-            if e == 'sign':
+            if e == 'sign':  # except `sign`
                 continue
             get_para = get_para + e + "=" + request.GET[e] + "&"
         get_para = get_para[:-1]
-        print(get_para)
 
-        print(sorted(request.POST))
+        # sort POST parameter list
         post_para = ""
         for e in sorted(request.POST):
             post_para = post_para + e + "=" + request.POST[e] + "&"
         post_para = post_para[:-1]
-        print(post_para)
 
-    except MultiValueDictKeyError:
+        # calculate sign
+        param_list = get_para + post_para
+        sign_calc = hashlib.md5(param_list.encode('utf-8')).hexdigest()
+
+        # check sign
+        if sign_calc != sign_get:
+            print("Not Equal!", sign_get, sign_calc)
+            return HttpResponse(json.dumps(
+                {"code": Codes.AUTH_SIGN_VERIFICATION_FAILED, "msg": Messages.AUTH_SIGN_VERIFICATION_FAILED}))
+        else:
+            print("Equal!")
+
+        # check time
+        # if abs(int(time.time()) - int(time_get)) > 5 * 60:
+        #     print("Time error", int(time.time()), time_get)
+        #     return HttpResponse(json.dumps({"code": Codes.AUTH_TIME_INVALID, "msg": Messages.AUTH_TIME_INVALID}))
+        # else:
+        #     print("Time OK!")
+
+        # check token
+        try:
+            stu = Student.objects.get(token=token_get)
+            print(timezone.now())
+
+            if stu.token_expired_time < timezone.now():
+                return HttpResponse(json.dumps({"code": Codes.AUTH_TOKEN_INVALID, "msg": Messages.AUTH_TOKEN_INVALID}))
+        except ObjectDoesNotExist:
+            return HttpResponse(json.dumps({"code": Codes.AUTH_TOKEN_INVALID, "msg": Messages.AUTH_TOKEN_INVALID}))
+
+
+
+    except ValueError:
         return HttpResponse(
             json.dumps({
                 "code": Codes.AUTH_VALIDATE_ARGUMENT_ERROR,
