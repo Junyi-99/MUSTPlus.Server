@@ -11,7 +11,7 @@ class CommentCourse(models.Model):
     thumbs_up = models.IntegerField(default=0)  # 点赞数量
     thumbs_down = models.IntegerField(default=0)  # 点赞数量
     rank = models.IntegerField(default=3)  # 评分
-    content = models.TextField  # 评论正文
+    content = models.TextField()  # 评论正文
     publish_time = models.TimeField()  # 发布时间
     visible = models.BooleanField()  # 是否可见
 
