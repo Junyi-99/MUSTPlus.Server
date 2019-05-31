@@ -1,7 +1,10 @@
 import json
+
 from django.http import HttpResponse
-from Settings import Codes, Messages
+from django.utils.datastructures import MultiValueDictKeyError
+
 from Services.News.models import Announcement, Document, Attachment
+from Settings import Codes, Messages
 
 
 # 选择 [begin, begin+count] 范围的数据
@@ -127,5 +130,31 @@ def news_all(request):
 
 
 def news_banners(request):
-    pass
+    try:
+        token = request.GET['token']
+        time = request.GET['time']
+        sign = request.GET['sign']
+        print(sorted(request.GET))
+        get_para = ""
+        for e in sorted(request.GET):
+            if e == 'sign':
+                continue
+            get_para = get_para + e + "=" + request.GET[e] + "&"
+        get_para = get_para[:-1]
+        print(get_para)
+
+        print(sorted(request.POST))
+        post_para = ""
+        for e in sorted(request.POST):
+            post_para = post_para + e + "=" + request.POST[e] + "&"
+        post_para = post_para[:-1]
+        print(post_para)
+
+    except MultiValueDictKeyError:
+        return HttpResponse(
+            json.dumps({
+                "code": Codes.AUTH_VALIDATE_ARGUMENT_ERROR,
+                "msg": Messages.AUTH_VALIDATE_ARGUMENT_ERROR
+            }))
+
     return HttpResponse(json.dumps({"code": Codes.OK, "msg": Messages.OK}))
