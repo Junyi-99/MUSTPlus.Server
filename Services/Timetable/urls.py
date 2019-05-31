@@ -1,6 +1,6 @@
 from django.urls import path
-
+from Services.Timetable import views
 urlpatterns = [
-    path('init/faculties', ),
-    path('init/departments', ),
+    path('timetable', views.get_timetable),
+
 ]
