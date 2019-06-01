@@ -1,5 +1,6 @@
 # MUSTPlus.Server
 
+The back-end.
 
 Macau University of Science and Technology Campus Application ( Server )
 
