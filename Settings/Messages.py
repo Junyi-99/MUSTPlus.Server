@@ -1,7 +1,7 @@
 # ALL API
 OK = 'OK'  # 正常
 WARNING = '警告信息'  # 警告（一般可忽略）
-INTERNAL_ERROR = 'Caused an unexpected exception, your request has been recorded.' # 内部错误
+INTERNAL_ERROR = 'Caused an unexpected exception, your request has been recorded.'  # 内部错误
 PAGE_NOT_FOUND = '404'
 MISSING_FIELD = 'Missing Field'
 
@@ -58,6 +58,5 @@ TIMETABLE_WEEK_INVALID = '周数无效'
 
 # GET /user/space
 SPACE_USERNAME_INVALID = '用户名无效'
-
 
 OTHER_ARGUMENT_INVALID = '其它类型参数错误'

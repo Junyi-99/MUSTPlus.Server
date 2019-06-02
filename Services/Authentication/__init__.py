@@ -6,8 +6,9 @@ This module is used to verify user tokens and record user's behavior, including:
 request URL, parameters, frequency, etc.
 """
 
-import rsa
 import os
+
+import rsa
 
 print("Loading RSA Key ... ")
 try:

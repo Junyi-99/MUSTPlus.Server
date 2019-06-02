@@ -1,6 +1,6 @@
-from Services.Basic.models import Department, Faculty
-
 from django.http import HttpResponse
+
+from Services.Basic.models import Department, Faculty
 
 faculties = {
     '資訊科技學院': 'Faculty of Information Technology',

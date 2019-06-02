@@ -1,15 +1,8 @@
 import json
-import time
-import hashlib
-from datetime import datetime
-import pytz
-from django.core.exceptions import ObjectDoesNotExist
+
 from django.http import HttpResponse
-from django.utils import timezone
-from django.utils.datastructures import MultiValueDictKeyError
 
 from Services.Authentication.decorators import validate
-from Services.Basic.models import Student
 from Services.News.models import Announcement, Document, Attachment
 from Settings import Codes, Messages
 

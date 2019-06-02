@@ -1,9 +1,6 @@
 from django.db import models
 
 from Services.Basic.models import Faculty
-
-
-
 # 老师
 from Services.Course.models import Course
 

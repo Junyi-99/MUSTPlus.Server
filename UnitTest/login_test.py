@@ -1,6 +1,7 @@
-import requests
 import base64
 import json
+
+import requests
 import rsa
 
 print("Trying to get basic information ... ")
@@ -40,4 +41,3 @@ r = requests.post('http://mp.junyi.pw:8000/auth/login', data=data)
 print()
 print("Server Response:")
 print(r.text)
-

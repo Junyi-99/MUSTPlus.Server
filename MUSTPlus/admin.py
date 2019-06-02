@@ -1,7 +1,7 @@
+from Services.Comment.models import CommentCourse
 from django.contrib import admin
 
 from Services.Basic.models import Department, Faculty, Major, ClassRoom, Student, Teacher
-from Services.Comment.models import CommentCourse
 from Services.News.models import Document, Announcement, Attachment
 from Services.Timetable.models import Course
 
@@ -17,4 +17,4 @@ admin.site.register(Course)
 admin.site.register(Student)
 admin.site.register(Teacher)
 admin.site.register(CommentCourse)
-#admin.site.register(FTP)
+# admin.site.register(FTP)

@@ -1,11 +1,11 @@
-import requests
 import json
 from datetime import datetime
 
+import requests
+from bs4 import BeautifulSoup
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
 from lxml import etree
-from bs4 import BeautifulSoup
 
 from Services.Basic.query import get_faculty, get_department
 from Services.News.models import Document, Announcement, Attachment
@@ -59,11 +59,12 @@ def view(faculty, department, date, id, news, deptType, lang, viewname, cookies)
 
         try:
             date = datetime.strptime(date, "%Y-%m-%d")
-            announcement = Announcement.objects.get(title=title, content=content, faculty_id=get_faculty(faculty,False),
-                                                    department_id=get_department(department,False), publish_time=date)
+            announcement = Announcement.objects.get(title=title, content=content,
+                                                    faculty_id=get_faculty(faculty, False),
+                                                    department_id=get_department(department, False), publish_time=date)
         except ObjectDoesNotExist:
-            announcement = Announcement(title=title, content=content, faculty_id=get_faculty(faculty,False),
-                                        department_id=get_department(department,False), publish_time=date)
+            announcement = Announcement(title=title, content=content, faculty_id=get_faculty(faculty, False),
+                                        department_id=get_department(department, False), publish_time=date)
             announcement.save()
 
         for d in downloads:
@@ -85,12 +86,12 @@ def down(faculty, department, title, publish_time, url, dId, filename, cookies) 
                   '?': '？', '"': '\'', '<': '《', '>': '》', '|': '｜'}
         try:
             publish_time = datetime.strptime(publish_time, "%Y-%m-%d")
-            document = Document.objects.get(faculty_id=get_faculty(faculty,False),
-                                            department_id=get_department(department,False), title=title,
+            document = Document.objects.get(faculty_id=get_faculty(faculty, False),
+                                            department_id=get_department(department, False), title=title,
                                             publish_time=publish_time, url=url)
         except ObjectDoesNotExist:
-            document = Document(faculty_id=get_faculty(faculty,False),
-                                department_id=get_department(department,False), title=title,
+            document = Document(faculty_id=get_faculty(faculty, False),
+                                department_id=get_department(department, False), title=title,
                                 publish_time=publish_time, url=url)
             document.save()
             # print("New Document saved:" + title, document.id)
