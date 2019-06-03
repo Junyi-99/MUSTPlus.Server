@@ -58,6 +58,8 @@ def login(username, password, token, cookies, captcha='0000'):
             print(r.text)
             logout(cookies)
             return LOGIN_CAPTCHA_ERROR
+        else:
+            return LOGIN_OTHER_ERROR
     except Exception as e:
         print(e)
         logout(cookies)

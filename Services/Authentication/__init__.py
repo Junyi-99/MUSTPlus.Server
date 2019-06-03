@@ -7,8 +7,8 @@ request URL, parameters, frequency, etc.
 """
 
 import os
-
 import rsa
+
 
 print("Loading RSA Key ... ")
 try:
@@ -27,3 +27,5 @@ except FileNotFoundError as e:
 
 def decrypt(message):
     return rsa.decrypt(message, private_key).decode()
+
+

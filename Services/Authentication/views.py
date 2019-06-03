@@ -140,13 +140,21 @@ def login(request):
                 )
                 stu.save()
                 refresh_student_information(username)
-            Login.logout(cookies)
+            # Login.logout(cookies)
             return HttpResponse(
                 json.dumps({"code": Codes.OK, "msg": Messages.OK, "student_name": stu.name_zh, "token": stu.token}))
-        else:
-            print("Login failed")
+        elif ret == Login.LOGIN_CAPTCHA_ERROR:
+            print("Captcha Error")
+            return HttpResponse(json.dumps({"code": Codes.LOGIN_CAPTCHA_ERROR, "msg": Messages.LOGIN_CAPTCHA_ERROR}))
+        elif ret == Login.LOGIN_OTHER_ERROR:
+            print("Other Error")
+            return HttpResponse(json.dumps({"code": Codes.LOGIN_FIELD_ERROR, "msg": Messages.LOGIN_FIELD_ERROR}))
+        elif ret == Login.LOGIN_PASSWORD_ERROR:
+            print("Password Error")
             return HttpResponse(json.dumps({"code": Codes.LOGIN_PASSWORD_ERROR, "msg": Messages.LOGIN_PASSWORD_ERROR}))
-
+        else:
+            print("Other Error")
+            return HttpResponse(json.dumps({"code": Codes.LOGIN_FIELD_ERROR, "msg": Messages.LOGIN_FIELD_ERROR}))
     except Exception as e:
         # TODO: Using Logger to record the dangerous behavior
         print(e)

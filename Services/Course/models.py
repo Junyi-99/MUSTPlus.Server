@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class Course(models.Model):
     intake = models.IntegerField(default=0)  # 学期
     course_code = models.CharField(max_length=10)  # 课程ID
@@ -9,7 +10,6 @@ class Course(models.Model):
     name_short = models.CharField(max_length=30)
     credit = models.IntegerField(default=0)
     faculty = models.ForeignKey("Basic.Faculty", on_delete=models.PROTECT)
-    classroom = models.ForeignKey("Basic.ClassRoom", on_delete=models.PROTECT)
     date_start = models.DateField()
     date_end = models.DateField()
     time_start = models.TimeField()
@@ -18,8 +18,8 @@ class Course(models.Model):
     def __str__(self):
         return self.course_code + " " + self.name_zh + " " + self.name_en
 
-    # class Meta:
-    #     unique_together = (("intake", "course_code", "course_class"),)
+    class Meta:
+        unique_together = (("intake", "course_code", "course_class"),)
 
 
 class Schedule(models.Model):
@@ -33,6 +33,7 @@ class Schedule(models.Model):
 
     def __str__(self):
         return str(self.date_start) + " - " + str(self.date_end) + " in " + str(self.classroom)
+
 
 # 科目评论
 class CourseComment(models.Model):
