@@ -10,7 +10,6 @@ from django.views.decorators.csrf import csrf_exempt
 
 from MUSTPlus.decorators import require_get, require_post
 from Services.Basic.COES import Login, StudentInfo
-
 from Services.Basic.query import get_faculty, get_program, get_major
 from Services.Student.models import Student
 from Settings import Codes, Messages
@@ -142,7 +141,8 @@ def login(request):
                 stu.save()
                 refresh_student_information(username)
             Login.logout(cookies)
-            return HttpResponse(json.dumps({"code": Codes.OK, "msg": Messages.OK}))
+            return HttpResponse(
+                json.dumps({"code": Codes.OK, "msg": Messages.OK, "student_name": stu.name_zh, "token": stu.token}))
         else:
             print("Login failed")
             return HttpResponse(json.dumps({"code": Codes.LOGIN_PASSWORD_ERROR, "msg": Messages.LOGIN_PASSWORD_ERROR}))

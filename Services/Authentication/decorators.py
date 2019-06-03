@@ -35,13 +35,13 @@ def validate(func):
             for e in sorted(args[0].GET):
                 if e == 'sign':  # except `sign`
                     continue
-                get_para = get_para + e + "=" + args[0].GET[e] + "&"
+                get_para = get_para + e + "=" + str(args[0].GET[e]) + "&"
             get_para = get_para[:-1]
 
             # sort POST parameter list
             post_para = ""
             for e in sorted(args[0].POST):
-                post_para = post_para + e + "=" + args[0].POST[e] + "&"
+                post_para = post_para + e + "=" + str(args[0].POST[e]) + "&"
             post_para = post_para[:-1]
 
             # calculate sign

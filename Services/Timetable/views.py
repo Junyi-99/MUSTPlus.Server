@@ -1,11 +1,12 @@
 import json
 from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
 
 from Services.Authentication import utility
 from Services.Authentication.decorators import validate
 from Services.Basic.COES.Timetable import get_html, get_timetable
 
-
+@csrf_exempt
 @validate
 def timetable(request):
     stu = utility.get_student_object(request)
