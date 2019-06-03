@@ -131,4 +131,5 @@ def news_all(request):
 
 @validate
 def news_banners(request):
+    print(type(request))
     return HttpResponse(json.dumps({"code": Codes.OK, "msg": Messages.OK, "detail": "Passed"}))

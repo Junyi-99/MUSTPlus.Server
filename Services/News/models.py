@@ -1,9 +1,12 @@
 from django.db import models
 
-from Services.Basic.models import Department, Faculty, Student
+from Services.Basic.models import Department, Faculty
 
 
 # Banners （适用于 APP 端的 `资讯` 栏目）
+from Services.Student.models import Student
+
+
 class Banner(models.Model):
     title = models.CharField(max_length=64)  # Banner 标题
     img = models.TextField()  # Banner 图像 URL

@@ -8,7 +8,7 @@ from django.http import HttpResponse
 # 强制 POST 方式请求
 from django.utils import timezone
 
-from Services.Basic.models import Student
+from Services.Student.models import Student
 from Settings import Codes, Messages
 
 TOKEN_ERROR = json.dumps({"code": Codes.AUTH_TOKEN_INVALID, "msg": Messages.AUTH_TOKEN_INVALID})

@@ -2,7 +2,7 @@ from django.db import models
 
 # 学生
 from Services.Basic.models import Faculty, Program, Major, ClassRoom
-from Services.Course.models import Course
+
 
 
 class Student(models.Model):
@@ -32,7 +32,7 @@ class Student(models.Model):
 class TakeCourse(models.Model):
     intake = models.IntegerField(default=0)
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    course = models.ForeignKey("Course.Course", on_delete=models.CASCADE)
     grade = models.CharField(max_length=16)
     exam_datetime = models.DateTimeField()
     exam_classroom = models.ForeignKey(ClassRoom, on_delete=models.CASCADE)

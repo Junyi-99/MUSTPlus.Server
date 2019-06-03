@@ -4,7 +4,7 @@ from lxml import etree
 from Settings import URLS
 
 
-def student_information(cookies):
+def student_information(cookies) -> dict:
     headers = URLS.headers
     headers['Cookie'] = cookies
     headers['Accept-Language'] = 'zh-CN,zh;q=0.9,en;q=0.8,zh-TW;q=0.7'

@@ -10,8 +10,9 @@ from django.views.decorators.csrf import csrf_exempt
 
 from MUSTPlus.decorators import require_get, require_post
 from Services.Basic.COES import Login, StudentInfo
-from Services.Basic.models import Student
+
 from Services.Basic.query import get_faculty, get_program, get_major
+from Services.Student.models import Student
 from Settings import Codes, Messages
 from . import public_key_content, decrypt
 
