@@ -53,7 +53,7 @@ PROFILE_AVATAR_INVALID = -6002  # 头像URL不合法
 PROFILE_REFRESH_USER_NOT_FOUND = -6003  # 从COES获取最新信息失败：找不到用户
 PROFILE_REFRESH_COOKIES_EXPIRED = -6003  # 从COES获取最新信息失败：用户Cookie失效
 
-# GET /my/timetable
+# GET /my/timetable.py
 TIMETABLE_SEMESTER_INVALID = -7000  # 学期无效
 TIMETABLE_WEEK_INVALID = -7001  # 周数无效
 
