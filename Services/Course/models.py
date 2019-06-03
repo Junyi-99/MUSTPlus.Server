@@ -18,8 +18,8 @@ class Course(models.Model):
     def __str__(self):
         return self.course_code + " " + self.name_zh + " " + self.name_en
 
-    # class Meta:
-    #     unique_together = (("intake", "course_code", "course_class"),)
+    class Meta:
+        unique_together = (("intake", "course_code", "course_class"),)
 
 
 class Schedule(models.Model):

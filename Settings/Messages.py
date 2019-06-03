@@ -55,7 +55,8 @@ PROFILE_REFRESH_COOKIES_EXPIRED = '从COES获取最新信息失败：用户Cooki
 # GET /my/timetable.py
 TIMETABLE_SEMESTER_INVALID = '学期无效'
 TIMETABLE_WEEK_INVALID = '周数无效'
-
+TIMETABLE_COOKIE_EXPIRED = 'Timetable 请求中发现 COES Cookie 过期'
+TIMETABLE_UNKNOWN_EXCEPTION = '未知异常'
 # GET /user/space
 SPACE_USERNAME_INVALID = '用户名无效'
 

@@ -29,7 +29,7 @@ urlpatterns = [
     path('auth/', include('Services.Authentication.urls')),
     path('basic/', include('Services.Basic.urls')),
     path('news/', include('Services.News.urls')),
-    path('timetable.py/', include('Services.Timetable.urls')),
+    path('timetable/', include('Services.Timetable.urls')),
 
 ]
 

@@ -2,7 +2,8 @@
 import hashlib
 import json
 import time
-
+import sys
+import traceback
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
 # 强制 POST 方式请求
@@ -28,7 +29,6 @@ def validate(func):
                     "code": Codes.AUTH_VALIDATE_ARGUMENT_ERROR,
                     "msg": Messages.AUTH_VALIDATE_ARGUMENT_ERROR
                 }))
-            print(token_get, time_get, sign_get)
 
             # sort GET parameter list
             get_para = ""
@@ -79,7 +79,7 @@ def validate(func):
                 }))
         except Exception as e:
             # TODO: Logger
-            print(e)
+            traceback.print_exc(file=sys.stdout)
             return HttpResponse(json.dumps({"code": Codes.AUTH_UNKNOWN_ERROR, "msg": Messages.AUTH_UNKNOWN_ERROR}))
 
     return wrapper
