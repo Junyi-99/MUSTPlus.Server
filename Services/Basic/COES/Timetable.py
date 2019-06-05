@@ -18,8 +18,9 @@ def get_html(token: str, cookies: str, intake: int, week: int = 0) -> Optional[s
         'x': 53,
         'y': 12,
     }
-    r = requests.post(URLS.COES_TIMETABLE, headers=headers, data=data)
 
+    r = requests.post(URLS.COES_TIMETABLE, headers=headers, data=data)
+    print(r.text)
     if 'doTimetable' in r.text:
         return r.text
     else:
@@ -50,21 +51,22 @@ def get_timetable(html_source: str) -> list:
              '\u4e03\u6708', '\u516b\u6708', '\u4e5d\u6708',
              '\u5341\u6708', '\u5341\u4e00\u6708', '\u5341\u4e8c\u6708']
 
-    pos1 = html_source.find('timetable.py.add')
-    pos2 = html_source.find('timetable.py.dra', pos1)
+    pos1 = html_source.find('timetable.add')
+    pos2 = html_source.find('timetable.dra', pos1)
     content = html_source[pos1:pos2]
 
     if pos1 == -1 or pos2 == -1:  # 防止瞎找
+        print("Can not find timetable.add")
         return []
 
-    content = content.replace('timetable.py.add(', '')
+    content = content.replace('timetable.add(', '')
     content = content.strip()[:-2]  # 这里有个 -2 是为了防止后面 content.split(');') 的时候多 split 出来一个元素
     sp1 = content.split(');')
 
-    print(sp1)
+    #print(sp1)
     for s1 in sp1:
         sp2 = s1.replace("'", '').replace('\r', '').replace('\n ', '').split(',')
-        print(sp2, s1)
+        print(sp2)
         for i in range(len(month)):  # 将中文月份转换到数字
             sp2[8] = sp2[8].replace(month[i], "%d-" % (i + 1))
 

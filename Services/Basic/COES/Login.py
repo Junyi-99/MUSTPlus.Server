@@ -7,6 +7,8 @@ from Settings import URLS
 LOGIN_SUCCESSFUL = 0
 LOGIN_PASSWORD_ERROR = 1
 LOGIN_CAPTCHA_ERROR = 2
+LOGIN_STUDENT_ID_DOES_NOT_EXIST = 3
+
 LOGIN_OTHER_ERROR = 10
 
 
@@ -45,7 +47,10 @@ def login(username, password, token, cookies, captcha='0000'):
         headers = URLS.headers
         headers['Cookie'] = cookies
         r = requests.post(url='https://coes-stud.must.edu.mo/coes/login.do', data=data, headers=headers)
-
+        # print(r.text)
+        with open("login_record.html", 'wb') as f:
+            f.write(r.text.encode('utf-8'))
+            f.close()
         trait = '<!--COES VERSION '
         if trait in r.text:
             p1 = r.text.find(trait) + len(trait)
@@ -54,12 +59,17 @@ def login(username, password, token, cookies, captcha='0000'):
             print("Login Successful!")
             print("COES Version: ", version)
             return LOGIN_SUCCESSFUL
-        elif 'Please ' in r.text:
-            print(r.text)
+        elif '驗證碼不相同' in r.text:
             logout(cookies)
             return LOGIN_CAPTCHA_ERROR
+        elif '找不到.' in r.text:
+            return LOGIN_STUDENT_ID_DOES_NOT_EXIST
+        elif '密碼錯誤' in r.text:
+            return LOGIN_PASSWORD_ERROR
         else:
-            return LOGIN_OTHER_ERROR
+            find2 = r.text.rfind('alert')
+            find3 = r.text.find(');', find2)
+            return r.text[find2 + 7:find3 - 1]
     except Exception as e:
         print(e)
         logout(cookies)

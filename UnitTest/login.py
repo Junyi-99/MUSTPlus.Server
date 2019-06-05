@@ -14,7 +14,7 @@ captcha = j['captcha']
 pic = base64.b64decode(captcha.encode('utf-8'))
 
 # save captcha
-with open("/home/junyi/tmp/pycharm_project_702/UnitTest/capt.jpg", 'wb') as f:
+with open("./capt.jpg", 'wb') as f:
     f.write(pic)
     f.close()
 

@@ -10,6 +10,7 @@ LOGIN_USERNAME_INVALID = 'Username Invalid'
 LOGIN_PASSWORD_ERROR = 'Wrong Password'
 LOGIN_CAPTCHA_ERROR = 'Wrong Captcha'
 LOGIN_FIELD_ERROR = 'Wrong field'
+LOGIN_OTHER_ERROR = '其他错误'
 
 AUTH_SIGN_VERIFICATION_FAILED = 'sign 验证失败'
 AUTH_TIME_INVALID = '请求已过期'

@@ -154,7 +154,8 @@ def login(request):
             return HttpResponse(json.dumps({"code": Codes.LOGIN_PASSWORD_ERROR, "msg": Messages.LOGIN_PASSWORD_ERROR}))
         else:
             print("Other Error")
-            return HttpResponse(json.dumps({"code": Codes.LOGIN_FIELD_ERROR, "msg": Messages.LOGIN_FIELD_ERROR}))
+            return HttpResponse(
+                json.dumps({"code": Codes.LOGIN_OTHER_ERROR, "msg": Messages.LOGIN_OTHER_ERROR, "detail": ret}))
     except Exception as e:
         # TODO: Using Logger to record the dangerous behavior
         print(e)

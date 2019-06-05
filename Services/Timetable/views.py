@@ -2,6 +2,7 @@ import json
 import sys
 import traceback
 
+from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
@@ -11,15 +12,21 @@ from Services.Basic.COES.Timetable import get_html, get_timetable
 from Services.Course.models import Course
 from Settings import Codes, Messages
 
+# Default timetable intake
+TIMETABLE_INTAKE = 1902
+
+
 @csrf_exempt
 @validate
 def timetable(request):
     stu = utility.get_student_object(request)
-    intake = int(request.GET.get("intake", 1902))
-    week = int(request.GET.get('week', 0))
+
+    intake = int(request.GET.get("intake", TIMETABLE_INTAKE))
+    week = int(request.GET.get('week', -1))
+    if week == -1:
+        return HttpResponse(json.dumps({"code": Codes.TIMETABLE_WEEK_INVALID, "msg": Messages.TIMETABLE_WEEK_INVALID}))
 
     s = get_html("", stu.coes_cookie, intake, week)
-
     if s is None:
         return HttpResponse(json.dumps({"code": Codes.TIMETABLE_COOKIE_EXPIRED,
                                         "msg": Messages.TIMETABLE_COOKIE_EXPIRED}))
@@ -28,7 +35,23 @@ def timetable(request):
 
         for e in r:
             print(e)
-            Course.objects.get(intake=intake, course_code=e['course_id'], course_class=e['course_class'])
+            try:
+                Course.objects.get(intake=intake, course_code=e['course_id'], course_class=e['course_class'])
+            except ObjectDoesNotExist:
+                course = Course(
+                    intake=intake,
+                    course_code=e['course_id'],
+                    course_class=e['course_class'],
+                    name_zh=e['course_name_zh'],
+                    name_en=e[''],
+                    name_short=e[''],
+                    credit=e[''],
+                    faculty=e[''],
+                    date_start=e['date_begin'],
+                    date_end=e['date_end'],
+                    time_start=e['time_begin'],
+                    time_end=e['time_end'],
+                )
 
         return HttpResponse(json.dumps(r))
     except Exception as e:
