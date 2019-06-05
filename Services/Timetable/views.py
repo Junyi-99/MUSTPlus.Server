@@ -34,7 +34,7 @@ def timetable(request):
         r = get_timetable(s)
 
         for e in r:
-            print(e)
+            #print(e)
             try:
                 Course.objects.get(intake=intake, course_code=e['course_id'], course_class=e['course_class'])
             except ObjectDoesNotExist:
@@ -43,15 +43,11 @@ def timetable(request):
                     course_code=e['course_id'],
                     course_class=e['course_class'],
                     name_zh=e['course_name_zh'],
-                    name_en=e[''],
-                    name_short=e[''],
-                    credit=e[''],
-                    faculty=e[''],
-                    date_start=e['date_begin'],
-                    date_end=e['date_end'],
-                    time_start=e['time_begin'],
-                    time_end=e['time_end'],
                 )
+                course.save()
+                print("Create a new Course [%d %s %s %s]"
+                      % (course.intake, course.course_code, course.course_class, course.name_zh))
+
 
         return HttpResponse(json.dumps(r))
     except Exception as e:

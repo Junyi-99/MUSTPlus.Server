@@ -3,12 +3,12 @@ import json
 import hashlib
 import requests
 
-token = '8146123c-87ae-11e9-9405-be63b5b3b608'
+token = '831d9e5c-87b0-11e9-9405-be63b5b3b608'
 
 data = {
     'token': token,
     'time': int(time.time()),
-    'intake': 1902,
+    'intake': 1909,
     'week':1,
 }
 
