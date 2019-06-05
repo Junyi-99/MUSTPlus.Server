@@ -58,10 +58,10 @@ def get_timetable(html_source: str) -> list:
     course_list = re.findall(r'timetable.add\([\s\S]*?\);', html_source)
 
     for each_course in course_list:
-        sp2 = each_course.replace("timetable.add(", '').replace("'", '').replace('\r', '').replace('\n ', '').split(',')
+        sp2 = each_course.replace("timetable.add(", '').replace("'", '').\
+            replace('\r', '').replace('\n ', '').replace(');','').split(',')
 
         for i in range(len(month) - 1, -1, -1):  # 将中文月份转换到数字 这里要反向迭代，因为 '十二月' 会在正向迭代的时候 被 '二月' 先替换
-            print(month[i], i + 1)
             sp2[8] = sp2[8].replace(month[i], "%d-" % (i + 1))
 
         pos_plus = sp2[8].find('+')
@@ -77,7 +77,7 @@ def get_timetable(html_source: str) -> list:
             'date_begin': sp2[8][:pos_plus],
             'date_end': sp2[8][pos_plus + 5:]
         })
-
+    print(result)
     return result
 
 # Usage:
