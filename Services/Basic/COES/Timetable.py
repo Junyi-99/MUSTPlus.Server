@@ -15,10 +15,12 @@ def get_html(token: str, cookies: str, intake: int, week: int = 0) -> Optional[s
         'org.apache.struts.taglib.html.TOKEN': token,
         'formAction': 'Timetable',
         'intake': intake,
-        'week': week,  # 第几周
         'x': 53,
         'y': 12,
     }
+
+    if week != 0:  # 如果 week 等于 0，请求参数里不应该有 week
+        data['week'] = week
 
     r = requests.post(URLS.COES_TIMETABLE, headers=headers, data=data)
 
@@ -58,13 +60,19 @@ def get_timetable(html_source: str) -> list:
     course_list = re.findall(r'timetable.add\([\s\S]*?\);', html_source)
 
     for each_course in course_list:
-        sp2 = each_course.replace("timetable.add(", '').replace("'", '').\
-            replace('\r', '').replace('\n ', '').replace(');','').split(',')
+        sp2 = each_course.replace("timetable.add(", '').replace("'", ''). \
+            replace('\r', '').replace('\n ', '').replace(');', '').split(',')
 
         for i in range(len(month) - 1, -1, -1):  # 将中文月份转换到数字 这里要反向迭代，因为 '十二月' 会在正向迭代的时候 被 '二月' 先替换
-            sp2[8] = sp2[8].replace(month[i], "%d-" % (i + 1))
+            sp2[-1] = sp2[-1].replace(month[i], "%d-" % (i + 1))
+        print(sp2)
+        pos_plus = sp2[-1].find('+')
 
-        pos_plus = sp2[8].find('+')
+        # Multi-Teacher condition
+        teacher = ""
+        for i in range(7, len(sp2)-1):
+            teacher = teacher + sp2[i] + ","
+
         result.append({
             'day': sp2[0].strip(),
             'time_begin': sp2[1],
@@ -73,9 +81,9 @@ def get_timetable(html_source: str) -> list:
             'course_name_zh': sp2[4],
             'course_class': sp2[5],
             'classroom': sp2[6],
-            'teacher': sp2[7],
-            'date_begin': sp2[8][:pos_plus],
-            'date_end': sp2[8][pos_plus + 5:]
+            'teacher': teacher[:-1],
+            'date_begin': sp2[-1][:pos_plus],
+            'date_end': sp2[-1][pos_plus + 5:]
         })
     print(result)
     return result
