@@ -1,9 +1,10 @@
 # 使用此装饰器，请保证函数的第一个参数为request
 import hashlib
 import json
-import time
 import sys
+import time
 import traceback
+
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
 # 强制 POST 方式请求
@@ -79,6 +80,7 @@ def validate(func):
                 }))
         except Exception as e:
             # TODO: Logger
+            print(e)
             traceback.print_exc(file=sys.stdout)
             return HttpResponse(json.dumps({"code": Codes.AUTH_UNKNOWN_ERROR, "msg": Messages.AUTH_UNKNOWN_ERROR}))
 

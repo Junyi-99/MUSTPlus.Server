@@ -19,16 +19,16 @@ class Course(models.Model):
 
 class Schedule(models.Model):
     intake = models.IntegerField(default=0)  # 学期
-    date_start = models.DateField()
+    date_begin = models.DateField()
     date_end = models.DateField()
-    time_start = models.TimeField()
+    time_begin = models.TimeField()
     time_end = models.TimeField()
     day_of_week = models.IntegerField()
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     classroom = models.ForeignKey("Basic.ClassRoom", on_delete=models.CASCADE)
 
     def __str__(self):
-        return str(self.date_start) + " - " + str(self.date_end) + " in " + str(self.classroom)
+        return str(self.date_begin) + " - " + str(self.date_end) + " in " + str(self.classroom)
 
 
 # 科目评论

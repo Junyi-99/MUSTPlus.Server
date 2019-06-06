@@ -28,6 +28,7 @@ def timetable(request):
     if week == -1:
         return HttpResponse(json.dumps({"code": Codes.TIMETABLE_WEEK_INVALID, "msg": Messages.TIMETABLE_WEEK_INVALID}))
 
+    # Get HTML source code
     s = get_html("", stu.coes_cookie, intake, week)
     if s is None:
         return HttpResponse(json.dumps({"code": Codes.TIMETABLE_COOKIE_EXPIRED,
@@ -39,14 +40,6 @@ def timetable(request):
             try:
                 course = Course.objects.get(course_code=e['course_id'], course_class=e['course_class'])
             except ObjectDoesNotExist:
-                a = """"{
-                    'day': sp2[0].strip(),
-                    'time_begin': sp2[1],
-                    'time_end': sp2[2],
-                    'classroom': sp2[6],
-                    'teacher': sp2[7],
-                    
-                }"""
                 course = Course(
                     course_code=e['course_id'],
                     course_class=e['course_class'],
@@ -63,28 +56,51 @@ def timetable(request):
                 classroom.save()
                 print("Create a new ClassRoom [%s]" % classroom.name_zh)
 
-            date_start = datetime.strptime(e['date_begin'], '%m-%d')
-            time_start = datetime.strptime(e['time_begin'], '%H:%M')
+            date_begin = datetime.strptime(e['date_begin'], '%m-%d')
+            time_begin = datetime.strptime(e['time_begin'], '%H:%M')
             date_end = datetime.strptime(e['date_end'], '%m-%d')
             time_end = datetime.strptime(e['time_end'], '%H:%M')
+
             try:
-                schedule = Schedule.objects.get(intake=intake, date_start=date_start, date_end=date_end,
-                                                time_start=time_start, time_end=time_end,
-                                                day_of_week=e['day'], course=course, classroom=classroom)
+                schedule = Schedule.objects.get(
+                    intake=intake,
+                    date_begin=date_begin,
+                    date_end=date_end,
+                    time_begin=time_begin,
+                    time_end=time_end,
+                    day_of_week=e['day'],
+                    course=course,
+                    classroom=classroom
+                )
             except ObjectDoesNotExist:
-                schedule = Schedule(intake=intake, date_start=date_start, date_end=date_end,
-                                    time_start=time_start, time_end=time_end,
-                                    day_of_week=e['day'], course=course, classroom=classroom)
+                schedule = Schedule(
+                    intake=intake,
+                    date_begin=date_begin,
+                    date_end=date_end,
+                    time_begin=time_begin,
+                    time_end=time_end,
+                    day_of_week=e['day'],
+                    course=course,
+                    classroom=classroom
+                )
                 schedule.save()
-                print("Create a new Schedule %d [DAY-%d %s-%s] of Course [%s] at Classroom [%s]" % (intake,
-                                                                                                    int(schedule.day_of_week), datetime.strftime(schedule.time_start, "%H:%M"),
-                                                                                                    datetime.strftime(schedule.time_end, "%H:%M"),
-                                                                                                    schedule.course.course_code + "-" + schedule.course.name_zh,
-                                                                                                    schedule.classroom.name_zh))
+                print("Create a new Schedule %d [DAY-%d %s-%s] of Course [%s] at Classroom [%s]"
+                      % (
+                          intake,
+                          int(schedule.day_of_week),
+                          datetime.strftime(schedule.time_start, "%H:%M"),
+                          datetime.strftime(schedule.time_end, "%H:%M"),
+                          schedule.course.course_code + "-" + schedule.course.name_zh,
+                          schedule.classroom.name_zh)
+                      )
 
         return HttpResponse(json.dumps(r))
     except Exception as e:
         print(e)
         traceback.print_exc(file=sys.stdout)
-        return HttpResponse(json.dumps({"code": Codes.TIMETABLE_UNKNOWN_EXCEPTION,
-                                        "msg": Messages.TIMETABLE_UNKNOWN_EXCEPTION}))
+        return HttpResponse(json.dumps(
+            {
+                "code": Codes.TIMETABLE_UNKNOWN_EXCEPTION,
+                "msg": Messages.TIMETABLE_UNKNOWN_EXCEPTION
+            }
+        ))

@@ -14,16 +14,15 @@ from Services.Course.models import Course
 
 def save_course(course_code: str, course_class: str, name_zh: str, name_en: str, credit: str, faculty: Faculty):
     try:
-        Course.objects.get(course_code=course_code, course_class=course_class)
-        print("Course ", course_code, name_zh, "Exist!~")
+        Course.objects.get(course_code, course_class)
     except ObjectDoesNotExist:
         course = Course(
-            course_code=course_code,
-            course_class=course_class,
-            name_zh=name_zh,
-            name_en=name_en,
-            credit=credit,
-            faculty=faculty,
+            course_code,
+            course_class,
+            name_zh,
+            name_en,
+            credit,
+            faculty,
         )
         course.save()
 
@@ -36,29 +35,26 @@ def init(request):
         cookie = student.coes_cookie
 
         for faculty in faculties:
-
             print("Now faculty: ", faculty)
-            html_source = make_request(token, 1, faculty, cookie)
+            html = make_request(token, 1, faculty, cookie)
+            pages = get_all_pages(html)
 
-            for l in process_course_list(html_source):
-                save_course(
-                    l["course_code"].strip(), 'EMPTY',
-                    l['name_zh'].strip(), l['name_en'].strip(),
-                    l['credit'].strip(), get_faculty(l['faculty'].strip())
-                )
-
-            for page in range(2, get_all_pages(html_source) + 1):
+            for page in range(1, pages + 1):  # 这里为什么要多循环一次（从1开始不从2开始）呢，因为少循环一次会让代码变丑很多
+                print("Page", page)
                 html_source = make_request(token, page, faculty, cookie)
-                for l in process_course_list(html_source):
+                course_list = process_course_list(html_source)
+                for course in course_list:
                     save_course(
-                        l["course_code"].strip(), 'EMPTY',
-                        l['name_zh'].strip(), l['name_en'].strip(),
-                        l['credit'].strip(), get_faculty(l['faculty'].strip())
+                        course["course_code"].strip(),
+                        'EMPTY',
+                        course['name_zh'].strip(),
+                        course['name_en'].strip(),
+                        course['credit'].strip(),
+                        get_faculty(course['faculty'].strip())
                     )
-                print(page)
+
 
     except Exception as e:
         print(e)
         traceback.print_exc(file=sys.stdout)
-
-    return HttpResponse("")
+    return HttpResponse()
