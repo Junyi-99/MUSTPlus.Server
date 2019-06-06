@@ -128,6 +128,7 @@ def login(request):
             try:
                 stu = Student.objects.get(student_id=username)
                 stu.token = str(uuid.uuid1())
+                stu.coes_token = token
                 stu.coes_cookie = cookies
                 stu.token_expired_time = datetime.now() + timedelta(hours=720)  # 720 hours = 1 month
                 stu.save()
@@ -135,6 +136,7 @@ def login(request):
                 stu = Student(
                     student_id=username,
                     token=str(uuid.uuid1()),
+                    coes_token=token,
                     coes_cookie=cookies,
                     token_expired_time=datetime.now() + timedelta(hours=720)
                 )

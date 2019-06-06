@@ -4,7 +4,6 @@ from django.db import models
 from Services.Basic.models import Faculty, Program, Major, ClassRoom
 
 
-
 class Student(models.Model):
     student_id = models.CharField(max_length=18, primary_key=True)
     name_zh = models.CharField(max_length=16, null=True)
@@ -18,6 +17,7 @@ class Student(models.Model):
     avatar_url = models.TextField(null=True)
     experience = models.IntegerField(null=True)  # 用户经验
     token = models.CharField(max_length=36)  # MUST+ token
+    coes_token = models.TextField()  # COES org.apache.struts.taglib.html.TOKEN
     coes_cookie = models.TextField(default="")  # COES cookie
     token_expired_time = models.DateTimeField()  # token expired time
     faculty = models.ForeignKey(Faculty, on_delete=models.CASCADE, null=True)

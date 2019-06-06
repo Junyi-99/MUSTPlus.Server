@@ -44,14 +44,18 @@ departments = {
 
 # 初始化 faculty 表的 value
 def init_faculties(request):
+    print("Initializing faculites")
     for k, v in faculties.items():
         d = Faculty(name_zh=k, name_en=v)
         d.save()
+    print("Done!")
     return HttpResponse("")
 
 
 def init_departments(request):
+    print("Initializing Departments")
     for k, v in departments.items():
         d = Department(name_zh=k, name_en=v)
         d.save()
+    print("Done!")
     return HttpResponse("")

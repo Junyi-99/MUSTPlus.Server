@@ -8,12 +8,15 @@ from django.http import HttpResponse
 from lxml import etree
 
 from Services.Basic.query import get_faculty, get_department
+from Services.Basic.views import init_faculties, init_departments
 from Services.News.models import Document, Announcement, Attachment
 from Settings import Codes, Messages, URLS
 
 
 # such as: 1709853di011002
 def login(username, password):
+    init_faculties(None)
+    init_departments(None)
     data = {
         'lang': 'BIG5',
         'studno': username,

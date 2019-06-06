@@ -30,7 +30,7 @@ urlpatterns = [
     path('basic/', include('Services.Basic.urls')),
     path('news/', include('Services.News.urls')),
     path('timetable/', include('Services.Timetable.urls')),
-
+    path('course/', include('Services.Course.urls'))
 ]
 
 

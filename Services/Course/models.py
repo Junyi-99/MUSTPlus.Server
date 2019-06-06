@@ -2,23 +2,23 @@ from django.db import models
 
 
 class Course(models.Model):
-    intake = models.IntegerField(default=0)  # 学期
-    course_code = models.CharField(max_length=10)  # 课程ID
-    course_class = models.CharField(max_length=10)  # 班别
-    name_zh = models.CharField(max_length=30)
-    name_en = models.CharField(max_length=30, null=True)
+    course_code = models.CharField(max_length=32)  # 课程ID
+    course_class = models.CharField(max_length=32)  # 班别
+    name_zh = models.TextField()
+    name_en = models.TextField(null=True)
     name_short = models.CharField(max_length=30, null=True)
-    credit = models.IntegerField(default=0, null=True)
-    faculty = models.ForeignKey("Basic.Faculty", on_delete=models.PROTECT, null=True)
+    credit = models.CharField(max_length=8, null=True)
+    faculty = models.ForeignKey("Basic.Faculty", on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return self.course_code + " " + self.name_zh + " " + self.name_en
 
     class Meta:
-        unique_together = (("intake", "course_code", "course_class"),)
+        unique_together = (("course_code", "course_class"),)
 
 
 class Schedule(models.Model):
+    intake = models.IntegerField(default=0)  # 学期
     date_start = models.DateField()
     date_end = models.DateField()
     time_start = models.TimeField()

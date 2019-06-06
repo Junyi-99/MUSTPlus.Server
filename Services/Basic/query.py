@@ -21,19 +21,19 @@ def get_department(name: str, auto_create: bool = True) -> Optional[Department]:
         return None
 
 
-def get_faculty(name: str, auto_create: bool = True) -> Optional[Faculty]:
+def get_faculty(name_zh: str, auto_create: bool = True) -> Optional[Faculty]:
     try:
-        return Faculty.objects.get(name_zh=name)
+        return Faculty.objects.get(name_zh=name_zh)
     except ObjectDoesNotExist:
         if auto_create:
-            f = Faculty(name_zh=name)
+            f = Faculty(name_zh=name_zh)
             f.save()
             print("Create a new Faculty [%s]" % (f.name_zh,))
             return f
         else:
             return None
     except Exception as e:
-        print("Exception in get_faculty(%s,%d):" % (name, auto_create), e)
+        print("Exception in get_faculty(%s,%d):" % (name_zh, auto_create), e)
         return None
 
 
