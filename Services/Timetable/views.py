@@ -88,7 +88,7 @@ def timetable(request):
                       % (
                           intake,
                           int(schedule.day_of_week),
-                          datetime.strftime(schedule.time_start, "%H:%M"),
+                          datetime.strftime(schedule.time_begin, "%H:%M"),
                           datetime.strftime(schedule.time_end, "%H:%M"),
                           schedule.course.course_code + "-" + schedule.course.name_zh,
                           schedule.classroom.name_zh)
