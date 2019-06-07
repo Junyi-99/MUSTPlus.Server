@@ -1,4 +1,6 @@
 import re
+import sys
+import traceback
 from typing import Optional
 
 import requests
@@ -48,46 +50,49 @@ def get_week_list(html_source: str) -> list:
 
 # 获取时间表（网页源代码）
 def get_timetable(html_source: str) -> list:
-    result = []
-    month = ['\u4e00\u6708', '\u4e8c\u6708', '\u4e09\u6708',
-             '\u56db\u6708', '\u4e94\u6708', '\u516d\u6708',
-             '\u4e03\u6708', '\u516b\u6708', '\u4e5d\u6708',
-             '\u5341\u6708', '\u5341\u4e00\u6708', '\u5341\u4e8c\u6708']
-    with open("save.html", 'wb') as f:
-        f.write(html_source.encode('utf-8'))
-        f.close()
+    try:
+        result = []
+        month = ['\u4e00\u6708', '\u4e8c\u6708', '\u4e09\u6708',
+                 '\u56db\u6708', '\u4e94\u6708', '\u516d\u6708',
+                 '\u4e03\u6708', '\u516b\u6708', '\u4e5d\u6708',
+                 '\u5341\u6708', '\u5341\u4e00\u6708', '\u5341\u4e8c\u6708']
+        with open("save.html", 'wb') as f:
+            f.write(html_source.encode('utf-8'))
+            f.close()
 
-    course_list = re.findall(r'timetable.add\([\s\S]*?\);', html_source)
+        course_list = re.findall(r'timetable.add\([\s\S]*?\);', html_source)
 
-    for each_course in course_list:
-        sp2 = each_course.replace("timetable.add(", '').replace("'", ''). \
-            replace('\r', '').replace('\n ', '').replace(');', '').split(',')
+        for each_course in course_list:
+            sp2 = each_course.replace("timetable.add(", '').replace("'", ''). \
+                replace('\r', '').replace('\n ', '').replace(');', '').split(',')
 
-        for i in range(len(month) - 1, -1, -1):  # 将中文月份转换到数字 这里要反向迭代，因为 '十二月' 会在正向迭代的时候 被 '二月' 先替换
-            sp2[-1] = sp2[-1].replace(month[i], "%d-" % (i + 1))
-        print(sp2)
-        pos_plus = sp2[-1].find('+')
+            for i in range(len(month) - 1, -1, -1):  # 将中文月份转换到数字 这里要反向迭代，因为 '十二月' 会在正向迭代的时候 被 '二月' 先替换
+                sp2[-1] = sp2[-1].replace(month[i], "%d-" % (i + 1))
+            print(sp2)
+            pos_plus = sp2[-1].find('+')
 
-        # Multi-Teacher condition
-        teacher = ""
-        for i in range(7, len(sp2)-1):
-            teacher = teacher + sp2[i] + ","
+            # Multi-Teacher condition
+            teacher = ""
+            for i in range(7, len(sp2) - 1):
+                teacher = teacher + sp2[i] + ","
 
-        result.append({
-            'day': sp2[0].strip(),
-            'time_begin': sp2[1],
-            'time_end': sp2[2],
-            'course_id': sp2[3],
-            'course_name_zh': sp2[4],
-            'course_class': sp2[5],
-            'classroom': sp2[6],
-            'teacher': teacher[:-1],
-            'date_begin': sp2[-1][:pos_plus],
-            'date_end': sp2[-1][pos_plus + 5:]
-        })
-    print(result)
-    return result
-
+            result.append({
+                'day': sp2[0].strip(),
+                'time_begin': sp2[1],
+                'time_end': sp2[2],
+                'course_id': sp2[3],
+                'course_name_zh': sp2[4],
+                'course_class': sp2[5],
+                'classroom': sp2[6],
+                'teacher': teacher[:-1],
+                'date_begin': sp2[-1][:pos_plus],
+                'date_end': sp2[-1][pos_plus + 5:]
+            })
+        return result
+    except Exception as e:
+        print(e)
+        traceback.print_exc(file=sys.stdout)
+        return []
 # Usage:
 # s = get_html()
 # get_week_list(s)

@@ -124,13 +124,18 @@ def timetable(request):
                     teacher_teach_course.save()
                     print("Create a new TeachCourse %s Teach %s" % (str(teacher), str(course)))
 
-        return HttpResponse(json.dumps(r))
+        return HttpResponse(json.dumps({
+            "code": Codes.OK,
+            "msg": Messages.OK,
+            "timetable": r
+        }))
     except Exception as e:
         print(e)
         traceback.print_exc(file=sys.stdout)
         return HttpResponse(json.dumps(
             {
                 "code": Codes.TIMETABLE_UNKNOWN_EXCEPTION,
-                "msg": Messages.TIMETABLE_UNKNOWN_EXCEPTION
+                "msg": Messages.TIMETABLE_UNKNOWN_EXCEPTION,
+                "timetable": r
             }
         ))

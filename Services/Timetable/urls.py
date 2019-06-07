@@ -4,5 +4,4 @@ from Services.Timetable import views
 
 urlpatterns = [
     path('', views.timetable),
-
 ]
