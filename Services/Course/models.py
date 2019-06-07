@@ -50,9 +50,14 @@ class ThumbsUpCourseComment(models.Model):
     comment = models.ForeignKey(CourseComment, on_delete=models.CASCADE)
     thumbs_time = models.DateTimeField(default=timezone.now)
 
+    class Meta:
+        unique_together = (("student", "comment"),)
 
 # 哪个学生认为哪条评论差
 class ThumbsDownCourseComment(models.Model):
     student = models.ForeignKey("Student.Student", on_delete=models.CASCADE)
     comment = models.ForeignKey(CourseComment, on_delete=models.CASCADE)
     thumbs_time = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        unique_together = (("student", "comment"),)
