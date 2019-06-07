@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 
 class Course(models.Model):
@@ -11,7 +12,7 @@ class Course(models.Model):
     faculty = models.ForeignKey("Basic.Faculty", on_delete=models.CASCADE, null=True)
 
     def __str__(self):
-        return self.course_code + " " + self.name_zh + " " + self.name_en
+        return self.course_code + " " + self.name_zh
 
     class Meta:
         unique_together = (("course_code", "course_class"),)
@@ -39,7 +40,7 @@ class CourseComment(models.Model):
     thumbs_down = models.IntegerField(default=0)  # 点赞数量
     rank = models.IntegerField(default=3)  # 评分
     content = models.TextField()  # 评论正文
-    publish_time = models.TimeField()  # 发布时间
+    publish_time = models.TimeField(default=timezone.now)  # 发布时间
     visible = models.BooleanField()  # 是否可见
 
 
@@ -47,11 +48,11 @@ class CourseComment(models.Model):
 class ThumbsUpCourseComment(models.Model):
     student = models.ForeignKey("Student.Student", on_delete=models.CASCADE)
     comment = models.ForeignKey(CourseComment, on_delete=models.CASCADE)
-    thumbs_time = models.DateTimeField()
+    thumbs_time = models.DateTimeField(default=timezone.now)
 
 
 # 哪个学生认为哪条评论差
 class ThumbsDownCourseComment(models.Model):
     student = models.ForeignKey("Student.Student", on_delete=models.CASCADE)
     comment = models.ForeignKey(CourseComment, on_delete=models.CASCADE)
-    thumbs_time = models.DateTimeField()
+    thumbs_time = models.DateTimeField(default=timezone.now)

@@ -33,10 +33,10 @@ class TakeCourse(models.Model):
     intake = models.IntegerField(default=0)
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     course = models.ForeignKey("Course.Course", on_delete=models.CASCADE)
-    grade = models.CharField(max_length=16)
-    exam_datetime = models.DateTimeField()
-    exam_classroom = models.ForeignKey(ClassRoom, on_delete=models.CASCADE)
-    exam_seat = models.CharField(max_length=16)
+    grade = models.CharField(max_length=16, null=True)
+    exam_datetime = models.DateTimeField(null=True)
+    exam_classroom = models.ForeignKey(ClassRoom, on_delete=models.CASCADE, null=True)
+    exam_seat = models.CharField(max_length=16, null=True)
 
     def __str__(self):
         return str(self.student) + " Enroll " + str(self.course) + " At " + str(self.intake)

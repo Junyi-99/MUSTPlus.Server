@@ -4,7 +4,7 @@ import time
 
 import requests
 
-token = '48823ee0-8816-11e9-9405-be63b5b3b608'
+token = '6e262476-88e9-11e9-9405-be63b5b3b608'
 def t(intake, week):
     data = {
         'token': token,
@@ -26,4 +26,8 @@ def t(intake, week):
     print(json.loads(r.text))
 
 
-t(-1, 5)
+t(1709, 0)
+t(1802, 0)
+t(1809, 0)
+t(1902, 0)
+t(1909, 0)
