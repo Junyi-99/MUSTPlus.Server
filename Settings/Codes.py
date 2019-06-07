@@ -27,7 +27,8 @@ COURSE_COMMENT_CONTENT_ILLEGAL = -4003  # 要评论的内容无效（非法评�
 COURSE_COMMENT_CONTENT_TOO_LONG = -4004  # 评论内容太长
 COURSE_COMMENT_CONTENT_EMPTY = -4005  # 评论内容不能为空
 COURSE_COMMENT_ID_NOT_FOUND = -4006  # 删除评论时未找到该评论ID
-COURSE_RECORD_FROM_INVALID = -4007  # 获取评论时，从第from条开始获取，from参数无效
+COURSE_COMMENT_RANK_INVALID = -4007  # 给课程的打分值不合法
+COURSE_RECORD_FROM_INVALID = -4008  # 获取评论时，从第from条开始获取，from参数无效
 
 # GET /course/ftp
 COURSE_FTP_ID_NOT_FOUNT = -4100  # 课程ID未找到

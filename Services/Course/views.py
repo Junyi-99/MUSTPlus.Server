@@ -1,10 +1,11 @@
 import json
 import sys
-import time
 import traceback
 
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Avg
 from django.http import HttpResponse
+from rest_framework.decorators import api_view
 
 from MUSTPlus.decorators import require_get
 from Services.Authentication.decorators import validate
@@ -65,6 +66,7 @@ def init(request):
     return HttpResponse()
 
 
+@api_view(['POST', 'DELETE'])
 @validate
 def api_thumbs_down(request, course_id):
     if request.method == "POST":
@@ -113,6 +115,7 @@ def api_thumbs_down(request, course_id):
         }))
 
 
+@api_view(['POST', 'DELETE'])
 @validate
 def api_thumbs_up(request, course_id):
     if request.method == "POST":
@@ -161,12 +164,13 @@ def api_thumbs_up(request, course_id):
         }))
 
 
+@api_view(['GET'])
 @require_get
 @validate
 def api_course(request, course_id):
     # 无论如何都要先判断一下 course_id 是否正确
     try:
-        course = Course.objects.get(course_id=course_id)
+        course = Course.objects.get(id=course_id)
         pass
     except ObjectDoesNotExist:
         return HttpResponse(json.dumps({"code": Codes.COURSE_ID_NOT_FOUNT, "msg": Messages.COURSE_ID_NOT_FOUNT}))
@@ -188,15 +192,17 @@ def api_course(request, course_id):
         for schedule in schedules:
             schedule_list.append({
                 "intake": schedule.intake,
-                "date_begin": time.strftime("%m-%d", schedule.date_begin),
-                "date_end": time.strftime("%m-%d", schedule.date_end),
-                "time_begin": time.strftime("%H:%M", schedule.time_begin),
-                "time_end": time.strftime("%H:%M", schedule.time_end),
+                "date_begin": schedule.date_begin.strftime("%m-%d"),
+                "date_end": schedule.date_end.strftime("%m-%d"),
+                "time_begin": schedule.time_begin.strftime("%H:%M"),
+                "time_end": schedule.time_end.strftime("%H:%M"),
                 "day_of_week": schedule.day_of_week,
                 "classroom": schedule.classroom.name_zh,
             })
 
-        print("AVG", CourseComment.objects.aggregate('rank'))
+        # 只取可见评论中的打分情况
+        rank_avg = CourseComment.objects.filter(course=course, visible=True).aggregate(Avg('rank'))
+
         return HttpResponse(json.dumps({
             "code": Codes.OK,
             "msg": Messages.OK,
@@ -206,10 +212,11 @@ def api_course(request, course_id):
             "name_en": course.name_en,
             "name_short": course.name_short,
             "credit": course.credit,
-            "faculty": course.faculty.name_zh,
+            "faculty": None if course.faculty is None else course.faculty.name_zh,
+            # TODO: foreign key 允许 null 时候一定要这样！ (这个TODO只是为了提醒一下你)
             "teachers": teacher_list,
             "schedule": schedule_list,
-            "rank": "to be implemented"
+            "rank": rank_avg['rank__avg']
         }))
     except Exception as e:
         print(e)
@@ -227,11 +234,12 @@ def swearing_filter(content: str) -> str:
     return content
 
 
+@api_view(['GET', 'POST', 'DELETE'])
 @validate
 def api_comment(request, course_id):
     # 无论如何都要先判断一下 course_id 是否正确
     try:
-        course = Course.objects.get(course_id=course_id)
+        course = Course.objects.get(id=course_id)
         pass
     except ObjectDoesNotExist:
         return HttpResponse(json.dumps({"code": Codes.COURSE_ID_NOT_FOUNT, "msg": Messages.COURSE_ID_NOT_FOUNT}))
@@ -239,7 +247,7 @@ def api_comment(request, course_id):
     try:
         if request.method == "GET":  # get course comment
 
-            comments = CourseComment.objects.filter(course=course).order_by('-publish_time')
+            comments = CourseComment.objects.filter(course=course, visible=True).order_by('-publish_time')
             com_list = []
             for comment in comments:
                 com_list.append({
@@ -249,7 +257,7 @@ def api_comment(request, course_id):
                     "thumbs_down": comment.thumbs_down,
                     "rank": comment.rank,
                     "content": comment.content,
-                    "publish_time": time.strftime("%Y-%m-%d", comment.publish_time)
+                    "publish_time": comment.publish_time.strftime("%Y-%m-%d %H:%M:%S")
                 })
             return HttpResponse(json.dumps({
                 "code": Codes.OK,
@@ -262,15 +270,19 @@ def api_comment(request, course_id):
 
             if len(content.strip()) == 0:
                 return HttpResponse(json.dumps({
-                    "code": Codes.COURSE_COMMENT_CONTENT_TOO_LONG,
-                    "msg": Messages.COURSE_COMMENT_CONTENT_TOO_LONG
+                    "code": Codes.COURSE_COMMENT_CONTENT_EMPTY,
+                    "msg": Messages.COURSE_COMMENT_CONTENT_EMPTY
                 }))
             if len(content) > 16384:
                 return HttpResponse(json.dumps({
                     "code": Codes.COURSE_COMMENT_CONTENT_TOO_LONG,
                     "msg": Messages.COURSE_COMMENT_CONTENT_TOO_LONG
                 }))
-
+            if rank > 5 or rank <= 0:
+                return HttpResponse(json.dumps({
+                    "code": Codes.COURSE_COMMENT_CONTENT_TOO_LONG,
+                    "msg": Messages.COURSE_COMMENT_CONTENT_TOO_LONG
+                }))
             # TODO: 脏话过滤
             content = swearing_filter(content)
 

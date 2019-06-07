@@ -1,0 +1,125 @@
+## **获取课程详情**
+
+  该 API 用于获取一个课程的详细内容。通过直接指定 URL 中的 `{course_id}` 即可获得某课程的详细信息
+
+- **URL**
+
+  _/course/{course_id}_
+
+- **Method**
+
+  `GET`
+
+- **REST Params**
+  `course_id: integer` 是 course_id 不是 course_code ！这里要注意！
+  
+- **URL Params**
+
+  **Required**
+
+  `token: string` 登陆时获得的 token
+
+  `time: integer` 10位时间戳 UTC+0
+
+  `sign: string` 当前请求的签名
+
+- **Data Params**
+
+  None
+
+- **Success Response:**
+
+  ```JSON
+  {
+      "code":0,
+      "msg":"",
+      "course_code":"GWC001",
+      "course_class":"D03",
+      "name_zh":"西方文化通論",
+      "name_en":null,
+      "name_short":null,
+      "credit":null,
+      "faculty":null,
+      "teachers":[
+          {
+              "name_zh":"顧衛民",
+              "name_en":"unspecified",
+              "position":null,
+              "email":null,
+              "office_room":"",
+              "avatar":""
+          },
+          {
+              "name_zh":"許平",
+              "name_en":"unspecified",
+              "position":null,
+              "email":null,
+              "office_room":"",
+              "avatar":""
+          },
+          {
+              "name_zh":"趙林",
+              "name_en":"unspecified",
+              "position":null,
+              "email":null,
+              "office_room":"",
+              "avatar":""
+          }
+      ],
+      "schedule":[
+          {
+              "intake":1709,
+              "date_begin":"09-04",
+              "date_end":"12-16",
+              "time_begin":"15:00",
+              "time_end":"16:45",
+              "day_of_week":1,
+              "classroom":"N214"
+          }
+      ],
+      "rank":3.5 # 可能为 null
+  }
+  ```
+
+- **Error Response:**
+
+  ```json
+  {
+      "code": -4002, 
+      "msg": "未找到该课程ID"
+  }
+  ```
+
+  
+
+- **Example** (Python)
+
+  ```python
+  import hashlib
+  import json
+  import time
+  import requests
+  
+  COURSE_ID = 5
+  
+  token = '6e262476-88e9-11e9-9405-be63b5b3b608'
+  
+  data = {
+      'token': token,
+      'time': int(time.time()),
+  }
+  
+  params = ''
+  for e in sorted(data):
+      params = params + e + '=' + str(data[e]) + '&'
+  params = params[:-1]
+  
+  data['sign'] = hashlib.md5(params.encode('utf-8')).hexdigest()
+  r = requests.get("http://mp.junyi.pw:8000/course/"+str(COURSE_ID), params=data)
+  
+  print(json.loads(r.text))
+  
+  ```
+  
+  
+

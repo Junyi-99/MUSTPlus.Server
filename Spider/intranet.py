@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
 from lxml import etree
+from rest_framework.decorators import api_view
 
 from Services.Basic.query import get_faculty, get_department
 from Services.Basic.views import init_faculties, init_departments
@@ -181,6 +182,7 @@ def proc_news(s, cookies):
     proc_news_list(news_list, cookies)
 
 
+@api_view(['GET'])
 def intranet_update_normal(request):
     try:
         c = login(request.GET['username'], request.GET['password'])
@@ -192,6 +194,7 @@ def intranet_update_normal(request):
         return HttpResponse(json.dumps({"code": Codes.INTERNAL_ERROR, "msg": Messages.INTERNAL_ERROR}))
 
 
+@api_view(['GET'])
 def intranet_update_more(request):
     try:
         c = login(request.GET['username'], request.GET['password'])

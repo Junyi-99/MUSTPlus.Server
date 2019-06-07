@@ -2,6 +2,7 @@ import json
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
+from rest_framework.decorators import api_view
 
 from MUSTPlus.decorators import require_get
 from Services.Authentication.decorators import validate
@@ -9,6 +10,7 @@ from Services.Teacher.models import Teacher, TeachCourse
 from Settings import Codes, Messages
 
 
+@api_view(['GET'])
 @require_get
 @validate
 def api_teacher(request, name_zh):

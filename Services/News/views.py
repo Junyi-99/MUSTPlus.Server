@@ -1,6 +1,9 @@
 import json
 
 from django.http import HttpResponse
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
+from rest_framework.decorators import api_view
 
 from Services.Authentication.decorators import validate
 from Services.News.models import Announcement, Document, Attachment
@@ -96,6 +99,12 @@ def news_argument(begin: int, count: int, department: int = None, faculty: int =
     return ret
 
 
+user_response = openapi.Response('descr124iption', )
+
+
+@swagger_auto_schema(method='get', responses={123: user_response}, tags=['News'])
+@api_view(['GET'])
+@validate
 def news_department(request, department_id):
     try:
         begin = int(request.GET['from'])
@@ -107,6 +116,8 @@ def news_department(request, department_id):
     return HttpResponse(json.dumps(ret))
 
 
+@api_view(['GET'])
+@validate
 def news_faculty(request, faculty_id):
     try:
         begin = int(request.GET['from'])
@@ -118,6 +129,8 @@ def news_faculty(request, faculty_id):
     return HttpResponse(json.dumps(ret))
 
 
+@api_view(['GET'])
+@validate
 def news_all(request):
     try:
         begin = int(request.GET['from'])

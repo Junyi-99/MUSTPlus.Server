@@ -28,8 +28,11 @@ DEBUG = True
 #
 ALLOWED_HOSTS = ['mp.junyi.pw', 'localhost', '127.0.0.1']
 
-# Application definition
+SWAGGER_SETTINGS = {
+    'DEFAULT_INFO': 'MUSTPlus.urls.api_info',
+}
 
+# Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -37,6 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'drf_yasg',
     'Services.Admin',
     'Services.Authentication',
     'Services.Basic',
@@ -48,6 +53,7 @@ INSTALLED_APPS = [
     'Services.Timetable',
     'MUSTPlus',
     'Spider',
+
 ]
 
 MIDDLEWARE = [

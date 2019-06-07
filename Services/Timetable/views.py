@@ -6,6 +6,7 @@ from datetime import datetime
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework.decorators import api_view
 
 from Services.Authentication import utility
 from Services.Authentication.decorators import validate
@@ -20,9 +21,11 @@ from Settings import Codes, Messages
 TIMETABLE_INTAKE = 1902
 
 
+@api_view(['GET'])
 @csrf_exempt
 @validate
 def timetable(request):
+    global r
     stu = utility.get_student_object(request)
 
     intake = int(request.GET.get("intake", TIMETABLE_INTAKE))
@@ -41,16 +44,18 @@ def timetable(request):
         for e in r:
             # 创建课程
             try:
-                course = Course.objects.get(course_code=e['course_id'], course_class=e['course_class'])
+                course = Course.objects.get(course_code=e['course_code'], course_class=e['course_class'])
             except ObjectDoesNotExist:
                 course = Course(
-                    course_code=e['course_id'],
+                    course_code=e['course_code'],
                     course_class=e['course_class'],
                     name_zh=e['course_name_zh'],
                 )
                 course.save()
                 print("Create a new Course [%s %s %s]"
                       % (course.course_code, course.course_class, course.name_zh))
+            e['course_id'] = course.id
+
             # 创建教室
             try:
                 classroom = ClassRoom.objects.get(name_zh=e['classroom'])

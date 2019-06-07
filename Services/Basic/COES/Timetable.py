@@ -80,7 +80,7 @@ def get_timetable(html_source: str) -> list:
                 'day': sp2[0].strip(),
                 'time_begin': sp2[1],
                 'time_end': sp2[2],
-                'course_id': sp2[3],
+                'course_code': sp2[3],
                 'course_name_zh': sp2[4],
                 'course_class': sp2[5],
                 'classroom': sp2[6],

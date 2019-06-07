@@ -12,6 +12,7 @@ from django.utils import timezone
 
 from Services.Student.models import Student
 from Settings import Codes, Messages
+from Settings.Server import AUTH_SECRET
 
 TOKEN_ERROR = json.dumps({"code": Codes.AUTH_TOKEN_INVALID, "msg": Messages.AUTH_TOKEN_INVALID})
 
@@ -46,7 +47,8 @@ def validate(func):
             post_para = post_para[:-1]
 
             # calculate sign
-            param_list = get_para + post_para
+            param_list = get_para + post_para + AUTH_SECRET
+            print("list", param_list)
             sign_calc = hashlib.md5(param_list.encode('utf-8')).hexdigest()
 
             # check sign

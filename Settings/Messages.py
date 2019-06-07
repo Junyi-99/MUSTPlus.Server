@@ -27,6 +27,7 @@ COURSE_COMMENT_CONTENT_ILLEGAL = "要评论的内容无效（非法评论内容�
 COURSE_COMMENT_CONTENT_TOO_LONG = "评论内容太长"
 COURSE_COMMENT_CONTENT_EMPTY = "评论内容不能为空"
 COURSE_COMMENT_ID_NOT_FOUND = "删除评论时未找到该评论ID"
+COURSE_COMMENT_RANK_INVALID = "给课程的打分值不合法"
 COURSE_RECORD_FROM_INVALID = "获取评论时，从第from条开始获取，from参数无效"
 
 # GET /course/ftp
