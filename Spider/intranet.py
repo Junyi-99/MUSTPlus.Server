@@ -152,10 +152,10 @@ def proc_more_news(s, cookies):
         title = t[pos1 + 1:pos2].replace('\xa0', '').strip()
         pos1 = title.find(')')
         news_list.append({
-            'fac_dep': title[1:pos1],  # faculties or departments
+            'fac_dep': title[1:pos1].strip(),  # faculties or departments
             'title': title[pos1 + 1:-10].strip(),
-            'date': title[-10:],
-            'url': str(e['onclick']),
+            'date': title[-10:].strip(),
+            'url': str(e['onclick'].strip()),
         })
     proc_news_list(news_list, cookies)
 
@@ -173,10 +173,10 @@ def proc_news(s, cookies):
     news_list = []
     for i in range(0, len(faculties_departments)):
         news_list.append({
-            'fac_dep': faculties_departments[i],  # faculties or departments
-            'title': titles[i],
-            'date': dates[i],
-            'url': links[i],
+            'fac_dep': faculties_departments[i].strip(),  # faculties or departments
+            'title': titles[i].strip(),
+            'date': dates[i].strip(),
+            'url': links[i].strip(),
         })
 
     proc_news_list(news_list, cookies)

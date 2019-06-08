@@ -1,4 +1,4 @@
-## **获取课程评论**
+## **获取课程评论👀**
 
   该 API 用于获取一个课程的详细内容。通过直接指定 URL 中的 `{course_id}` 即可获得某课程的详细信息
 
@@ -76,7 +76,7 @@
 
 
 
-## **发布课程评论**
+## **发布课程评论**✍
 
   该 API 用于获取一个课程的详细内容。通过直接指定 URL 中的 `{course_id}` 即可获得某课程的详细信息
 
@@ -137,3 +137,64 @@
   
   POST请求里，只会返回**这些**错误代码 + AUTH系列的错误代码
 
+## **删除课程评论❌**
+
+  该 API 用于删除某条课程评论。删除课程评论后，对于课程的评分也会被删除。
+
+- **URL**
+
+  _/course/{course_id}/comment_
+
+- **Method**
+
+  `DELETE`
+
+- **REST Params**
+  `course_id: integer` 是 course_id 不是 course_code ！这里要注意！
+
+- **URL Params**
+
+  **Required**
+
+  `token: string` 登陆时获得的 token
+
+  `time: integer` 10位时间戳 UTC+0
+
+  `sign: string` 当前请求的签名
+  
+  `id: integer` 课程评论 ID
+
+- **Data Params**
+
+- 
+  None
+  
+- **Success Response:**
+
+  ```JSON
+  {
+      "code":0,
+      "msg":""
+  }
+  ```
+  
+- **Error Response:**
+
+  ```json
+  {
+      "code": -4006, # 状态码 
+      "msg": "未找到该评论ID" # 错误信息
+  }
+  ```
+
+  DELETE 请求里，只会返回这**一个**错误代码 + AUTH系列的错误代码
+  
+- **附录：**
+
+  有可能在实现API的时候会产生这样一个疑问：
+
+  _明明 course_id 与 coursecomment_id 没有附属关系，我直接给 coursecomment_id 不就好了，为什么还要传入 course_id 呢？_
+
+  好问题。
+
+  主要是为了 API **风格上的统一**，所以采用了现在这种实现方式。

@@ -22,47 +22,46 @@ def calc_sign(get_data: dict, post_data: dict) -> dict:
     return hashlib.md5(params.encode('utf-8')).hexdigest()
 
 
-def news_all(begin, count):
+def comment_get(course_id):
     get_data = {
         'token': TOKEN,
         'time': int(time.time()),
-        'from': begin,
-        'count': count
     }
+
     get_data['sign'] = calc_sign(get_data, {})
-    r = requests.get("http://mp.junyi.pw:8000/news/all", params=get_data)
-    return r.text
+    r = requests.get("http://mp.junyi.pw:8000/course/" +
+                     str(course_id) + "/comment", params=get_data)
+    print(r.text)
 
 
-def news_faculty(faculty_id, begin, count):
+def comment_post(course_id, rank, content):
     get_data = {
         'token': TOKEN,
         'time': int(time.time()),
-        'from': begin,
-        'count': count
     }
-    get_data['sign'] = calc_sign(get_data, {})
-    r = requests.get("http://mp.junyi.pw:8000/news/faculty/" +
-                     str(faculty_id), params=get_data)
-    return r.text
+    post_data = {
+        'rank': rank,
+        'content': content
+    }
+
+    get_data['sign'] = calc_sign(get_data, post_data)
+    r = requests.post("http://mp.junyi.pw:8000/course/" +
+                      str(course_id) + "/comment", params=get_data, data=post_data)
+    print(r.text)
 
 
-def news_department(department_id, begin, count):
+def comment_delete(course_id, comment_id):
     get_data = {
         'token': TOKEN,
         'time': int(time.time()),
-        'from': begin,
-        'count': count
+        'id': comment_id,
     }
+
     get_data['sign'] = calc_sign(get_data, {})
-    r = requests.get("http://mp.junyi.pw:8000/news/department/" +
-                     str(department_id), params=get_data)
-    return r.text
+    r = requests.delete("http://mp.junyi.pw:8000/course/" +
+                        str(course_id) + "/comment", params=get_data)
+    print(r.text)
 
-
-# j = json.loads(news_all(1, 3))
-# print(json.dumps(j))
-# print(j, len(j['news']))
-# print(news_department('圖書館', 1, 2))
-print(news_faculty('商學院', 1, 2))
-# news_faculty()
+# comment_post(5, 8, "   ")
+# comment_delete(5, 1)
+# comment_get(5)

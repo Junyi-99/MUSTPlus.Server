@@ -1,11 +1,15 @@
 import json
+import sys
+import traceback
 
+from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import api_view
 
 from Services.Authentication.decorators import validate
+from Services.Basic.models import Department, Faculty
 from Services.News.models import Announcement, Document, Attachment
 from Settings import Codes, Messages
 
@@ -14,13 +18,21 @@ from Settings import Codes, Messages
 # begin ∈ [1, n]
 # department 和 faculty 谁不为 None 表示选择谁
 # 如果二者都为 None 说明选择的是全部
-def news_argument(begin: int, count: int, department: int = None, faculty: int = None) -> dict:
+def news_argument(begin: int, count: int, department: str = None, faculty: str = None) -> dict:
     if department is not None:
-        ann = Announcement.objects.filter(department_id=department).order_by('-publish_time')  # 按照发布时间从最近到最远排序
-        doc = Document.objects.filter(department_id=department).order_by('-publish_time')  # 按照发布时间从最近到最远排序
+        try:
+            dep = Department.objects.get(name_zh=department)
+            ann = Announcement.objects.filter(department=dep).order_by('-publish_time')  # 按照发布时间从最近到最远排序
+            doc = Document.objects.filter(department=dep).order_by('-publish_time')  # 按照发布时间从最近到最远排序
+        except ObjectDoesNotExist:
+            pass
     elif faculty is not None:
-        ann = Announcement.objects.filter(faculty_id=faculty).order_by('-publish_time')  # 按照发布时间从最近到最远排序
-        doc = Document.objects.filter(faculty_id=faculty).order_by('-publish_time')  # 按照发布时间从最近到最远排序
+        try:
+            fac = Faculty.objects.get(name_zh=faculty)
+            ann = Announcement.objects.filter(faculty=fac).order_by('-publish_time')  # 按照发布时间从最近到最远排序
+            doc = Document.objects.filter(faculty=fac).order_by('-publish_time')  # 按照发布时间从最近到最远排序
+        except ObjectDoesNotExist:
+            pass
     else:
         ann = Announcement.objects.all().order_by('-publish_time')  # 按照发布时间从最近到最远排序
         doc = Document.objects.all().order_by('-publish_time')  # 按照发布时间从最近到最远排序
@@ -52,8 +64,8 @@ def news_argument(begin: int, count: int, department: int = None, faculty: int =
     elif count > 20:
         count = 20
     if begin + count > len(result):
-        count = len(result) - begin
-
+        count = len(result) - begin + 1
+    print(begin, count)
     news = []  # 存放结果
     for i in range(begin - 1, begin - 1 + count):
         r = result[i]
@@ -105,28 +117,44 @@ user_response = openapi.Response('descr124iption', )
 @swagger_auto_schema(method='get', responses={123: user_response}, tags=['News'])
 @api_view(['GET'])
 @validate
-def news_department(request, department_id):
+def news_department(request, department_name_zh):
     try:
         begin = int(request.GET['from'])
         count = int(request.GET['count'])
     except Exception as e:
-        begin = 0
+        begin = 1
         count = 20
-    ret = news_argument(begin, count, department_id, None)
-    return HttpResponse(json.dumps(ret))
+    try:
+        ret = news_argument(begin, count, department_name_zh, None)
+        return HttpResponse(json.dumps(ret))
+    except Exception as e:
+        print(e)
+        traceback.print_exc(file=sys.stdout)
+        return HttpResponse(json.dumps({
+            "code": Codes.NEWS_UNKNOWN_ERROR,
+            "msg": Messages.NEWS_UNKNOWN_ERROR
+        }))
 
 
 @api_view(['GET'])
 @validate
-def news_faculty(request, faculty_id):
+def news_faculty(request, faculty_name_zh):
     try:
         begin = int(request.GET['from'])
         count = int(request.GET['count'])
     except Exception as e:
-        begin = 0
+        begin = 1
         count = 20
-    ret = news_argument(begin, count, None, faculty_id)
-    return HttpResponse(json.dumps(ret))
+    try:
+        ret = news_argument(begin, count, None, faculty_name_zh)
+        return HttpResponse(json.dumps(ret))
+    except Exception as e:
+        print(e)
+        traceback.print_exc(file=sys.stdout)
+        return HttpResponse(json.dumps({
+            "code": Codes.NEWS_UNKNOWN_ERROR,
+            "msg": Messages.NEWS_UNKNOWN_ERROR
+        }))
 
 
 @api_view(['GET'])
@@ -136,10 +164,18 @@ def news_all(request):
         begin = int(request.GET['from'])
         count = int(request.GET['count'])
     except Exception as e:
-        begin = 0
+        begin = 1
         count = 20
-    ret = news_argument(begin, count, None, None)
-    return HttpResponse(json.dumps(ret))
+    try:
+        ret = news_argument(begin, count, None, None)
+        return HttpResponse(json.dumps(ret))
+    except Exception as e:
+        print(e)
+        traceback.print_exc(file=sys.stdout)
+        return HttpResponse(json.dumps({
+            "code": Codes.NEWS_UNKNOWN_ERROR,
+            "msg": Messages.NEWS_UNKNOWN_ERROR
+        }))
 
 
 @validate

@@ -19,26 +19,18 @@ def calc_sign(get_data: dict, post_data: dict) -> dict:
     post = post[:-1]
 
     params = get + post + AUTH_SECRET
-    print(params)
     return hashlib.md5(params.encode('utf-8')).hexdigest()
-    
-def t(intake, week):
-    data = {
+
+
+def teacher(name_zh):
+    get_data = {
         'token': TOKEN,
         'time': int(time.time()),
-        'intake': intake,
-        'week':week,
     }
-    data['sign'] = calc_sign(data, {})
-    # print(data)
-    r = requests.get("http://mp.junyi.pw:8000/timetable", params=data)
-    #print(r.text)
-    print(r.text)
-    # print(json.loads(r.text))
+    get_data['sign'] = calc_sign(get_data, {})
+    r = requests.get("http://mp.junyi.pw:8000/teacher/" +
+                     name_zh, params=get_data)
+    return r.text
 
 
-# t(1709, 0)
-# t(1802, 0)
-# t(1809, 0)
-t(1902, 0)
-#t(1909, 0)
+print(teacher("羅少龍"))

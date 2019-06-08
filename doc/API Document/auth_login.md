@@ -9,7 +9,11 @@
 - **Method**
 
   `POST`
-
+  
+- **REST Params**
+  
+  None
+  
 - **URL Params**
 
   None
@@ -119,7 +123,10 @@
    r = requests.post('http://mp.junyi.pw:8000/auth/login', data=post_data)
    print(json.loads(r.text))
    
+   ```
 ```
    
    
 
+
+```

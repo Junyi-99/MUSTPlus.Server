@@ -31,7 +31,7 @@ def api_teacher(request, name_zh):
             "msg": Messages.OK,
             "name_zh": teacher.name_zh,
             "name_en": teacher.name_en,
-            "faculty": teacher.faculty.name_zh,
+            "faculty": "" if teacher.faculty is None else teacher.faculty.name_zh,
             "avatar_url": teacher.avatar_url,
             "position": teacher.position,
             "email": teacher.email,

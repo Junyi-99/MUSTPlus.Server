@@ -14,6 +14,10 @@
   
   `GET`
   
+* **REST Params**
+
+  None
+
 *  **URL Params**
 
   None

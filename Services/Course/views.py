@@ -36,9 +36,9 @@ def save_course(course_code: str, course_class: str, name_zh: str, name_en: str,
 @validate
 def init(request):
     try:
-        student = get_student_object(request)
-        token = student.coes_token
-        cookie = student.coes_cookie
+        stu = get_student_object(request)
+        token = stu.coes_token
+        cookie = stu.coes_cookie
 
         for faculty in faculties:
             print("Now faculty: ", faculty)
@@ -71,18 +71,20 @@ def init(request):
 def api_thumbs_down(request, course_id):
     if request.method == "POST":
         try:
-            comment_id = int(request.POST.get("id", -1))
-            comment = CourseComment.objects.get(id=comment_id)
+            comment_id = int(request.GET.get("id", -1))
+            comment = CourseComment.objects.get(id=comment_id, visible=True)
         except ObjectDoesNotExist:
             return HttpResponse(json.dumps({
                 "code": Codes.COURSE_COMMENT_ID_NOT_FOUND,
                 "msg": Messages.COURSE_COMMENT_ID_NOT_FOUND
             }))
         try:
-            student = get_student_object(request)
-            tdcc = ThumbsDownCourseComment.objects.get(student=student, comment=comment)
+            stu = get_student_object(request)
+            tdcc = ThumbsDownCourseComment.objects.get(student=stu, comment=comment)
         except ObjectDoesNotExist:
-            tdcc = ThumbsDownCourseComment(student=student, comment=comment)
+            tdcc = ThumbsDownCourseComment(student=stu, comment=comment)
+            comment.thumbs_down = comment.thumbs_down + 1
+            comment.save()
             tdcc.save()
 
         return HttpResponse(json.dumps({
@@ -91,7 +93,7 @@ def api_thumbs_down(request, course_id):
         }))
     elif request.method == "DELETE":
         try:
-            comment_id = int(request.POST.get("id", -1))
+            comment_id = int(request.GET.get("id", -1))
             comment = CourseComment.objects.get(id=comment_id)
         except ObjectDoesNotExist:
             return HttpResponse(json.dumps({
@@ -99,8 +101,10 @@ def api_thumbs_down(request, course_id):
                 "msg": Messages.COURSE_COMMENT_ID_NOT_FOUND
             }))
         try:
-            student = get_student_object(request)
-            ThumbsDownCourseComment.objects.get(student=student, comment=comment).delete()
+            stu = get_student_object(request)
+            ThumbsDownCourseComment.objects.get(student=stu, comment=comment).delete()
+            comment.thumbs_down = comment.thumbs_down - 1
+            comment.save()
         except ObjectDoesNotExist:
             pass
 
@@ -120,18 +124,20 @@ def api_thumbs_down(request, course_id):
 def api_thumbs_up(request, course_id):
     if request.method == "POST":
         try:
-            comment_id = int(request.POST.get("id", -1))
-            comment = CourseComment.objects.get(id=comment_id)
+            comment_id = int(request.GET.get("id", -1))
+            comment = CourseComment.objects.get(id=comment_id, visible=True)
         except ObjectDoesNotExist:
             return HttpResponse(json.dumps({
                 "code": Codes.COURSE_COMMENT_ID_NOT_FOUND,
                 "msg": Messages.COURSE_COMMENT_ID_NOT_FOUND
             }))
         try:
-            student = get_student_object(request)
-            tdcc = ThumbsUpCourseComment.objects.get(student=student, comment=comment)
+            stu = get_student_object(request)
+            tdcc = ThumbsUpCourseComment.objects.get(student=stu, comment=comment)
         except ObjectDoesNotExist:
-            tdcc = ThumbsUpCourseComment(student=student, comment=comment)
+            tdcc = ThumbsUpCourseComment(student=stu, comment=comment)
+            comment.thumbs_up = comment.thumbs_up + 1
+            comment.save()
             tdcc.save()
 
         return HttpResponse(json.dumps({
@@ -140,7 +146,7 @@ def api_thumbs_up(request, course_id):
         }))
     elif request.method == "DELETE":
         try:
-            comment_id = int(request.POST.get("id", -1))
+            comment_id = int(request.GET.get("id", -1))
             comment = CourseComment.objects.get(id=comment_id)
         except ObjectDoesNotExist:
             return HttpResponse(json.dumps({
@@ -150,6 +156,8 @@ def api_thumbs_up(request, course_id):
         try:
             student = get_student_object(request)
             ThumbsUpCourseComment.objects.get(student=student, comment=comment).delete()
+            comment.thumbs_up = comment.thumbs_up - 1
+            comment.save()
         except ObjectDoesNotExist:
             pass
 
@@ -280,8 +288,8 @@ def api_comment(request, course_id):
                 }))
             if rank > 5 or rank <= 0:
                 return HttpResponse(json.dumps({
-                    "code": Codes.COURSE_COMMENT_CONTENT_TOO_LONG,
-                    "msg": Messages.COURSE_COMMENT_CONTENT_TOO_LONG
+                    "code": Codes.COURSE_COMMENT_RANK_INVALID,
+                    "msg": Messages.COURSE_COMMENT_RANK_INVALID
                 }))
             # TODO: 脏话过滤
             content = swearing_filter(content)
@@ -295,7 +303,7 @@ def api_comment(request, course_id):
             }))
         elif request.method == "DELETE":
             try:
-                comment_id = request.DELETE.get('id')
+                comment_id = request.GET.get('id')
                 course_comment = CourseComment.objects.get(id=comment_id)
                 course_comment.visible = False
                 course_comment.save()
