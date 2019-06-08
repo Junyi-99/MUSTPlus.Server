@@ -8,6 +8,11 @@ Macau University of Science and Technology Campus Application ( Server )
 
 Please check the `doc` folder.
 
+
+## API 文档
+
+请移步 [MUSTPlus API 文档](.\doc\API Document\API Document.md)
+
 ## Environments
 
 Server: **Ubuntu 18.04**

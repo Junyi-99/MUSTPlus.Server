@@ -155,6 +155,6 @@ GET 请求里，只会返回**这些**错误代码 + AUTH系列的错误代码
 
 - **Example** (Python)
 
-  不想写Example了，自己去查 UnitTest
+  不想写Example了，写文档快累死了
   
   
