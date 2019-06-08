@@ -11,7 +11,7 @@ Please check the `doc` folder.
 
 ## API 文档
 
-请移步 [MUSTPlus API 文档](.\doc\API Document\API Document.md)
+请移步 `\doc\API Document\API Document.md`
 
 ## Environments
 
