@@ -7,7 +7,7 @@ Macau University of Science and Technology Campus Application ( Server )
 ## Documentation
 
 Please check the `doc` folder.
-
+.
 
 ## API 文档
 
