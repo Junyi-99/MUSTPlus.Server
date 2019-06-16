@@ -5,3 +5,5 @@ Our code style follows Google's [Python Style Guide]((https://github.com/google/
 ## Directory Structure
 
 
+All folder names should be in small letters
+

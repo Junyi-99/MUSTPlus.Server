@@ -140,7 +140,7 @@
   ```json
   {
       "code": -7003, 
-      "msg": "Timetable 请求中发现 COES Cookie 过期"
+      "msg": timetable
   }
   ```
 
