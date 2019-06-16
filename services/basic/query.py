@@ -22,6 +22,7 @@ def get_department(name: str, auto_create: bool = True) -> Optional[Department]:
 
 def get_faculty(name_zh: str, auto_create: bool = True) -> Optional[Faculty]:
     try:
+        print("Get Faculty", name_zh)
         return Faculty.objects.get(name_zh=name_zh)
     except ObjectDoesNotExist:
         if auto_create:

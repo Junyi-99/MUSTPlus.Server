@@ -32,7 +32,7 @@ class Student(models.Model):
 class TakeCourse(models.Model):
     intake = models.IntegerField(default=0)
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
-    course = models.ForeignKey("services.course.Course", on_delete=models.CASCADE)
+    course = models.ForeignKey("course.Course", on_delete=models.CASCADE)
     grade = models.CharField(max_length=16, null=True)
     exam_datetime = models.DateTimeField(null=True)
     exam_classroom = models.ForeignKey(ClassRoom, on_delete=models.CASCADE, null=True)

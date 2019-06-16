@@ -49,16 +49,17 @@ def login(username, password, token, cookies, captcha='0000'):
         headers['Cookie'] = cookies
         ret = requests.post(url=url, data=data, headers=headers)
         # print(r.text)
-        with open("login_record.html", 'wb') as file:
-            file.write(ret.text.encode('utf-8'))
-            file.close()
+        # with open("login_record.html", 'wb') as file:
+        #     file.write(ret.text.encode('utf-8'))
+        #     file.close()
 
-        trait = '<!--coes VERSION '
+        trait = '- Inbox'
         if trait in ret.text:
-            pos1 = ret.text.find(trait) + len(trait)
-            pos2 = ret.text.find('-->', pos1)
-            print("Login Successful!")
-            print("coes Version: ", ret.text[pos1:pos2])
+            # pos1 = ret.text.find(trait) + len(trait)
+            # pos2 = ret.text.find('-->', pos1)
+            # print("Login Successful!")
+            # print("coes Version: ", ret.text[pos1:pos2])
+
             return LOGIN_SUCCESSFUL
         if '驗證碼不相同' in ret.text:
             logout(cookies)

@@ -32,7 +32,7 @@ class DocumentViewed(models.Model):
     view_time = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return str(self.student) + " viewed " + str(self.document)
+        return str(self.student) + ' viewed ' + str(self.document)
 
 
 # 通告（适用于 viewContent ）
@@ -54,7 +54,7 @@ class AnnouncementViewed(models.Model):
     view_time = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return str(self.student) + " viewed " + str(self.announcement)
+        return str(self.student) + ' viewed ' + str(self.announcement)
 
 
 # 附件(适用于 viewContent中的附件)

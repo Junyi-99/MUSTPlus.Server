@@ -5,6 +5,7 @@ import traceback
 import uuid
 from datetime import datetime, timedelta
 
+import pytz
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -24,12 +25,12 @@ def get_hash(request):
     token, cookies = coes_login.get_token_cookies()
     captcha = coes_login.get_captcha(cookies)
     ret = {
-        "code": codes.OK,
-        "msg": messages.OK,
-        "key": PUBLIC_KEY_CONTENT,
-        "token": token,
-        "cookies": cookies,
-        "captcha": base64.b64encode(captcha).decode('utf-8')
+        'code': codes.OK,
+        'msg': messages.OK,
+        'key': PUBLIC_KEY_CONTENT,
+        'token': token,
+        'cookies': cookies,
+        'captcha': base64.b64encode(captcha).decode('utf-8')
     }
     return JsonResponse(ret)
 
@@ -40,7 +41,7 @@ def get_hash(request):
 @csrf_exempt
 @require_post
 def login(request):
-    cookies = ""
+    cookies = ''
     try:
         username = request.POST.get('username', None)
         password = request.POST.get('password', None)
@@ -52,9 +53,9 @@ def login(request):
         for i in range(5):
             if check_list[i] is None:
                 return JsonResponse({
-                    "code": codes.LOGIN_FIELD_ERROR,
-                    "msg": messages.LOGIN_FIELD_ERROR,
-                    "detail": i
+                    'code': codes.LOGIN_FIELD_ERROR,
+                    'msg': messages.LOGIN_FIELD_ERROR,
+                    'detail': i
                 })
 
         username = decrypt(base64.b64decode(username))
@@ -65,20 +66,20 @@ def login(request):
 
         if not username_check(username):
             return JsonResponse({
-                "code": codes.LOGIN_USERNAME_INVALID,
-                "msg": messages.LOGIN_USERNAME_INVALID
+                'code': codes.LOGIN_USERNAME_INVALID,
+                'msg': messages.LOGIN_USERNAME_INVALID
             })
 
         ret = coes_login.login(username, password, token, cookies, captcha)
 
         if ret == coes_login.LOGIN_SUCCESSFUL:
-            print("User: %s, Login Successful" % (username,))
+            print('User: %s, Login Successful' % (username,))
             try:
                 stu = Student.objects.get(student_id=username)
                 stu.token = str(uuid.uuid1())
                 stu.coes_token = token
                 stu.coes_cookie = cookies
-                stu.token_expired_time = datetime.now() + timedelta(hours=720)  # 1 month
+                stu.token_expired_time = datetime.now(tz=pytz.UTC) + timedelta(hours=720)  # 1 month
                 stu.save()
             except ObjectDoesNotExist:  # New user, update user data
                 stu = Student(
@@ -86,21 +87,21 @@ def login(request):
                     token=str(uuid.uuid1()),
                     coes_token=token,
                     coes_cookie=cookies,
-                    token_expired_time=datetime.now() + timedelta(hours=720)
+                    token_expired_time=datetime.now(tz=pytz.UTC) + timedelta(hours=720)
                 )
-                stu.save()
-                refresh_student_information(username)
+                # stu.save()
+                refresh_student_information(stu)
             # coes_login.logout(cookies)
             return JsonResponse({
-                "code": codes.OK,
-                "msg": messages.OK,
-                "student_name": stu.name_zh,
-                "token": stu.token
+                'code': codes.OK,
+                'msg': messages.OK,
+                'student_name': stu.name_zh,
+                'token': stu.token
             })
 
         ret_code = codes.LOGIN_OTHER_ERROR
         ret_msg = messages.LOGIN_OTHER_ERROR
-
+        ret_detail = ret
         if ret == coes_login.LOGIN_CAPTCHA_ERROR:
             ret_code = codes.LOGIN_CAPTCHA_ERROR
             ret_msg = messages.LOGIN_CAPTCHA_ERROR
@@ -112,8 +113,9 @@ def login(request):
             ret_msg = messages.LOGIN_PASSWORD_ERROR
 
         return JsonResponse({
-            "code": ret_code,
-            "msg": ret_msg
+            'code': ret_code,
+            'msg': ret_msg,
+            'detail': ret_detail
         })
 
     except Exception as exception:
@@ -121,12 +123,12 @@ def login(request):
         traceback.print_exc(file=sys.stdout)
         ret_code = codes.INTERNAL_ERROR
         ret_msg = messages.INTERNAL_ERROR
-        if str(exception) == "Incorrect padding" or str(exception) == "Decryption failed":
+        if str(exception) == 'Incorrect padding' or str(exception) == 'Decryption failed':
             ret_code = codes.LOGIN_RSA_ERROR
             ret_msg = messages.LOGIN_RSA_ERROR
         return JsonResponse({
-            "code": ret_code,
-            "msg": ret_msg
+            'code': ret_code,
+            'msg': ret_msg
         })
 
 
@@ -137,7 +139,7 @@ def login(request):
 @require_post
 @validate
 def logout(request):
-    return HttpResponse("")
+    return HttpResponse('')
 
 
 def username_check(username: str):
@@ -157,7 +159,9 @@ def username_check(username: str):
 # 刷新用户信息
 # Feature: 自动更新 Faculty Program Major 之间的关系（不存在自动创建，且保证依赖关系正确）
 def refresh_student_information(student: Student):
+    print(student.coes_cookie)
     ret = stu_info.student_information(student.coes_cookie)
+    print(ret)
     student.name_zh = ret['name_zh']
     student.name_en = ret['name_en']
     student.gender = (ret['gender'] == '男')

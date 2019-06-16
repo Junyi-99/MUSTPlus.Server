@@ -28,9 +28,6 @@ DEBUG = True
 #
 ALLOWED_HOSTS = ['mp.junyi.pw', 'localhost', '127.0.0.1']
 
-SWAGGER_SETTINGS = {
-    'DEFAULT_INFO': 'mustplus.urls.api_info',
-}
 
 # Application definition
 INSTALLED_APPS = [
@@ -40,7 +37,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'services.admin',
     'services.authentication',
     'services.basic',
     'services.course',

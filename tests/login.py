@@ -3,6 +3,8 @@ import json
 import getpass
 import requests
 import rsa
+import sys
+
 
 print("Trying to get basic information ... ")
 r = requests.get('http://mp.junyi.pw:8000/auth/hash')
@@ -20,8 +22,14 @@ with open("./capt.jpg", 'wb') as f:
 
 # prompt input
 captcha = input("Please input the Captcha: ")
-username = input("Please input your student id: ")
-password = getpass.getpass("And your password: ")
+if len(sys.argv) > 1:
+    with open(sys.argv[1], 'r') as f:
+        username = f.readline().strip()
+        password = f.readline().strip()
+        print(username, password)
+else:
+    username = input("Please input your student id: ")
+    password = getpass.getpass("And your password: ")
 
 data = {
     'username': username.encode('utf-8'),

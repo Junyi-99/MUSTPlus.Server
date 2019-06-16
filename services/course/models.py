@@ -8,13 +8,13 @@ class Course(models.Model):
     name_en = models.TextField(null=True)
     name_short = models.CharField(max_length=30, null=True)
     credit = models.CharField(max_length=8, null=True)
-    faculty = models.ForeignKey("services.basic.Faculty", on_delete=models.CASCADE, null=True)
+    faculty = models.ForeignKey('basic.Faculty', on_delete=models.CASCADE, null=True)
 
     def __str__(self):
-        return self.course_code + " " + self.name_zh
+        return self.course_code + ' ' + self.name_zh
 
     class Meta:
-        unique_together = (("course_code", "course_class"),)
+        unique_together = (('course_code', 'course_class'),)
 
 
 class Schedule(models.Model):
@@ -25,16 +25,16 @@ class Schedule(models.Model):
     time_end = models.TimeField()
     day_of_week = models.IntegerField()
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    classroom = models.ForeignKey("services.basic.ClassRoom", on_delete=models.CASCADE)
+    classroom = models.ForeignKey('basic.ClassRoom', on_delete=models.CASCADE)
 
     def __str__(self):
-        return str(self.date_begin) + " - " + str(self.date_end) + " in " + str(self.classroom)
+        return str(self.date_begin) + ' - ' + str(self.date_end) + ' in ' + str(self.classroom)
 
 
 # 科目评论
 class CourseComment(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)  # 被评论的课程id
-    student = models.ForeignKey("services.student.Student", on_delete=models.CASCADE)  # 评论发布者id
+    student = models.ForeignKey('student.Student', on_delete=models.CASCADE)  # 评论发布者id
     thumbs_up = models.IntegerField(default=0)  # 点赞数量
     thumbs_down = models.IntegerField(default=0)  # 点赞数量
     rank = models.IntegerField(default=3)  # 评分
@@ -45,18 +45,19 @@ class CourseComment(models.Model):
 
 # 哪个学生认为哪条评论赞
 class ThumbsUpCourseComment(models.Model):
-    student = models.ForeignKey("services.student.Student", on_delete=models.CASCADE)
+    student = models.ForeignKey('student.Student', on_delete=models.CASCADE)
     comment = models.ForeignKey(CourseComment, on_delete=models.CASCADE)
     thumbs_time = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = (("student", "comment"),)
+        unique_together = (('student', 'comment'),)
+
 
 # 哪个学生认为哪条评论差
 class ThumbsDownCourseComment(models.Model):
-    student = models.ForeignKey("services.student.Student", on_delete=models.CASCADE)
+    student = models.ForeignKey('student.Student', on_delete=models.CASCADE)
     comment = models.ForeignKey(CourseComment, on_delete=models.CASCADE)
     thumbs_time = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = (("student", "comment"),)
+        unique_together = (('student', 'comment'),)

@@ -1,7 +1,7 @@
-find ./Services -name migrations | xargs rm -rf
-find ./Services -name __pycache__ | xargs rm -rf
+find ./services -name migrations | xargs rm -rf
+find ./services -name __pycache__ | xargs rm -rf
 
-python3 manage.py makemigrations --empty Admin Authentication Basic Course Moments News Student Teacher Timetable MUSTPlus Spider
+python3 manage.py makemigrations --empty authentication basic course moments news student teacher timetable mustplus spider
 
 python3 manage.py migrate
 python3 manage.py makemigrations

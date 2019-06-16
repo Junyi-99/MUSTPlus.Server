@@ -25,20 +25,20 @@ def timetable(request):
     ret = []
     stu = utility.get_student_object(request)
 
-    intake = int(request.GET.get("intake", TIMETABLE_INTAKE))
+    intake = int(request.GET.get('intake', TIMETABLE_INTAKE))
     week = int(request.GET.get('week', -1))
     if week == -1:
         return JsonResponse({
-            "code": codes.TIMETABLE_WEEK_INVALID,
-            "msg": messages.TIMETABLE_WEEK_INVALID
+            'code': codes.TIMETABLE_WEEK_INVALID,
+            'msg': messages.TIMETABLE_WEEK_INVALID
         })
 
     # Get HTML source code
-    source = get_html("", stu.coes_cookie, intake, week)
+    source = get_html('', stu.coes_cookie, intake, week)
     if source is None:
         return JsonResponse({
-            "code": codes.TIMETABLE_COOKIE_EXPIRED,
-            "msg": messages.TIMETABLE_COOKIE_EXPIRED
+            'code': codes.TIMETABLE_COOKIE_EXPIRED,
+            'msg': messages.TIMETABLE_COOKIE_EXPIRED
         })
     try:
         ret = get_timetable(source)
@@ -57,7 +57,7 @@ def timetable(request):
                     name_zh=each_ret['course_name_zh'],
                 )
                 course.save()
-                print("Create a new course [%s %s %s]"
+                print('Create a new course [%s %s %s]'
                       % (course.course_code, course.course_class, course.name_zh))
             each_ret['course_id'] = course.id
 
@@ -67,7 +67,7 @@ def timetable(request):
             except ObjectDoesNotExist:
                 classroom = ClassRoom(name_zh=each_ret['classroom'])
                 classroom.save()
-                print("Create a new ClassRoom [%s]" % classroom.name_zh)
+                print('Create a new ClassRoom [%s]' % classroom.name_zh)
 
             date_begin = datetime.strptime(each_ret['date_begin'], '%m-%d')
             time_begin = datetime.strptime(each_ret['time_begin'], '%H:%M')
@@ -98,13 +98,13 @@ def timetable(request):
                     classroom=classroom
                 )
                 schedule.save()
-                print("Create a new Schedule %d [DAY-%d %s-%s] for course [%s] at Classroom [%s]"
+                print('Create a new Schedule %d [DAY-%d %s-%s] for course [%s] at Classroom [%s]'
                       % (
                           intake,
                           int(schedule.day_of_week),
-                          datetime.strftime(schedule.time_begin, "%H:%M"),
-                          datetime.strftime(schedule.time_end, "%H:%M"),
-                          schedule.course.course_code + "-" + schedule.course.name_zh,
+                          datetime.strftime(schedule.time_begin, '%H:%M'),
+                          datetime.strftime(schedule.time_end, '%H:%M'),
+                          schedule.course.course_code + '-' + schedule.course.name_zh,
                           schedule.classroom.name_zh
                       ))
             # 关联学生选课
@@ -113,7 +113,7 @@ def timetable(request):
             except ObjectDoesNotExist:
                 stu_take_course = TakeCourse(intake=intake, student=stu, course=course)
                 stu_take_course.save()
-                print("Create a new TakeCourse %s Take %s"
+                print('Create a new TakeCourse %s Take %s'
                       % (
                           str(stu), str(course)
                       ))
@@ -126,7 +126,7 @@ def timetable(request):
                 except ObjectDoesNotExist:
                     teacher = Teacher(name_zh=teacher)
                     teacher.save()
-                    print("Create a new teacher %s" % (str(teacher)))
+                    print('Create a new teacher %s' % (str(teacher)))
                 try:
                     teacher_teach_course = TeachCourse.objects.get(
                         intake=intake,
@@ -140,18 +140,18 @@ def timetable(request):
                         course=course
                     )
                     teacher_teach_course.save()
-                    print("Create a new TeachCourse %s Teach %s" % (str(teacher), str(course)))
+                    print('Create a new TeachCourse %s Teach %s' % (str(teacher), str(course)))
 
         return JsonResponse({
-            "code": codes.OK,
-            "msg": messages.OK,
-            "timetable": ret
+            'code': codes.OK,
+            'msg': messages.OK,
+            'timetable': ret
         })
     except Exception as exception:
         print(exception)
         traceback.print_exc(file=sys.stdout)
         return JsonResponse({
-            "code": codes.TIMETABLE_UNKNOWN_EXCEPTION,
-            "msg": messages.TIMETABLE_UNKNOWN_EXCEPTION,
-            "timetable": ret
+            'code': codes.TIMETABLE_UNKNOWN_EXCEPTION,
+            'msg': messages.TIMETABLE_UNKNOWN_EXCEPTION,
+            'timetable': ret
         })
