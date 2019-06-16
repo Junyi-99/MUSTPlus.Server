@@ -35,6 +35,7 @@ def timetable(request):
 
     # Get HTML source code
     source = get_html('', stu.coes_cookie, intake, week)
+
     if source is None:
         return JsonResponse({
             'code': codes.TIMETABLE_COOKIE_EXPIRED,

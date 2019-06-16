@@ -3,7 +3,7 @@ import time
 
 import requests
 
-TOKEN = 'c5957b90-8c1c-11e9-9405-be63b5b3b608'
+TOKEN = '34773dc2-9065-11e9-9405-be63b5b3b608'
 AUTH_SECRET = r'flw4\-t94!09tesldfgio30'
 
 
@@ -37,8 +37,8 @@ def t(intake, week):
     # print(json.loads(r.text))
 
 
-t(1709, 0)
+# t(1709, 0)
 # t(1802, 0)
-# t(1809, 0)
-#t(1902, 0)
-#t(1909, 0)
+t(1809, 0)
+t(1902, 0)
+t(1909, 0)

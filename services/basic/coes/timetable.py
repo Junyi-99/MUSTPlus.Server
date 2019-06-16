@@ -14,13 +14,16 @@ def get_html(token: str, cookies: str, intake: int, week: int = 0) -> Optional[s
     url = 'https://coes-stud.must.edu.mo/coes/AcademicRecordsForm.do'
     data = {
         'org.apache.struts.taglib.html.TOKEN': token,
-        'formAction': 'timetable',
+        'formAction': 'Timetable',
         'intake': intake,
         'x': 53,
         'y': 12,
     }
     headers = urls.headers
     headers['Cookie'] = cookies
+
+    print("intake", intake)
+    print("week", week)
 
     if week != 0:  # 如果 week 等于 0，请求参数里不应该有 week
         data['week'] = week
@@ -78,15 +81,15 @@ def get_timetable(html_source: str) -> list:
 
             result.append({
                 'day': sp2[0].strip(),
-                'time_begin': sp2[1],
-                'time_end': sp2[2],
-                'course_code': sp2[3],
-                'course_name_zh': sp2[4],
-                'course_class': sp2[5],
-                'classroom': sp2[6],
-                'teacher': teacher[:-1],
-                'date_begin': sp2[-1][:pos_plus],
-                'date_end': sp2[-1][pos_plus + 5:]
+                'time_begin': sp2[1].strip(),
+                'time_end': sp2[2].strip(),
+                'course_code': sp2[3].strip(),
+                'course_name_zh': sp2[4].strip(),
+                'course_class': sp2[5].strip(),
+                'classroom': sp2[6].strip(),
+                'teacher': teacher[:-1].strip(),
+                'date_begin': sp2[-1][:pos_plus].strip(),
+                'date_end': sp2[-1][pos_plus + 5:].strip()
             })
         return result
     except Exception as exception:
