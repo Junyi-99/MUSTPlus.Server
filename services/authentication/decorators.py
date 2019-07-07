@@ -25,25 +25,26 @@ def validate(func):
             token_get = str(args[0].GET.get('token', ""))
             time_get = int(args[0].GET.get('time', 0))
             sign_get = str(args[0].GET.get('sign', ""))
+
             if (token_get == "") or (time_get == 0) or (sign_get == ""):
                 raise ValueError
 
             # sort GET parameter list
-            get_para = ""
+            get_params = ""
             for element in sorted(args[0].GET):
                 if element == 'sign':  # except `sign`
                     continue
-                get_para = get_para + element + "=" + str(args[0].GET[element]) + "&"
-            get_para = get_para[:-1]
+                get_params = get_params + element + "=" + str(args[0].GET[element]) + "&"
+            get_params = get_params[:-1]
 
             # sort POST parameter list
-            post_para = ""
+            post_params = ""
             for element in sorted(args[0].POST):
-                post_para = post_para + element + "=" + str(args[0].POST[element]) + "&"
-            post_para = post_para[:-1]
+                post_params = post_params + element + "=" + str(args[0].POST[element]) + "&"
+            post_params = post_params[:-1]
 
             # calculate sign
-            param_list = get_para + post_para + AUTH_SECRET
+            param_list = get_params + post_params + AUTH_SECRET
             sign_calc = hashlib.md5(param_list.encode('utf-8')).hexdigest()
 
             # check sign
@@ -64,8 +65,8 @@ def validate(func):
 
             # check token
 
-            stu = Student.objects.get(token=token_get)
-            if stu.token_expired_time < timezone.now():
+            obj_student = Student.objects.get(token=token_get)
+            if obj_student.token_expired_time < timezone.now():
                 print("Token", token_get, "expired")
                 raise ObjectDoesNotExist
 

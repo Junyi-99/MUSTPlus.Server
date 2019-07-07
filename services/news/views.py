@@ -104,7 +104,7 @@ def news_argument(begin: int, count: int, department: str = None, faculty: str =
                 "url": ret.url,
             })
 
-    ret = {
+    return {
         "code": codes.OK,
         "msg": messages.OK,
         "records": i_length + j_length,
@@ -162,6 +162,7 @@ def news_all(request):
         count = 20
     try:
         ret = news_argument(begin, count, None, None)
+        print(ret)
         return JsonResponse(ret)
     except Exception as exception:
         print(exception)
