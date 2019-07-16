@@ -17,6 +17,17 @@ class Course(models.Model):
         unique_together = (('course_code', 'course_class'),)
 
 
+class Ftp(models.Model):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    student = models.ForeignKey('student.Student', on_delete=models.CASCADE)  # student who posted ftp information
+    publish_time = models.DateTimeField(auto_now_add=True)  # 发布时间
+    address = models.TextField()
+    port = models.IntegerField()
+    username = models.TextField()
+    password = models.TextField()
+    visible = models.BooleanField(default=True)  # 是否可见
+
+
 class Schedule(models.Model):
     intake = models.IntegerField(default=0)  # 学期
     date_begin = models.DateField()

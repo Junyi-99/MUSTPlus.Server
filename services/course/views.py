@@ -128,6 +128,26 @@ def api_thumbs_down(request, course_id):
 
 
 @validate
+def api_ftp(request, course_id):
+    # TODO: FTP功能
+    # 无论如何都要先判断一下 course_id 是否正确
+    try:
+        course = Course.objects.get(id=course_id)
+    except ObjectDoesNotExist:
+        return JsonResponse({
+            "code": codes.COURSE_ID_NOT_FOUNT,
+            "msg": messages.COURSE_ID_NOT_FOUNT
+        })
+    if request.method == "POST":
+        pass
+    if request.method == "GET":
+        pass
+    if request.method == "DELETE":
+        pass
+    pass
+
+
+@validate
 def api_thumbs_up(request, course_id):
     if request.method == "POST":
         try:
