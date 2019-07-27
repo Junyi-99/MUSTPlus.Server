@@ -105,6 +105,9 @@ def login(request):
         if ret == coes_login.LOGIN_CAPTCHA_ERROR:
             ret_code = codes.LOGIN_CAPTCHA_ERROR
             ret_msg = messages.LOGIN_CAPTCHA_ERROR
+        if ret == coes_login.LOGIN_STUDENT_ID_DOES_NOT_EXIST:
+            ret_code = codes.LOGIN_USERNAME_INVALID
+            ret_msg = messages.LOGIN_USERNAME_INVALID
         if ret == coes_login.LOGIN_OTHER_ERROR:
             ret_code = codes.LOGIN_FIELD_ERROR
             ret_msg = messages.LOGIN_FIELD_ERROR

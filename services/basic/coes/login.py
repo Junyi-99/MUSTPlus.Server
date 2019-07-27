@@ -59,7 +59,6 @@ def login(username, password, token, cookies, captcha='0000'):
             # pos2 = ret.text.find('-->', pos1)
             # print("Login Successful!")
             # print("coes Version: ", ret.text[pos1:pos2])
-
             return LOGIN_SUCCESSFUL
         if '驗證碼不相同' in ret.text:
             logout(cookies)
@@ -68,7 +67,6 @@ def login(username, password, token, cookies, captcha='0000'):
             return LOGIN_STUDENT_ID_DOES_NOT_EXIST
         if '密碼錯誤' in ret.text:
             return LOGIN_PASSWORD_ERROR
-
         pos1 = ret.text.rfind('alert')
         pos2 = ret.text.find(');', pos1)
         return ret.text[pos1 + 7:pos2 - 1]
