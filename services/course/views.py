@@ -219,7 +219,7 @@ def api_course(request, course_id):
                 "position": teach.teacher.position,
                 "email": teach.teacher.email,
                 "office_room": teach.teacher.office_room,
-                "avatar": teach.teacher.avatar_url
+                "avatar_url": teach.teacher.avatar_url
             })
 
         schedule_list = []
