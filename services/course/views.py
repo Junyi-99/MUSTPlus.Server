@@ -237,8 +237,8 @@ def api_course(request, course_id):
 
         # 只取可见评论中的打分情况
         rank_avg = CourseComment.objects.filter(course=course, visible=True).aggregate(Avg('rank'))
-        if rank_avg - 0 < 0.05:
-            rank_avg = 2.5
+        if rank_avg['rank__avg'] - 0 < 0.05:
+            rank_avg['rank__avg'] = 2.5
 
         return JsonResponse({
             "code": codes.OK,
