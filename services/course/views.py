@@ -356,7 +356,7 @@ def api_comment(request, course_id):
             return JsonResponse({
                 "code": codes.OK,
                 "msg": messages.OK,
-                "comment": comment_list
+                "comments": comment_list
             })
         if request.method == "POST":  # publish course comment
             rank = int(request.POST.get("rank", 3))

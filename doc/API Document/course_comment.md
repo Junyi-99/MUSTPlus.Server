@@ -33,7 +33,7 @@
   {
       "code":0,
       "msg":"",
-      "comment":[
+      "comments":[
           {
               "comment_id":2,
               "student_id":"1709853D-I011-0021",
