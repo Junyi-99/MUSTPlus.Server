@@ -1,7 +1,9 @@
 import json
+import sys
 from datetime import datetime
 
 import requests
+import traceback
 from bs4 import BeautifulSoup
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
@@ -78,8 +80,9 @@ def view(faculty, department, date, id, news, deptType, lang, viewname, cookies)
                 attachment.save()
                 # print("New Attachment saved:" + title, attachment.id)
         return True
-    except Exception as e:
-        print("Exception in intranet.view", e)
+    except Exception as exception:
+        print("Exception in intranet.view", exception)
+        traceback.print_exc(file=sys.stdout)
         return False
 
 
@@ -112,8 +115,9 @@ def down(faculty, department, title, publish_time, url, dId, filename, cookies) 
         #     f.close()
         #     return True
 
-    except Exception as e:
-        print("Exception in intranet.down", e)
+    except Exception as exception:
+        print("Exception in intranet.down", exception)
+        traceback.print_exc(file=sys.stdout)
         return False
 
 
@@ -187,8 +191,9 @@ def intranet_update_normal(request):
         s = get_news(c)
         proc_news(s, c)
         return HttpResponse(json.dumps({"code": codes.OK, "msg": messages.OK}))
-    except Exception as e:
-        print(e)
+    except Exception as exception:
+        print(exception)
+        traceback.print_exc(file=sys.stdout)
         return HttpResponse(json.dumps({"code": codes.INTERNAL_ERROR, "msg": messages.INTERNAL_ERROR}))
 
 
@@ -198,6 +203,7 @@ def intranet_update_more(request):
         s = get_more_news(c)
         proc_more_news(s, c)
         return HttpResponse(json.dumps({"code": codes.OK, "msg": messages.OK}))
-    except Exception as e:
-        print(e)
+    except Exception as exception:
+        print(exception)
+        traceback.print_exc(file=sys.stdout)
         return HttpResponse(json.dumps({"code": codes.INTERNAL_ERROR, "msg": messages.INTERNAL_ERROR}))
