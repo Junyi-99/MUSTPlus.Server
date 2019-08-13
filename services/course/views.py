@@ -265,9 +265,9 @@ def api_course(request, course_id):
 
 
 def swearing_filter(content: str) -> str:
-    word_list = ['傻逼', '蠢逼', '狗日', '操逼', '屄', '做爱', '习近平', '共产党', '法轮功']
+    word_list = ['傻逼', '蠢逼', '狗日', '操逼', '屄', '做爱', '习近平', '共产党', '法轮功', '操你妈', '草泥马', '草你妈']
     for word in word_list:
-        content = content.replace(word, '大笨蛋')
+        content = content.replace(word, '喵喵喵')
     return content
 
 

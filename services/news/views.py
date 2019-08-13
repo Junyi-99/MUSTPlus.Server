@@ -9,35 +9,59 @@ from services.basic.models import Department, Faculty
 from services.news.models import Announcement, Document, Attachment
 from settings import codes, messages
 
+REQUEST_TYPE_ALL = 0  # 获取所有类型
+REQUEST_TYPE_ANNOUNCEMENT = 1  # 只获取announcement
+REQUEST_TYPE_DOCUMENT = 2  # 只获取document
+
 
 # 选择 [begin, begin+count] 范围的数据
 # begin ∈ [1, n]
 # department 和 faculty 谁不为 None 表示选择谁
 # 如果二者都为 None 说明选择的是全部
-def news_argument(begin: int, count: int, department: str = None, faculty: str = None) -> dict:
+def news_argument(begin: int, count: int, department: str = None, faculty: str = None, request_type: int = 0) -> dict:
+    print("news_argument", begin, count, department, faculty, request_type)
     ann = []
     doc = []
     if department is not None:
         try:
             dep = Department.objects.get(name_zh=department)
             # 按照发布时间从最近到最远排序
-            ann = Announcement.objects.filter(department=dep).order_by('-publish_time')
-            # 按照发布时间从最近到最远排序
-            doc = Document.objects.filter(department=dep).order_by('-publish_time')
+            if request_type == REQUEST_TYPE_ANNOUNCEMENT:
+                ann = Announcement.objects.filter(department=dep).order_by('-publish_time')
+            elif request_type == REQUEST_TYPE_DOCUMENT:
+                doc = Document.objects.filter(department=dep).order_by('-publish_time')
+            else:
+                ann = Announcement.objects.filter(department=dep).order_by('-publish_time')
+                doc = Document.objects.filter(department=dep).order_by('-publish_time')
         except ObjectDoesNotExist:
             pass
     elif faculty is not None:
         try:
             fac = Faculty.objects.get(name_zh=faculty)
             # 按照发布时间从最近到最远排序
-            ann = Announcement.objects.filter(faculty=fac).order_by('-publish_time')
-            # 按照发布时间从最近到最远排序
-            doc = Document.objects.filter(faculty=fac).order_by('-publish_time')
+            if request_type == REQUEST_TYPE_ANNOUNCEMENT:
+                ann = Announcement.objects.filter(faculty=fac).order_by('-publish_time')
+            elif request_type == REQUEST_TYPE_DOCUMENT:
+                doc = Document.objects.filter(faculty=fac).order_by('-publish_time')
+            else:
+                ann = Announcement.objects.filter(faculty=fac).order_by('-publish_time')
+                doc = Document.objects.filter(faculty=fac).order_by('-publish_time')
         except ObjectDoesNotExist:
             pass
     else:
-        ann = Announcement.objects.all().order_by('-publish_time')  # 按照发布时间从最近到最远排序
-        doc = Document.objects.all().order_by('-publish_time')  # 按照发布时间从最近到最远排序
+        if request_type == REQUEST_TYPE_ANNOUNCEMENT:
+            ann = Announcement.objects.all().order_by('-publish_time')
+        elif request_type == REQUEST_TYPE_DOCUMENT:
+            doc = Document.objects.all().order_by('-publish_time')
+        else:
+            ann = Announcement.objects.all().order_by('-publish_time')
+            doc = Document.objects.all().order_by('-publish_time')
+
+    # 把数组清空防止误操作
+    if request_type == REQUEST_TYPE_ANNOUNCEMENT:
+        doc = []
+    elif request_type == REQUEST_TYPE_DOCUMENT:
+        ann = []
 
     # 按照时间对 Announcement 和 Document 排序
     i, j, i_length, j_length = 0, 0, len(ann), len(doc)
@@ -69,6 +93,8 @@ def news_argument(begin: int, count: int, department: str = None, faculty: str =
 
     if begin + count > len(result):
         count = len(result) - begin + 1
+
+    print("proc result")
 
     news_list = []  # 存放结果
     for i in range(begin - 1, begin - 1 + count):
@@ -103,7 +129,7 @@ def news_argument(begin: int, count: int, department: str = None, faculty: str =
                 "type": False,  # True: viewDownload
                 "url": ret.url,
             })
-
+    print("return result")
     return {
         "code": codes.OK,
         "msg": messages.OK,
@@ -124,7 +150,6 @@ def news_department(request, department_name_zh):
         ret = news_argument(begin, count, department_name_zh, None)
         return JsonResponse(ret)
     except Exception as exception:
-        print(exception)
         traceback.print_exc(file=sys.stdout)
         return JsonResponse({
             "code": codes.NEWS_UNKNOWN_ERROR,
@@ -144,7 +169,44 @@ def news_faculty(request, faculty_name_zh):
         ret = news_argument(begin, count, None, faculty_name_zh)
         return JsonResponse(ret)
     except Exception as exception:
-        print(exception)
+        traceback.print_exc(file=sys.stdout)
+        return JsonResponse({
+            "code": codes.NEWS_UNKNOWN_ERROR,
+            "msg": messages.NEWS_UNKNOWN_ERROR
+        })
+
+
+@validate
+def news_documents(request):
+    try:
+        begin = int(request.GET.get('from', 1))
+        count = int(request.GET.get('count', 20))
+    except ValueError:
+        begin = 1
+        count = 20
+    try:
+        ret = news_argument(begin, count, None, None, REQUEST_TYPE_DOCUMENT)
+        return JsonResponse(ret)
+    except Exception as exception:
+        traceback.print_exc(file=sys.stdout)
+        return JsonResponse({
+            "code": codes.NEWS_UNKNOWN_ERROR,
+            "msg": messages.NEWS_UNKNOWN_ERROR
+        })
+
+
+@validate
+def news_announcements(request):
+    try:
+        begin = int(request.GET.get('from', 1))
+        count = int(request.GET.get('count', 20))
+    except ValueError:
+        begin = 1
+        count = 20
+    try:
+        ret = news_argument(begin, count, None, None, REQUEST_TYPE_ANNOUNCEMENT)
+        return JsonResponse(ret)
+    except Exception as exception:
         traceback.print_exc(file=sys.stdout)
         return JsonResponse({
             "code": codes.NEWS_UNKNOWN_ERROR,
@@ -162,10 +224,8 @@ def news_all(request):
         count = 20
     try:
         ret = news_argument(begin, count, None, None)
-        print(ret)
         return JsonResponse(ret)
     except Exception as exception:
-        print(exception)
         traceback.print_exc(file=sys.stdout)
         return JsonResponse({
             "code": codes.NEWS_UNKNOWN_ERROR,

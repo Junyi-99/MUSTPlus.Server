@@ -27,7 +27,7 @@ urlpatterns = [
     url('admin/', admin.site.urls),
     path('intranet/update/normal', intranet.intranet_update_normal),
     path('intranet/update/more', intranet.intranet_update_more),
-
+    path('student/',include('services.student.urls')),
     path('auth/', include('services.authentication.urls')),
     path('basic/', include('services.basic.urls')),
     path('course/', include('services.course.urls')),
