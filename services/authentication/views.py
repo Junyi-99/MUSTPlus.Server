@@ -49,6 +49,10 @@ def login(request):
         cookies = request.POST.get('cookies', None)
         captcha = request.POST.get('captcha', None)
 
+        #print("USERNAME", username)
+        #print("PASSWORD", password)
+        #print("TOKEN", token)
+
         check_list = (username, password, token, cookies, captcha)
         for i in range(5):
             if check_list[i] is None:
@@ -109,8 +113,8 @@ def login(request):
             ret_code = codes.LOGIN_USERNAME_INVALID
             ret_msg = messages.LOGIN_USERNAME_INVALID
         if ret == coes_login.LOGIN_OTHER_ERROR:
-            ret_code = codes.LOGIN_FIELD_ERROR
-            ret_msg = messages.LOGIN_FIELD_ERROR
+            ret_code = codes.LOGIN_OTHER_ERROR
+            ret_msg = messages.LOGIN_OTHER_ERROR
         if ret == coes_login.LOGIN_PASSWORD_ERROR:
             ret_code = codes.LOGIN_PASSWORD_ERROR
             ret_msg = messages.LOGIN_PASSWORD_ERROR
