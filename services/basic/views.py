@@ -1,6 +1,9 @@
+import datetime
+
 from django.http import HttpResponse
 
 from services.basic.models import Department, Faculty
+from settings.server import SEMESTER, SEMESTER_BEGIN
 
 FACULTIES = {
     '資訊科技學院': 'Faculty of Information Technology',
@@ -40,6 +43,16 @@ DEPARTMENTS = {
     '教學質量督導處': 'Quality Assurance Office',
     '人力資源處': 'Human Resources Office',
 }
+
+
+def api_week(request):
+    begin_week = datetime.datetime.strptime(SEMESTER_BEGIN, "%Y-%m-%d").isocalendar()[1]
+    now_week = datetime.datetime.now().date().isocalendar()[1]
+    return HttpResponse('{"code":0,"msg":"","week":%d}' % (now_week - begin_week + 1,))
+
+
+def api_semester(request):
+    return HttpResponse('{"code":0,"msg":"","semester":%d}' % (SEMESTER,))
 
 
 # 初始化 faculty 表的 value
