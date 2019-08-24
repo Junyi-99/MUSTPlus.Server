@@ -279,7 +279,7 @@ def publish_comment(course, student, rank, content):
         ret_code = codes.COURSE_COMMENT_CONTENT_EMPTY
         ret_msg = messages.COURSE_COMMENT_CONTENT_EMPTY
 
-    if len(content) > 4096:
+    if len(content) > 512:
         ret_code = codes.COURSE_COMMENT_CONTENT_TOO_LONG
         ret_msg = messages.COURSE_COMMENT_CONTENT_TOO_LONG
 
