@@ -279,11 +279,11 @@ def publish_comment(course, student, rank, content):
         ret_code = codes.COURSE_COMMENT_CONTENT_EMPTY
         ret_msg = messages.COURSE_COMMENT_CONTENT_EMPTY
 
-    if len(content) > 16384:
+    if len(content) > 4096:
         ret_code = codes.COURSE_COMMENT_CONTENT_TOO_LONG
         ret_msg = messages.COURSE_COMMENT_CONTENT_TOO_LONG
 
-    if rank > 5 or rank <= 0:
+    if rank > 5 or rank < 0:
         ret_code = codes.COURSE_COMMENT_RANK_INVALID
         ret_msg = messages.COURSE_COMMENT_RANK_INVALID
 
@@ -359,7 +359,7 @@ def api_comment(request, course_id):
                 "comments": comment_list
             })
         if request.method == "POST":  # publish course comment
-            rank = int(request.POST.get("rank", 3))
+            rank = float(request.POST.get("rank", 2.5))
             content = str(request.POST.get("content", ""))
             return publish_comment(course, student, rank, content)
         if request.method == "DELETE":
