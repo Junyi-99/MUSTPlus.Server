@@ -4,6 +4,7 @@ import traceback
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Avg
 from django.http import HttpResponse, JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 
 from mustplus.decorators import require_get
 from services.authentication.decorators import validate
@@ -322,6 +323,7 @@ def delete_comment(comment_id, student):
         })
 
 
+@csrf_exempt
 @validate
 def api_comment(request, course_id):
     # 无论如何都要先判断一下 course_id 是否正确
@@ -346,10 +348,12 @@ def api_comment(request, course_id):
             for comment in comments:
                 comment_list.append({
                     "comment_id": comment.id,
+                    "nickname": comment.student.nickname,
+                    "name_zh": comment.student.name_zh,
                     "student_id": comment.student.student_id,
                     "thumbs_up": comment.thumbs_up,
                     "thumbs_down": comment.thumbs_down,
-                    "rank": comment.rank,
+                    "rank": "%.2f" % (comment.rank,),
                     "content": comment.content,
                     "publish_time": comment.publish_time.strftime("%Y-%m-%d %H:%M:%S")
                 })

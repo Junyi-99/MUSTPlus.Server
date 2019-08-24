@@ -37,6 +37,8 @@
           {
               "comment_id":2,
               "student_id":"1709853D-I011-0021",
+              "name_zh": "中文名",
+              "nickname": "昵称",
               "thumbs_up":0,
               "thumbs_down":0,
               "rank":5,
@@ -46,6 +48,8 @@
           {
               "comment_id":1,
               "student_id":"1709853D-I011-0021",
+              "name_zh": "中文名",
+              "nickname": "昵称",
               "thumbs_up":0,
               "thumbs_down":0,
               "rank":1,

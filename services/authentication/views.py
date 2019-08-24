@@ -49,9 +49,9 @@ def login(request):
         cookies = request.POST.get('cookies', None)
         captcha = request.POST.get('captcha', None)
 
-        #print("USERNAME", username)
-        #print("PASSWORD", password)
-        #print("TOKEN", token)
+        print("USERNAME", username)
+        print("PASSWORD", password)
+        print("TOKEN", token)
 
         check_list = (username, password, token, cookies, captcha)
         for i in range(5):

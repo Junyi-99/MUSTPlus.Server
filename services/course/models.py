@@ -48,7 +48,7 @@ class CourseComment(models.Model):
     student = models.ForeignKey('student.Student', on_delete=models.CASCADE)  # 评论发布者id
     thumbs_up = models.IntegerField(default=0)  # 点赞数量
     thumbs_down = models.IntegerField(default=0)  # 点赞数量
-    rank = models.IntegerField(default=3)  # 评分
+    rank = models.FloatField(default=2.5)  # 评分
     content = models.TextField()  # 评论正文
     publish_time = models.DateTimeField(auto_now_add=True)  # 发布时间
     visible = models.BooleanField(default=True)  # 是否可见
