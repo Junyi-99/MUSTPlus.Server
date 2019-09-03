@@ -1,8 +1,12 @@
 # 这个文件主要是与COES连接的部分，现在包括COES的登录
 # 个人信息和课程表的获取
 import requests
+# 移除安全警告
+import urllib3
 
 from settings import urls
+
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 LOGIN_SUCCESSFUL = 0
 LOGIN_PASSWORD_ERROR = 1
@@ -15,22 +19,24 @@ LOGIN_OTHER_ERROR = 10
 # 获取 token 和 cookie
 def get_token_cookies():
     headers = urls.headers
-    headers['Accept-Language'] = 'zh-CN,zh;q=0.9,en;q=0.8,zh-TW;q=0.7'
-
-    ret = requests.get(url="https://coes-stud.must.edu.mo/coes/login.do", headers=headers)
+    headers['Cookie'] = ''
+    ret = requests.get(url="https://coes-stud.must.edu.mo/coes/login.do", headers=headers, verify=False)
     pos1 = ret.text.find('org.apache.struts.taglib.html.TOKEN') + 44  # 44 代表 这里面一大串和外面的value=" 的长度
     pos2 = ret.text.find('">', pos1)
 
-    cookies = ""
+    cookies = ''
     for cookie in ret.cookies:
-        cookies = cookies + cookie.name + "=" + cookie.value + "; "
-    return ret.text[pos1:pos2], cookies[:-2]  # remove the last '; '
+        print(cookie.name)
+        if cookie.name == "JSESSIONID":
+            cookies = "JSESSIONID=" + cookie.value
+
+    return ret.text[pos1:pos2], cookies
 
 
 def get_captcha(cookies):
     headers = urls.headers
     headers['Cookie'] = cookies
-    ret = requests.get(url='https://coes-stud.must.edu.mo/coes/RandomImgCode.do', headers=headers)
+    ret = requests.get(url='https://coes-stud.must.edu.mo/coes/RandomImgCode.do', headers=headers, verify=False)
     return ret.content
 
 
@@ -47,7 +53,7 @@ def login(username, password, token, cookies, captcha='0000'):
         }
         headers = urls.headers
         headers['Cookie'] = cookies
-        ret = requests.post(url=url, data=data, headers=headers)
+        ret = requests.post(url=url, data=data, headers=headers, verify=False)
         # print(r.text)
         # with open("login_record.html", 'wb') as file:
         #     file.write(ret.text.encode('utf-8'))

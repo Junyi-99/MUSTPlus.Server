@@ -2,12 +2,13 @@ import requests
 from lxml import etree
 
 from settings import urls
-
+# 移除安全警告
+import urllib3
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 def student_information(cookies) -> dict:
     headers = urls.headers
     headers['Cookie'] = cookies
-    headers['Accept-Language'] = 'zh-CN,zh;q=0.9,en;q=0.8,zh-TW;q=0.7'
     result = {}  # 结果字典
 
     title1 = ('student_id', 'name_zh', 'name_en', 'gender',
@@ -16,8 +17,8 @@ def student_information(cookies) -> dict:
               'remarks', 'require_credit', 'effective_intake')
     url_birthday = 'https://coes-stud.must.edu.mo/coes/StudentInfo.do'
     url_study = 'https://coes-stud.must.edu.mo/coes/StudyPlanGroup.do'
-    ret1 = requests.get(url=url_birthday, headers=headers)
-    ret2 = requests.get(url=url_study, headers=headers)
+    ret1 = requests.get(url=url_birthday, headers=headers, verify=False)
+    ret2 = requests.get(url=url_study, headers=headers, verify=False)
     with open('ret1.html', 'wb') as f:
         f.write(ret1.text.encode('utf-8'))
         f.close()

@@ -3,6 +3,11 @@ import sys
 import traceback
 from typing import Optional
 
+# 移除安全警告
+import urllib3
+
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
 import requests
 from lxml import etree
 
@@ -27,7 +32,7 @@ def get_html(token: str, cookies: str, intake: int, week: int = 0) -> Optional[s
 
     if week != 0:  # 如果 week 等于 0，请求参数里不应该有 week
         data['week'] = week
-    ret = requests.post(url=url, headers=headers, data=data)
+    ret = requests.post(url=url, headers=headers, data=data, verify=False)
 
     if 'doTimetable' in ret.text:
         return ret.text
@@ -58,9 +63,9 @@ def get_timetable(html_source: str) -> list:
                  '\u56db\u6708', '\u4e94\u6708', '\u516d\u6708',
                  '\u4e03\u6708', '\u516b\u6708', '\u4e5d\u6708',
                  '\u5341\u6708', '\u5341\u4e00\u6708', '\u5341\u4e8c\u6708']
-        with open("save.html", 'wb') as file:
-            file.write(html_source.encode('utf-8'))
-            file.close()
+        # with open("save.html", 'wb') as file:
+        #     file.write(html_source.encode('utf-8'))
+        #     file.close()
 
         course_list = re.findall(r'timetable.add\([\s\S]*?\);', html_source)
 
@@ -68,11 +73,14 @@ def get_timetable(html_source: str) -> list:
             sp2 = each_course.replace("timetable.add(", '').replace("'", ''). \
                 replace('\r', '').replace('\n ', '').replace(');', '').split(',')
 
+
             # 将中文月份转换到数字 这里要反向迭代，因为 '十二月' 会在正向迭代的时候 被 '二月' 先替换
             for i in range(len(month) - 1, -1, -1):
                 sp2[-1] = sp2[-1].replace(month[i], "%d-" % (i + 1))
             print(sp2)
             pos_plus = sp2[-1].find('+')
+
+
 
             # Multi-teacher condition
             teacher = ""

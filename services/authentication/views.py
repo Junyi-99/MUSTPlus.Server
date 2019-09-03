@@ -22,16 +22,30 @@ from . import PUBLIC_KEY_CONTENT, decrypt
 
 @require_get
 def get_hash(request):
-    token, cookies = coes_login.get_token_cookies()
-    captcha = coes_login.get_captcha(cookies)
-    ret = {
-        'code': codes.OK,
-        'msg': messages.OK,
-        'key': PUBLIC_KEY_CONTENT,
-        'token': token,
-        'cookies': cookies,
-        'captcha': base64.b64encode(captcha).decode('utf-8')
-    }
+    times = 0
+    token = ''
+    cookies = ''
+    while times < 5 and not cookies:
+        token, cookies = coes_login.get_token_cookies()
+        times = times + 1
+        print("Retry to get cookies")
+
+    if not cookies:
+        ret = {
+            'code': codes.WARNING,
+            'msg': '获取基本信息失败'
+        }
+    else:
+        captcha = coes_login.get_captcha(cookies)
+        ret = {
+            'code': codes.OK,
+            'msg': messages.OK,
+            'key': PUBLIC_KEY_CONTENT,
+            'token': token,
+            'cookies': cookies,
+            'captcha': base64.b64encode(captcha).decode('utf-8')
+        }
+
     return JsonResponse(ret)
 
 

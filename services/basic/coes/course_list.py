@@ -1,5 +1,10 @@
 import re
 
+# 移除安全警告
+import urllib3
+
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
 import requests
 from lxml import etree
 
@@ -46,7 +51,7 @@ def make_request(token: str, page: int, faculty: str, cookies: str) -> str:
         'courseCode': ""
     }
 
-    ret = requests.post(url=url, data=data, headers=headers)
+    ret = requests.post(url=url, data=data, headers=headers, verify=False)
     return ret.text
 
 
