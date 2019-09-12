@@ -8,7 +8,13 @@
 
 （再次强调，写文档真累死个人......）
 
+阅读文档前，事先定义如下名词：
 
+course_code: 课程编号，如 CO101
+
+course_id: 课程ID，即课程在数据库中的ID
+
+course_class: 课程所在教室
 
 ## Authentication （登录与授权）
 
