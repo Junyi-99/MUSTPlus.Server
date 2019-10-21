@@ -19,12 +19,12 @@ def student_information(cookies) -> dict:
     url_study = 'https://coes-stud.must.edu.mo/coes/StudyPlanGroup.do'
     ret1 = requests.get(url=url_birthday, headers=headers, verify=False)
     ret2 = requests.get(url=url_study, headers=headers, verify=False)
-    with open('ret1.html', 'wb') as f:
-        f.write(ret1.text.encode('utf-8'))
-        f.close()
-    with open('ret2.html', 'wb') as f:
-        f.write(ret2.text.encode('utf-8'))
-        f.close()
+    # with open('ret1.html', 'wb') as f:
+    #     f.write(ret1.text.encode('utf-8'))
+    #     f.close()
+    # with open('ret2.html', 'wb') as f:
+    #     f.write(ret2.text.encode('utf-8'))
+    #     f.close()
     html1 = etree.HTML(ret1.text)
     html2 = etree.HTML(ret2.text)
     info1 = html1.xpath("//td[@class='data']/table[1]")

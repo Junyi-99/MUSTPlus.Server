@@ -33,8 +33,11 @@ def get_html(token: str, cookies: str, intake: int, week: int = 0) -> Optional[s
     if week != 0:  # 如果 week 等于 0，请求参数里不应该有 week
         data['week'] = week
     ret = requests.post(url=url, headers=headers, data=data, verify=False)
+    with open("./get_html.html", 'w',encoding='utf-8') as f:
+        f.write(ret.text)
+        f.close()
 
-    if 'doTimetable' in ret.text:
+    if 'timetable.add' in ret.text:
         return ret.text
     return None
 

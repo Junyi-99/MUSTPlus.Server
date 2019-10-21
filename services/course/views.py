@@ -14,7 +14,7 @@ from services.basic.coes.course_list import get_all_pages
 from services.basic.coes.course_list import make_request
 from services.basic.coes.course_list import process_course_list
 from services.basic.query import get_faculty
-from services.course.models import Course
+from services.course.models import Course, Ftp
 from services.course.models import CourseComment
 from services.course.models import Schedule
 from services.course.models import ThumbsDownCourseComment
@@ -77,6 +77,25 @@ def api_thumbs_down(request, course_id):
     })
 
 
+def _ftp_post(course: Course, student, address, port, username, password) -> JsonResponse:
+    ret_code = codes.OK
+    ret_msg = ""
+    obj = Ftp(course, student, address, port, username, password)
+    obj.save()
+
+    return JsonResponse({
+        "code": ret_code,
+        "msg": ret_msg
+    })
+
+
+def _ftp_get(course: Course, student) -> JsonResponse:
+    try:
+        ftp = Ftp.objects.filter(course=course, visible=True)
+    except ObjectDoesNotExist:
+        pass
+
+
 @validate
 def api_ftp(request, course_id):
     # TODO: FTP功能
@@ -88,9 +107,10 @@ def api_ftp(request, course_id):
             "code": codes.COURSE_ID_NOT_FOUNT,
             "msg": messages.COURSE_ID_NOT_FOUNT
         })
-    if request.method == "POST":
-        pass
     if request.method == "GET":
+        student = get_student_object(request)
+        return _ftp_get(course, student)
+    if request.method == "POST":
         pass
     if request.method == "DELETE":
         pass
