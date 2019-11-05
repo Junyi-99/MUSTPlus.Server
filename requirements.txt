@@ -1,4 +1,4 @@
-Django==2.1.4
+Django==2.1.11
 lxml==4.3.3
 PyMySQL==0.9.3
 requests>=2.20.0
