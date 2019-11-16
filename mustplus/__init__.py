@@ -1,10 +1,8 @@
 """
 Hey, PyLint? SHUT UP
 """
-import pymysql
 
-pymysql.install_as_MySQLdb()
-
+#
 # import time
 # import threading
 #

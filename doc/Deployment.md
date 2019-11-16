@@ -46,7 +46,7 @@
 
 进入 venv 环境
 
-`source ./venv/bin/active`
+`source ./venv/bin/activate`
 
 安装 requirements
 

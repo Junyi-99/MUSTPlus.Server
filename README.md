@@ -32,7 +32,7 @@ You may need to install the Python and MySQL development headers and libraries l
 
 `sudo apt install python3-dev default-libmysqlclient-dev`
 
-`pip3 install mysqlclient`
+`pip3 install mysqlclient requests beautifulsoup4 lxml`
 
 ## License
 
