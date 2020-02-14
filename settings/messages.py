@@ -34,7 +34,6 @@ COURSE_RECORD_FROM_INVALID = "获取评论时，从第from条开始获取，from
 COURSE_FTP_ID_NOT_FOUNT = "课程ID未找到"
 
 # POST /course/ftp
-COURSE_FTP_ID_NOT_FOUNT = COURSE_FTP_ID_NOT_FOUNT
 COURSE_FTP_HOST_ILLEGAL = "FTP 主机名非法"
 COURSE_FTP_USERNAME_ILLEGAL = "FTP 用户名非法"
 COURSE_FTP_PASSWORD_ILLEGAL = "FTP 密码非法"
@@ -43,6 +42,11 @@ NEWS_UNKNOWN_ERROR = '资讯 未知错误'
 
 # GET /teacher
 TEACHER_ID_NOT_FOUNT = "未找到教师"
+
+# GET /moment
+MOMENT_UNKNOWN_ERROR = "未知错误"
+# GET /moment/{moment_id}
+MOMENT_DOES_NOT_EXIST = "校友圈不存在"
 
 # POST /my/profile
 PROFILE_UNKNOWN_ERROR = "未知错误"

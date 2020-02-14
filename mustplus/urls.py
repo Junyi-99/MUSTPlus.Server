@@ -27,7 +27,7 @@ urlpatterns = [
     url('admin/', admin.site.urls),
     path('intranet/update/normal', intranet.intranet_update_normal),
     path('intranet/update/more', intranet.intranet_update_more),
-    path('student/',include('services.student.urls')),
+    path('student/', include('services.student.urls')),
     path('auth/', include('services.authentication.urls')),
     path('basic/', include('services.basic.urls')),
     path('course/', include('services.course.urls')),
@@ -37,12 +37,24 @@ urlpatterns = [
 ]
 
 
-def handle_500():
-    return HttpResponse(json.dumps({"code": codes.INTERNAL_ERROR, "msg": messages.INTERNAL_ERROR}))
+def handle_500(request, *args, **kwargs):
+    return HttpResponse(content=json.dumps(
+        {
+            "code": codes.INTERNAL_ERROR,
+            "msg": messages.INTERNAL_ERROR
+        }
+    ),
+        status=500)
 
 
-def handle_404():
-    return HttpResponse(json.dumps({"code": codes.PAGE_NOT_FOUND, "msg": messages.PAGE_NOT_FOUND}))
+def handle_404(request, *args, **kwargs):
+    return HttpResponse(content=json.dumps(
+        {
+            "code": codes.PAGE_NOT_FOUND,
+            "msg": messages.PAGE_NOT_FOUND
+        }
+    ),
+        status=404)
 
 
 handler404 = handle_404

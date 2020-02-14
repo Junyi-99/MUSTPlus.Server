@@ -27,6 +27,13 @@ class Student(models.Model):
     def __str__(self):
         return "%s(%s)" % (self.name_zh, self.student_id)
 
+    # 有昵称返回昵称，没有昵称返回真实姓名
+    def get_name(self):
+        if self.nickname is None:
+            return self.name_zh
+        else:
+            return self.nickname
+
 
 # 学生选什么课
 class TakeCourse(models.Model):

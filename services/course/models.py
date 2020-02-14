@@ -43,7 +43,7 @@ class Schedule(models.Model):
 
 
 # 科目评论
-class CourseComment(models.Model):
+class Comment(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)  # 被评论的课程id
     student = models.ForeignKey('student.Student', on_delete=models.CASCADE)  # 评论发布者id
     thumbs_up = models.IntegerField(default=0)  # 点赞数量
@@ -55,9 +55,9 @@ class CourseComment(models.Model):
 
 
 # 哪个学生认为哪条评论赞
-class ThumbsUpCourseComment(models.Model):
+class ThumbsUp(models.Model):
     student = models.ForeignKey('student.Student', on_delete=models.CASCADE)
-    comment = models.ForeignKey(CourseComment, on_delete=models.CASCADE)
+    comment = models.ForeignKey('course.Comment', on_delete=models.CASCADE)
     thumbs_time = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -65,9 +65,9 @@ class ThumbsUpCourseComment(models.Model):
 
 
 # 哪个学生认为哪条评论差
-class ThumbsDownCourseComment(models.Model):
+class ThumbsDown(models.Model):
     student = models.ForeignKey('student.Student', on_delete=models.CASCADE)
-    comment = models.ForeignKey(CourseComment, on_delete=models.CASCADE)
+    comment = models.ForeignKey('course.Comment', on_delete=models.CASCADE)
     thumbs_time = models.DateTimeField(auto_now_add=True)
 
     class Meta:

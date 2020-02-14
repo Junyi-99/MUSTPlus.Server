@@ -36,7 +36,7 @@ course_class: 课程所在教室
 
 ## Course （课程信息）
 
-[获取课程信息](course.md)
+[获取课程信息](course_id.md)
 
 [获取课程评论信息](course_comment.md)
 
@@ -107,23 +107,23 @@ course_class: 课程所在教室
 
 - [查询可用匿名次数](moment_anonymoud.md)
 
-### [动态](moment.md)
+### [动态](moment_id.md)
 
-- [发布](moment.md)
+- [发布](moment_id.md)
 
   动态发布默认为全校可见。
 
-- [转载](moment.md)
+- [转载](moment_id.md)
 
-- [删除](moment.md)
+- [删除](moment_id.md)
 
-- [修改](moment.md)
+- [修改](moment_id.md)
 
-- [获取](moment.md)
+- [获取](moment_id.md)
 
-  - [校友圈动态](moment.md)
+  - [校友圈动态](moment_id.md)
   
-  - [我发布的动态](moment.md)
+  - [我发布的动态](moment_id.md)
 
   用户应可以设置浏览时要屏蔽的人或学院。每条动态显示评论条数和点赞条数，不显示具体内容
   

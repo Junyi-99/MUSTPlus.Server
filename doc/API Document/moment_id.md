@@ -1,17 +1,27 @@
-## **获取课程详情📃**
+## **获取单条校友圈详情📃**
 
-  该 API 用于获取一个课程的详细内容。通过直接指定 URL 中的 `{course_id}` 即可获得某课程的详细信息
+  该 API 用于获取一个校友圈的详细内容。通过直接指定 URL 中的 `{moment_id}` 即可获得某课程的详细信息。
+  
+  校友圈部分：
+  
+   1. 获取校友圈列表 (打开QQ空间/微信朋友圈)
+   2. **获取单条校友圈详情 (点击查看详情，比如评论、图片等)**  <-- 你所在的步骤
+   3. 修改校友圈内容 (如果有权限)
+   4. 删除校友圈
+   5. 给校友圈点赞
+  
 
 - **URL**
 
-  _/course/{course_id}_
+  _/moment/{moment_id}_
 
 - **Method**
 
   `GET`
 
 - **REST Params**
-  `course_id: integer` 是 course_id 不是 course_code ！这里要注意！
+
+  `moment_id: integer` 是 moment_id, 可由 `/moment` API 获取到
   
 - **URL Params**
 
