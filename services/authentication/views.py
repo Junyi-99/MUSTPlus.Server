@@ -18,6 +18,7 @@ from services.basic.query import get_faculty, get_program, get_major
 from services.student.models import Student
 from settings import codes, messages
 from . import PUBLIC_KEY_CONTENT, decrypt
+from .utility import get_student_object
 
 
 @require_get
@@ -153,14 +154,20 @@ def login(request):
         })
 
 
-# Author: Junyi
-# Time: 2019/4/30
-# Status: unfinished
 @csrf_exempt
 @require_post
 @validate
 def logout(request):
-    return HttpResponse('')
+    stu = get_student_object(request)
+    if stu is not None:
+        stu.token = ''
+        stu.coes_cookie = ''
+        stu.coes_token = ''
+        stu.save()
+    return JsonResponse({
+        'code': codes.OK,
+        'msg': messages.OK
+    })
 
 
 def username_check(username: str):

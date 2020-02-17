@@ -5,6 +5,7 @@ from services.basic.models import Faculty, Program, Major, ClassRoom
 
 
 class Student(models.Model):
+    # 修改这个Model的时候记得修改 student/me 下返回的数据
     student_id = models.CharField(max_length=18, primary_key=True)
     name_zh = models.CharField(max_length=16, null=True)
     name_en = models.CharField(max_length=16, null=True)

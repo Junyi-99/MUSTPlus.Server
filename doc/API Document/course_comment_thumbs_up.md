@@ -1,17 +1,18 @@
 ## **给课程评论点赞👍**
 
-  赞某一个课程的评论
+  赞某一个课程的评论。注意，这个API的comment_id 放在 URL 参数里，因为要美观
 
 - **URL**
 
-  _/course/{course_id}/comment/thumbs_up_
+  _/course/thumbs_up_
 
 - **Method**
 
   `POST`
 
 - **REST Params**
-  `course_id: integer`
+
+  None
 
 - **URL Params**
 
@@ -27,7 +28,7 @@
 
 - **Data Params**
 
-  None (注意，就算这里是POST方法，id参数也要放在URLParams里)
+  None
 
 - **Success Response:**
 
@@ -58,18 +59,19 @@
 
 ## **取消给课程评论点赞❌👍**
 
-  取消赞某一个课程的评论
+  取消赞某一个课程的评论。与点赞不同的，只有REQUEST METHOD的区别
 
 - **URL**
 
-  _/course/{course_id}/comment/thumbs_down_
+  _/course/thumbs_up_
 
 - **Method**
 
   `DELETE`
 
 - **REST Params**
-  `course_id: integer` 
+  
+  None
 
 - **URL Params**
 
@@ -85,7 +87,7 @@
 
 - **Data Params**
 
-  None (注意，就算这里是POST方法，id参数也要放在URLParams里)
+  None
 
 - **Success Response:**
 
@@ -109,6 +111,4 @@
   | --------------------------- | -------------- | ----- |
   | COURSE_COMMENT_ID_NOT_FOUND | 未找到该评论ID | -4006 |
   | AUTH_REQUEST_METHOD_ERROR   | 请求方法错误   | -1004 |
-
-  DELETE 请求里，只会返回**这些**错误代码 + AUTH系列的错误代码
 

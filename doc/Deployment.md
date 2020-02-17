@@ -90,3 +90,82 @@ must_plus
 编码字符集：
 
 utf8mb4_unicode_ci
+
+
+## 整体流程
+
+```
+# 换国内源:
+sudo nano /etc/apt/sources.list
+# 在文件添加以下条目:
+deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ bionic main restricted universe multiverse
+deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ bionic main restricted universe multiverse
+deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ bionic-updates main restricted universe multiverse
+deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ bionic-updates main restricted universe multiverse
+deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ bionic-backports main restricted universe multiverse
+deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ bionic-backports main restricted universe multiverse
+deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ bionic-security main restricted universe multiverse
+deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ bionic-security main restricted universe multiverse
+deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ bionic-proposed main restricted universe multiverse
+deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ bionic-proposed main restricted universe multiverse
+
+sudo apt update
+sudo apt install openssh-server
+sudo apt install git python3-dev python3-pip python3-venv default-libmysqlclient-dev 
+
+
+
+
+
+
+# MySQL
+# https://www.digitalocean.com/community/tutorials/how-to-install-mysql-on-ubuntu-18-04
+sudo apt install mysql-server
+sudo mysql_secure_installation
+# 输入想要设置MySQL的root的密码
+# Yes, Yes, Yes, Yes
+sudo mysql
+SELECT user,authentication_string,plugin,host FROM mysql.user;
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '你的密码';
+FLUSH PRIVILEGES;
+SELECT user,authentication_string,plugin,host FROM mysql.user;
+exit
+
+# 创建用户
+CREATE USER 'mustplus'@'%' IDENTIFIED BY 'qNg%AbN3#8#kqOAr';
+GRANT ALL PRIVILEGES ON must_plus.* TO 'mustplus'@'%' WITH GRANT OPTION;
+
+# 创建数据库 
+CREATE DATABASE must_plus CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+
+cd /etc/mysql/mysql.conf.d/
+sudo nano mysqld.cnf
+#修改默认端口为其他（端口要要大于1000！）
+#修改bindaddress为0.0.0.0
+
+
+# 开启防火墙
+sudo ufw default deny
+sudo ufw allow 22/tcp
+sudo ufw allow 3306/tcp
+sudo ufw allow 8000/tcp
+sudo ufw enable
+
+
+
+# pip3切换源
+mkdir ~/.pip
+nano ~/.pip/pip.conf
+# 然后将下面这两行复制进去就好了
+[global]
+index-url = https://pypi.tuna.tsinghua.edu.cn/simple
+
+
+pip3 install mysqlclient requests beautifulsoup4 virtualenv lxml
+git clone https://github.com/Military-Doctor/MUSTPlus.Server.git
+cd MUSTPlus.Server
+python3 -m venv venv
+source ./venv/bin/activate
+pip3 install -r requirements.txt
+```

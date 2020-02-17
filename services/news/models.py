@@ -5,6 +5,10 @@ from services.basic.models import Department, Faculty
 from services.student.models import Student
 
 
+class RobotUpdate(models.Model):
+    update_time = models.DateField(auto_now_add=True)  # 爬虫更新时间
+
+
 class Banner(models.Model):
     title = models.CharField(max_length=64)  # Banner 标题
     img = models.TextField()  # Banner 图像 URL

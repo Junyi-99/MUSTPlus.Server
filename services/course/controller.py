@@ -3,6 +3,7 @@
 # 而 controller.py 则是 .c 文件
 
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Avg
 from django.http import JsonResponse
 
 from services.course.models import Course, Ftp, Comment, ThumbsUp, ThumbsDown, Schedule

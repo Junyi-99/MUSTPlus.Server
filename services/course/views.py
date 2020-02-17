@@ -26,7 +26,7 @@ from settings import codes, messages
 @validate
 def init(request):
     try:
-        stu = get_student_object(request)
+
         token = stu.coes_token
         cookie = stu.coes_cookie
 
@@ -111,7 +111,6 @@ def api_comment(request, course_id):
             "code": codes.AUTH_REQUEST_METHOD_ERROR,
             "msg": messages.AUTH_REQUEST_METHOD_ERROR
         })
-
     except Exception as exception:
         traceback.print_exc(file=sys.stdout)
         return JsonResponse({
@@ -122,15 +121,17 @@ def api_comment(request, course_id):
 
 @require_post
 @validate
-def api_thumbs_up(request, course_id):
+def api_thumbs_up(request):
     if request.method == "POST":
         comment_id = int(request.GET.get("id", -1))
         student = get_student_object(request)
         return _comment_thumbs_up(comment_id, student)
+
     if request.method == "DELETE":
         comment_id = int(request.GET.get("id", -1))
         student = get_student_object(request)
         return _comment_thumbs_up_cancel(comment_id, student)
+
     return JsonResponse({
         "code": codes.AUTH_REQUEST_METHOD_ERROR,
         "msg": messages.AUTH_REQUEST_METHOD_ERROR
@@ -138,7 +139,7 @@ def api_thumbs_up(request, course_id):
 
 
 @validate
-def api_thumbs_down(request, course_id):
+def api_thumbs_down(request):
     if request.method == "POST":
         comment_id = int(request.GET.get("id", -1))
         student = get_student_object(request)

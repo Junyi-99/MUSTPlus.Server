@@ -1,17 +1,17 @@
-## **给课程评论点踩👎**
+## **获取我的信息**
 
-  踩某一个课程的评论。注意，这个API的REST参数只有course_id，comment_id 放在 URL 参数里，
+  获取自己的student详细信息
 
 - **URL**
 
-  _/course/thumbs_down_
+  _/student/me_
 
 - **Method**
 
-  `POST`
+  `GET`
 
 - **REST Params**
-  `course_id: integer`
+  None
 
 - **URL Params**
 
@@ -23,18 +23,17 @@
 
   `sign: string` 当前请求的签名
 
-  `id: integer` 课程评论ID
-
 - **Data Params**
 
-  None (注意，就算这里是POST方法，id参数也要放在URLParams里)
+  None
 
 - **Success Response:**
 
   ```JSON
   {
       "code":0,
-      "msg":""
+      "msg":"",
+      "": 
   }
   ```
 
@@ -56,21 +55,20 @@
 
 
 
-## **取消给课程评论点踩❌👎**
+## **取消给课程评论点赞❌👍**
 
-  取消踩某一课程的评论
+  取消赞某一个课程的评论
 
 - **URL**
 
-  _/course/thumbs_down_
+  _/course/{course_id}/comment/thumbs_down_
 
 - **Method**
 
   `DELETE`
 
 - **REST Params**
-
-  None
+  `course_id: integer` 
 
 - **URL Params**
 
@@ -101,8 +99,8 @@
 
   ```json
   {
-      "code": -4006, # 状态码 
-      "msg": "未找到该评论ID" # 错误信息
+      "code": -4006,
+      "msg": "未找到该评论ID"
   }
   ```
 

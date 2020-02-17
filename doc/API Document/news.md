@@ -227,6 +227,7 @@ GET 请求里，只会返回**这一个**错误代码 + AUTH系列的错误代�
   {
     "code":0,
     "msg":"",
+    "last_update": 
     "records":136,
     "news":[
         {

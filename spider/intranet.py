@@ -2,6 +2,7 @@ import json
 import sys
 from datetime import datetime
 
+import pytz
 import requests
 import traceback
 from bs4 import BeautifulSoup
@@ -11,7 +12,7 @@ from lxml import etree
 
 from services.basic.query import get_faculty, get_department
 from services.basic.views import init_faculties, init_departments
-from services.news.models import Document, Announcement, Attachment
+from services.news.models import Document, Announcement, Attachment, RobotUpdate
 from settings import codes, messages, urls
 
 
@@ -189,6 +190,8 @@ def intranet_update_normal(request):
     try:
         c = login(request.GET['username'], request.GET['password'])
         s = get_news(c)
+        update_record = RobotUpdate(update_time=datetime.now(tz=pytz.UTC))
+        update_record.save()
         proc_news(s, c)
         return HttpResponse(json.dumps({"code": codes.OK, "msg": messages.OK}))
     except Exception as exception:
@@ -201,6 +204,8 @@ def intranet_update_more(request):
     try:
         c = login(request.GET['username'], request.GET['password'])
         s = get_more_news(c)
+        update_record = RobotUpdate(update_time=datetime.now(tz=pytz.UTC))
+        update_record.save()
         proc_more_news(s, c)
         return HttpResponse(json.dumps({"code": codes.OK, "msg": messages.OK}))
     except Exception as exception:

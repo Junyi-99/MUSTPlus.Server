@@ -4,9 +4,10 @@ import traceback
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
 
+from mustplus.decorators import require_get
 from services.authentication.decorators import validate
 from services.basic.models import Department, Faculty
-from services.news.models import Announcement, Document, Attachment
+from services.news.models import Announcement, Document, Attachment, RobotUpdate
 from settings import codes, messages
 
 REQUEST_TYPE_ALL = 0  # 获取所有类型
@@ -130,16 +131,19 @@ def news_argument(begin: int, count: int, department: str = None, faculty: str =
                 "url": ret.url,
             })
     print("return result")
+    last_update = RobotUpdate.objects.all().first()
     return {
         "code": codes.OK,
         "msg": messages.OK,
         "records": i_length + j_length,
+        "last_update": last_update.update_time,
         "news_list": news_list,
     }
 
 
+@require_get
 @validate
-def news_department(request, department_name_zh):
+def api_news_department(request, department_name_zh):
     try:
         begin = int(request.GET['from'])
         count = int(request.GET['count'])
@@ -157,8 +161,9 @@ def news_department(request, department_name_zh):
         })
 
 
+@require_get
 @validate
-def news_faculty(request, faculty_name_zh):
+def api_news_faculty(request, faculty_name_zh):
     try:
         begin = int(request.GET.get('from', 1))
         count = int(request.GET.get('count', 20))
@@ -176,8 +181,9 @@ def news_faculty(request, faculty_name_zh):
         })
 
 
+@require_get
 @validate
-def news_documents(request):
+def api_news_documents(request):
     try:
         begin = int(request.GET.get('from', 1))
         count = int(request.GET.get('count', 20))
@@ -195,8 +201,9 @@ def news_documents(request):
         })
 
 
+@require_get
 @validate
-def news_announcements(request):
+def api_news_announcements(request):
     try:
         begin = int(request.GET.get('from', 1))
         count = int(request.GET.get('count', 20))
@@ -214,8 +221,9 @@ def news_announcements(request):
         })
 
 
+@require_get
 @validate
-def news_all(request):
+def api_news_all(request):
     try:
         begin = int(request.GET.get('from', 1))
         count = int(request.GET.get('count', 20))
@@ -233,8 +241,9 @@ def news_all(request):
         })
 
 
+@require_get
 @validate
-def news_banners(request):
+def api_news_banners(request):
     print(type(request))
     return JsonResponse({
         "code": codes.OK,
