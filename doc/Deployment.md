@@ -1,10 +1,21 @@
 # 服务器部署
 
+## Prerequisites
+
+You may need to install the Python and MySQL development headers and libraries like:
+
+`sudo apt install python3-dev default-libmysqlclient-dev python3-pip`
+
+`pip3 install mysqlclient requests beautifulsoup4 lxml`
+
+
 ## Step 1 安装系统
 
 推荐操作系统：Ubuntu 18.04
 
 上来第一步，修改默认 ssh 端口
+
+`sudo nano /etc/ssh/sshd_config`
 
 之后添加自己的 ssh pub key 到服务器的 authorized_keys 文件夹中
 
@@ -15,6 +26,10 @@
 `sudo apt install mysql-server`
 
 `sudo mysql_secure_installation`
+
+按照提示做出相应选择
+
+然后编辑 Mysql 端口
 
 `cd /etc/mysql/mysqld.conf.d/`
 
@@ -30,11 +45,13 @@
 
 `ufw allow 你的SSH端口/tcp`
 
-`ufw allow 你的MYSQL端口/tcp`
+`ufw allow 你的MYSQL端口/tcp` (如果不暴露 MySQL 这条可以忽略 )
 
-`ufw enable`
+`ufw enable` （enable 前请确认已经修改了SSH端口之类的）
 
 ## Step 3 部署 Python
+
+执行该操作之前请先 clone 本 repository 到本地，并且 cd 到项目根目录
 
 安装 virtualenv
 
