@@ -114,8 +114,6 @@ processes、workers、threads 按需修改
 
 `pip3 install uwsgi`
 
-`uwsgi --ini uwsgi.ini`
-
 ## Step 4 配置服务器
 
 请确保 Settings 符合下面的文件夹结构：
@@ -143,7 +141,16 @@ PORT = ''
 SECRET_KEY = 'yfyzhc%840_!g%!#(sqy(ccock4^z4ohl=$-*3xpoe+v^cq)ih'
 ```
 
-## Database
+
+## 启动服务器
+
+记得也配置一下防火墙允许 8000 端口出入（django端口）
+
+`uwsgi --ini uwsgi.ini`
+
+
+
+## 其他：Database
 
 数据库：
 
@@ -153,11 +160,8 @@ must_plus
 
 utf8mb4_unicode_ci
 
-## 启动服务器
 
-`uwsgi --ini uwsgi.ini`
-
-## 整体流程
+## 其他：整体流程
 
 ```
 # 换国内源:
