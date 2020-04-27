@@ -59,7 +59,7 @@ You may need to install the Python and MySQL development headers and libraries l
 
 创建 virtualenv 目录
 
-`virtualenv venv`
+`python3 -m virtualenv venv`
 
 进入 venv 环境
 
@@ -69,16 +69,61 @@ You may need to install the Python and MySQL development headers and libraries l
 
 `pip3 install -r requirements.txt`
 
+创建表（请确认数据库配置无误，才可进入此操作）
+```
+find ./services -name migrations | xargs rm -rf
+find ./services -name __pycache__ | xargs rm -rf
 
+python3 manage.py makemigrations --empty authentication basic course moments news student teacher timetable mustplus spider
+
+python3 manage.py migrate
+python3 manage.py makemigrations
+python3 manage.py migrate
+
+python3 manage.py runserver 0.0.0.0:8000
+```
+
+出现
+
+```
+Loading RSA Key ...
+RSA Key Loaded.
+Loading RSA Key ...
+RSA Key Loaded.
+Watching for file changes with StatReloader
+Performing system checks...
+
+System check identified no issues (0 silenced).
+April 27, 2020 - 11:24:27
+Django version 3.0b1, using settings 'mustplus.settings'
+Starting development server at http://0.0.0.0:8000/
+Quit the server with CONTROL-C.
+```
+
+即表示成功部署服务器
+
+## 安装 uwsgi （非常建议）
+
+修改 `uwsgi.ini` 内容
+
+把 chdir 改为现在的目录
+
+把 daemonize 改为其他目录
+
+processes、workers、threads 按需修改
+
+`pip3 install uwsgi`
+
+`uwsgi --ini uwsgi.ini`
 
 ## Step 4 配置服务器
 
 请确保 Settings 符合下面的文件夹结构：
 ```
-├─Settings
-│      Database.py
-│      Server.py
-│      URLS.py
+├─settings
+│      database.py
+│      server.py
+│      urls.py
 │      __init__.py
 ```
 （其中，`Database.py` 和 `Server.py` **不应**出现在 git 中）
@@ -93,7 +138,7 @@ HOST = ''
 PORT = ''
 ```
 
-对于 `Server.py`，内容如下： 
+对于 `server.py`，内容示例如下： 
 ```
 SECRET_KEY = 'yfyzhc%840_!g%!#(sqy(ccock4^z4ohl=$-*3xpoe+v^cq)ih'
 ```
@@ -108,6 +153,9 @@ must_plus
 
 utf8mb4_unicode_ci
 
+## 启动服务器
+
+`uwsgi --ini uwsgi.ini`
 
 ## 整体流程
 
@@ -149,17 +197,29 @@ SELECT user,authentication_string,plugin,host FROM mysql.user;
 exit
 
 # 创建用户
+
+```
 CREATE USER 'mustplus'@'%' IDENTIFIED BY 'qNg%AbN3#8#kqOAr';
+```
+
+```
 GRANT ALL PRIVILEGES ON must_plus.* TO 'mustplus'@'%' WITH GRANT OPTION;
+```
 
 # 创建数据库 
+
+```
 CREATE DATABASE must_plus CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+```
 
 
-cd /etc/mysql/mysql.conf.d/
-sudo nano mysqld.cnf
-#修改默认端口为其他（端口要要大于1000！）
-#修改bindaddress为0.0.0.0
+`cd /etc/mysql/mysql.conf.d/`
+
+`sudo nano mysqld.cnf`
+
+# 修改默认端口为其他（端口要要大于1000！）
+
+# 修改bindaddress为0.0.0.0 （如果要暴露的话）
 
 
 # 开启防火墙
