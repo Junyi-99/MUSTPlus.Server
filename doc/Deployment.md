@@ -49,6 +49,11 @@ You may need to install the Python and MySQL development headers and libraries l
 
 `ufw enable` （enable 前请确认已经修改了SSH端口之类的）
 
+！！！注意。在这一步里，你应该创建一个名为 must_plus 的新用户，并且牢牢限定它的用户权限，以保证安全！！！
+！！！注意。在这一步里，你应该创建一个名为 must_plus 的新用户，并且牢牢限定它的用户权限，以保证安全！！！
+！！！注意。在这一步里，你应该创建一个名为 must_plus 的新用户，并且牢牢限定它的用户权限，以保证安全！！！
+
+
 ## Step 3 部署 Python
 
 执行该操作之前请先 clone 本 repository 到本地，并且 cd 到项目根目录
