@@ -1,5 +1,5 @@
 NAME = 'must_plus'
-USER = 'mustplus'
+USER = 'must_plus'
 PASSWORD = 'qNg%AbN3#8#kqOAr'
 HOST = '127.0.0.1'
 PORT = '3306'
