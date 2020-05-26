@@ -162,7 +162,7 @@ SECRET_KEY = '这里是只有自己知道的密码'
 
 创建 virtualenv 目录
 
-`virtualenv --no-site-packages venv`
+`virtualenv -p python3 --no-site-packages venv`
 
 进入 venv 环境
 
