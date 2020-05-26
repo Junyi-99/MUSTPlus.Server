@@ -156,11 +156,13 @@ SECRET_KEY = '这里是只有自己知道的密码'
 
 安装 virtualenv
 
+`sudo apt-get install python-virtualenv`
+
 `pip3 install virtualenv`
 
 创建 virtualenv 目录
 
-`python3 -m virtualenv venv`
+`virtualenv --no-site-packages venv`
 
 进入 venv 环境
 
