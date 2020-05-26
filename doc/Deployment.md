@@ -216,9 +216,7 @@ Quit the server with CONTROL-C.
 
 processes、workers、threads 按需修改
 
-`sudo apt install uwsgi-core`
-
-`pip3 install uwsgi`
+`sudo pip3 install uwsgi` (系统级安装)
 
 ### 启动服务器（uwsgi）
 
