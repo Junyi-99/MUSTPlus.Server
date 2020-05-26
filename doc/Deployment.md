@@ -236,6 +236,13 @@ processes、workers、threads 按需修改
 
 因为你懂得的原因，我们要把 apt 和 pip 的源都换成国内的
 
+## Nginx + uWSGI + Django 部署：
+
+`https://uwsgi-docs.readthedocs.io/en/latest/tutorials/Django_and_nginx.html`
+
+看英文原版教程，就能配置成功，中文翻译的太差
+
+
 ### apt 换国内源:
 
 `sudo nano /etc/apt/sources.list`
