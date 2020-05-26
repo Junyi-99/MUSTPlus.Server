@@ -115,8 +115,9 @@ CREATE DATABASE must_plus CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 `sudo ufw allow 你的MYSQL端口/tcp` (如果不暴露 MySQL 这条可以忽略 )
 
-`sudo ufw enable` （enable 前请确认已经修改了SSH端口之类的，否则会被拒绝连接到服务器）
+`sudo ufw allow 服务器要用的端口/tcp` (如果不暴露 MySQL 这条可以忽略 )
 
+`sudo ufw enable` （enable 前请确认已经修改了SSH端口之类的，否则会被拒绝连接到服务器）
 
 ## Step 7 配置服务器
 
@@ -146,6 +147,8 @@ SECRET_KEY = 'yfyzhc%840_!g%!#(sqy(ccock4^z4ohl=$-*3xpoe+v^cq)ih'
 ```
 
 ## Step 8 部署 Python
+
+# 注意，对 MUSTPLUS 服务器的任何操作，都应当在 virtualenv 环境下进行
 
 执行该操作之前请先 clone 本 repository 到本地，并且 cd 到项目根目录（以下操作在 must_plus 账户下进行）
 
@@ -221,12 +224,16 @@ processes、workers、threads 按需修改
 
 
 
-## 其他：整体流程 （无需仔细看）
+## 其他：
 
+因为你懂得的原因，我们要把 apt 和 pip 的源都换成国内的
+
+### apt 换国内源:
+
+`sudo nano /etc/apt/sources.list`
+
+**在文件添加以下条目:**
 ```
-# 换国内源:
-sudo nano /etc/apt/sources.list
-# 在文件添加以下条目:
 deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ bionic main restricted universe multiverse
 deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ bionic main restricted universe multiverse
 deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ bionic-updates main restricted universe multiverse
@@ -243,30 +250,14 @@ sudo apt install openssh-server
 sudo apt install git python3-dev python3-pip python3-venv default-libmysqlclient-dev 
 ```
 
-
-
-
-# 开启防火墙
-sudo ufw default deny
-sudo ufw allow 22/tcp
-sudo ufw allow 3306/tcp
-sudo ufw allow 8000/tcp
-sudo ufw enable
-
-
-
 # pip3切换源
-mkdir ~/.pip
-nano ~/.pip/pip.conf
+
+`mkdir ~/.pip`
+
+`nano ~/.pip/pip.conf`
+
 # 然后将下面这两行复制进去就好了
+```
 [global]
 index-url = https://pypi.tuna.tsinghua.edu.cn/simple
-
-
-pip3 install mysqlclient requests beautifulsoup4 virtualenv lxml
-git clone https://github.com/Military-Doctor/MUSTPlus.Server.git
-cd MUSTPlus.Server
-python3 -m venv venv
-source ./venv/bin/activate
-pip3 install -r requirements.txt
 ```
