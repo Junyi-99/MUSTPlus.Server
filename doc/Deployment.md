@@ -58,8 +58,10 @@ exit
 ### 创建 must_plus 用户
 
 ```
-CREATE USER 'must_plus'@'%' IDENTIFIED BY 'qNg%AbN3#8#kqOAr';
+CREATE USER 'must_plus'@'%' IDENTIFIED BY '这里写密码';
 ```
+
+
 
 ```
 GRANT ALL PRIVILEGES ON must_plus.* TO 'must_plus'@'%' WITH GRANT OPTION;
@@ -143,7 +145,7 @@ PORT = ''
 
 对于 `server.py`，内容示例如下： 
 ```
-SECRET_KEY = 'yfyzhc%840_!g%!#(sqy(ccock4^z4ohl=$-*3xpoe+v^cq)ih'
+SECRET_KEY = '这里是只有自己知道的密码'
 ```
 
 ## Step 8 部署 Python
@@ -222,9 +224,13 @@ processes、workers、threads 按需修改
 
 `uwsgi --ini uwsgi.ini`
 
+用 ps 看看有没有启动成功
 
+`ps -aux | grep uwsgi`
 
+注意：你应该先用基本的 `python3 manage.py runserver 0.0.0.0:8000` 来测试是否能正常启动，再使用 uwsgi 启动
 
+这样可以避免你遇到一些因为自己能力问题不知道怎么解决的问题
 
 ## 其他：
 
