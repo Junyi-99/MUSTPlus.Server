@@ -21,7 +21,10 @@ You may need to install the Python and MySQL development headers and libraries l
 
 之后添加自己的 ssh pub key 到服务器的 authorized_keys 文件夹中
 
-安装 MySQL
+## Step 2 安装 MySQL
+
+参考自：https://www.digitalocean.com/community/tutorials/how-to-install-mysql-on-ubuntu-18-04
+
 
 `sudo apt update`
 
@@ -29,7 +32,7 @@ You may need to install the Python and MySQL development headers and libraries l
 
 `sudo mysql_secure_installation`
 
-按照提示做出相应选择
+按照提示做出相应选择，一般是输入一个密码，剩下的全都 YES
 
 然后编辑 Mysql 端口
 
@@ -41,17 +44,34 @@ You may need to install the Python and MySQL development headers and libraries l
 
 修改bindaddress为0.0.0.0
 
-## Step 2 开启防火墙
+## Step 3 配置 MySQL
 
-`sudo ufw default deny`
+```MySQL
+sudo mysql
+SELECT user,authentication_string,plugin,host FROM mysql.user;
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '你的密码';
+FLUSH PRIVILEGES;
+SELECT user,authentication_string,plugin,host FROM mysql.user;
+exit
+```
 
-`sudo ufw allow 你的SSH端口/tcp`
+### 创建 must_plus 用户
 
-`sudo ufw allow 你的MYSQL端口/tcp` (如果不暴露 MySQL 这条可以忽略 )
+```
+CREATE USER 'must_plus'@'%' IDENTIFIED BY 'qNg%AbN3#8#kqOAr';
+```
 
-`sudo ufw enable` （enable 前请确认已经修改了SSH端口之类的，否则会被拒绝连接到服务器）
+```
+GRANT ALL PRIVILEGES ON must_plus.* TO 'must_plus'@'%' WITH GRANT OPTION;
+```
 
-## Step 3 添加用户
+### 创建 must_plus 数据库，编码 utf8mb4_unicode_ci
+
+```
+CREATE DATABASE must_plus CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+```
+
+## Step 4 添加用户
 
 在这一步里，你应该创建一个名为 must_plus 的新**普通用户**，并且牢牢限定它的用户权限，以保证安全
 
@@ -71,7 +91,7 @@ You may need to install the Python and MySQL development headers and libraries l
 
 如果有需要，修改 `/etc/passwd` ，给用户设置 zsh 或 bash
 
-## Step 4 设置公钥登录
+## Step 5 设置公钥登录
 
 `ssh-keygen` 生成属于该用户的密钥对
 
@@ -85,9 +105,49 @@ You may need to install the Python and MySQL development headers and libraries l
 
 保存
 
-## Step 5 部署 Python
+## Step 6 开启防火墙
 
-执行该操作之前请先 clone 本 repository 到本地，并且 cd 到项目根目录
+这一步执行之前，你应该已经完成了 SSH 和 MySQL 的配置工作
+
+`sudo ufw default deny`
+
+`sudo ufw allow 你的SSH端口/tcp`
+
+`sudo ufw allow 你的MYSQL端口/tcp` (如果不暴露 MySQL 这条可以忽略 )
+
+`sudo ufw enable` （enable 前请确认已经修改了SSH端口之类的，否则会被拒绝连接到服务器）
+
+
+## Step 7 配置服务器
+
+请确保 settings 目录符合下面的文件夹结构：
+```
+├─settings
+│      database.py
+│      server.py
+│      urls.py
+│      __init__.py
+```
+（其中，`database.py` 和 `server.py` **不应**出现在 git 中）
+
+这两个文件应由开发者自己编写，对于 `database.py`，内容如下：
+
+```
+NAME = ''
+USER = ''
+PASSWORD = ''
+HOST = ''
+PORT = ''
+```
+
+对于 `server.py`，内容示例如下： 
+```
+SECRET_KEY = 'yfyzhc%840_!g%!#(sqy(ccock4^z4ohl=$-*3xpoe+v^cq)ih'
+```
+
+## Step 8 部署 Python
+
+执行该操作之前请先 clone 本 repository 到本地，并且 cd 到项目根目录（以下操作在 must_plus 账户下进行）
 
 安装 virtualenv
 
@@ -106,6 +166,7 @@ You may need to install the Python and MySQL development headers and libraries l
 `pip3 install -r requirements.txt`
 
 创建表（请确认数据库配置无误，才可进入此操作）
+
 ```
 find ./services -name migrations | xargs rm -rf
 find ./services -name __pycache__ | xargs rm -rf
@@ -138,7 +199,7 @@ Quit the server with CONTROL-C.
 
 即表示成功部署服务器
 
-## 安装 uwsgi （非常建议）
+### 安装 uwsgi （非常建议）
 
 修改 `uwsgi.ini` 内容
 
@@ -150,35 +211,7 @@ processes、workers、threads 按需修改
 
 `pip3 install uwsgi`
 
-## Step 6 配置服务器
-
-请确保 Settings 符合下面的文件夹结构：
-```
-├─settings
-│      database.py
-│      server.py
-│      urls.py
-│      __init__.py
-```
-（其中，`Database.py` 和 `Server.py` **不应**出现在 git 中）
-
-这两个文件应由开发者自己编写，对于 `Database.py`，内容如下：
-
-```
-NAME = ''
-USER = ''
-PASSWORD = ''
-HOST = ''
-PORT = ''
-```
-
-对于 `server.py`，内容示例如下： 
-```
-SECRET_KEY = 'yfyzhc%840_!g%!#(sqy(ccock4^z4ohl=$-*3xpoe+v^cq)ih'
-```
-
-
-## 启动服务器
+### 启动服务器（uwsgi）
 
 记得也配置一下防火墙允许 8000 端口出入（django端口）
 
@@ -186,18 +219,9 @@ SECRET_KEY = 'yfyzhc%840_!g%!#(sqy(ccock4^z4ohl=$-*3xpoe+v^cq)ih'
 
 
 
-## 其他：Database
-
-数据库：
-
-must_plus
-
-编码字符集：
-
-utf8mb4_unicode_ci
 
 
-## 其他：整体流程
+## 其他：整体流程 （无需仔细看）
 
 ```
 # 换国内源:
@@ -217,49 +241,9 @@ deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ bionic-proposed main restri
 sudo apt update
 sudo apt install openssh-server
 sudo apt install git python3-dev python3-pip python3-venv default-libmysqlclient-dev 
-
-
-
-
-
-
-# MySQL
-# https://www.digitalocean.com/community/tutorials/how-to-install-mysql-on-ubuntu-18-04
-sudo apt install mysql-server
-sudo mysql_secure_installation
-# 输入想要设置MySQL的root的密码
-# Yes, Yes, Yes, Yes
-sudo mysql
-SELECT user,authentication_string,plugin,host FROM mysql.user;
-ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '你的密码';
-FLUSH PRIVILEGES;
-SELECT user,authentication_string,plugin,host FROM mysql.user;
-exit
-
-# 创建用户
-
-```
-CREATE USER 'mustplus'@'%' IDENTIFIED BY 'qNg%AbN3#8#kqOAr';
-```
-
-```
-GRANT ALL PRIVILEGES ON must_plus.* TO 'mustplus'@'%' WITH GRANT OPTION;
-```
-
-# 创建数据库 
-
-```
-CREATE DATABASE must_plus CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ```
 
 
-`cd /etc/mysql/mysql.conf.d/`
-
-`sudo nano mysqld.cnf`
-
-# 修改默认端口为其他（端口要要大于1000！）
-
-# 修改bindaddress为0.0.0.0 （如果要暴露的话）
 
 
 # 开启防火墙
