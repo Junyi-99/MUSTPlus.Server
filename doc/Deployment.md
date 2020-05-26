@@ -13,9 +13,11 @@ You may need to install the Python and MySQL development headers and libraries l
 
 推荐操作系统：Ubuntu 18.04
 
-上来第一步，修改默认 ssh 端口
+上来第一步，修改默认 ssh 端口，并且关闭密码登录，只允许使用密钥文件登录
 
 `sudo nano /etc/ssh/sshd_config`
+
+...
 
 之后添加自己的 ssh pub key 到服务器的 authorized_keys 文件夹中
 
@@ -47,7 +49,7 @@ You may need to install the Python and MySQL development headers and libraries l
 
 `ufw allow 你的MYSQL端口/tcp` (如果不暴露 MySQL 这条可以忽略 )
 
-`ufw enable` （enable 前请确认已经修改了SSH端口之类的）
+`ufw enable` （enable 前请确认已经修改了SSH端口之类的，否则会被拒绝连接到服务器）
 
 ！！！注意。在这一步里，你应该创建一个名为 must_plus 的新用户，并且牢牢限定它的用户权限，以保证安全！！！
 ！！！注意。在这一步里，你应该创建一个名为 must_plus 的新用户，并且牢牢限定它的用户权限，以保证安全！！！
