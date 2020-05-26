@@ -35,7 +35,7 @@ You may need to install the Python and MySQL development headers and libraries l
 
 `cd /etc/mysql/mysqld.conf.d/`
 
-`nano mysqld.cnf`
+`sudo nano mysqld.cnf`
 
 修改默认端口为其他（端口要要大于1000！）
 
@@ -43,20 +43,49 @@ You may need to install the Python and MySQL development headers and libraries l
 
 ## Step 2 开启防火墙
 
-`ufw default deny`
+`sudo ufw default deny`
 
-`ufw allow 你的SSH端口/tcp`
+`sudo ufw allow 你的SSH端口/tcp`
 
-`ufw allow 你的MYSQL端口/tcp` (如果不暴露 MySQL 这条可以忽略 )
+`sudo ufw allow 你的MYSQL端口/tcp` (如果不暴露 MySQL 这条可以忽略 )
 
-`ufw enable` （enable 前请确认已经修改了SSH端口之类的，否则会被拒绝连接到服务器）
+`sudo ufw enable` （enable 前请确认已经修改了SSH端口之类的，否则会被拒绝连接到服务器）
 
-！！！注意。在这一步里，你应该创建一个名为 must_plus 的新用户，并且牢牢限定它的用户权限，以保证安全！！！
-！！！注意。在这一步里，你应该创建一个名为 must_plus 的新用户，并且牢牢限定它的用户权限，以保证安全！！！
-！！！注意。在这一步里，你应该创建一个名为 must_plus 的新用户，并且牢牢限定它的用户权限，以保证安全！！！
+## Step 3 添加用户
 
+在这一步里，你应该创建一个名为 must_plus 的新**普通用户**，并且牢牢限定它的用户权限，以保证安全
 
-## Step 3 部署 Python
+这个账户**不要赋予** root 组权限
+
+`sudo useradd -m must_plus`
+
+-m 表示 自动建立用户的登入目录
+
+由于我们的系统用户数量只有一个，所以就不设置用户组了。
+
+然后我们来修改用户密码：
+
+`sudo passwd must_plus`
+
+输入你设置的密码，并且保管妥当
+
+如果有需要，修改 `/etc/passwd` ，给用户设置 zsh 或 bash
+
+## Step 4 设置公钥登录
+
+`ssh-keygen` 生成属于该用户的密钥对
+
+`cd ~/.ssh` 切换到 ssh 配置目录
+
+`nano authorized_keys` 授权列表
+
+然后把你的 id_rsa.pub 文件的内容粘贴进去
+
+一条记录一行
+
+保存
+
+## Step 5 部署 Python
 
 执行该操作之前请先 clone 本 repository 到本地，并且 cd 到项目根目录
 
@@ -121,7 +150,7 @@ processes、workers、threads 按需修改
 
 `pip3 install uwsgi`
 
-## Step 4 配置服务器
+## Step 6 配置服务器
 
 请确保 Settings 符合下面的文件夹结构：
 ```
