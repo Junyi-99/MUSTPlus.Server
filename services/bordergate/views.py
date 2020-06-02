@@ -10,6 +10,9 @@ from settings import codes, messages
 import requests
 import json
 
+# Author: Paul
+# Last Modified: 06/03/2020
+
 # port 0 关闸
 # port 1 横琴
 # 由 caller 来做判断
