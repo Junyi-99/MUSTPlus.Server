@@ -77,7 +77,6 @@ def api_ftp(request, course_id):
         pass
     if request.method == "DELETE":
         pass
-    pass
 
 
 @csrf_exempt

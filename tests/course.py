@@ -73,9 +73,3 @@ def comment_delete(course_id, comment_id):
     r = requests.delete("http://mp.junyi.pw:8000/course/" +
                         str(course_id) + "/comment", params=get_data)
     print(r.text)
-
-# comment_post(5, 8, "   ")
-# comment_delete(5, 1)
-# comment_get(5)
-# course(5)
-# comment_get(5)

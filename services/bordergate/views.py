@@ -35,21 +35,20 @@ def __bordergate(port: int):
         j = json.loads(j["d"])
 
         for e in j["Rt"]:
-            if e["Pn"] == "2":
-                if e["Id"] == "D":
-                    if e["St"] == "1":
-                        info_list.append("暢通")
-                    elif e["St"] == "2":
-                        info_list.append("繁忙")
-                    elif e["St"] == "3":
-                        info_list.append("擠擁")
-                    elif e["St"] == "4":
-                        info_list.append("分流")
-                    elif e["St"] == "5":
-                        info_list.append("暫停")
-                    elif e["St"] == "6":
-                        info_list.append("黑屏")
-                    info_list.append(e["Ti"])
+            if e["Pn"] == "2" and e["Id"] == "D":
+                if e["St"] == "1":
+                    info_list.append("暢通")
+                elif e["St"] == "2":
+                    info_list.append("繁忙")
+                elif e["St"] == "3":
+                    info_list.append("擠擁")
+                elif e["St"] == "4":
+                    info_list.append("分流")
+                elif e["St"] == "5":
+                    info_list.append("暫停")
+                elif e["St"] == "6":
+                    info_list.append("黑屏")
+                info_list.append(e["Ti"])
         return info_list
     elif port == 1:
         response = requests.post(
@@ -67,25 +66,24 @@ def __bordergate(port: int):
         j = json.loads(response.text)
         j = json.loads(j["d"])
         for e in j["Rt"]:
-            if e["Pn"] == "5":
-                if e["Id"] == "D":
-                    if e["St"] == "1":
-                        info_list.append("暢通")
-                    elif e["St"] == "2":
-                        info_list.append("繁忙")
-                    elif e["St"] == "3":
-                        info_list.append("擠擁")
-                    elif e["St"] == "4":
-                        info_list.append("分流")
-                    elif e["St"] == "5":
-                        info_list.append("暫停")
-                    elif e["St"] == "6":
-                        info_list.append("黑屏")
-                    info_list.append(e["Ti"])
+            if e["Pn"] == "5" and e["Id"] == "D":
+                if e["St"] == "1":
+                    info_list.append("暢通")
+                elif e["St"] == "2":
+                    info_list.append("繁忙")
+                elif e["St"] == "3":
+                    info_list.append("擠擁")
+                elif e["St"] == "4":
+                    info_list.append("分流")
+                elif e["St"] == "5":
+                    info_list.append("暫停")
+                elif e["St"] == "6":
+                    info_list.append("黑屏")
+                info_list.append(e["Ti"])
         return info_list
 
 @require_get
-#@validate
+@validate
 def api_bordergate(request, port):
     if port == 0:  # 关闸
         ret = __bordergate(0)

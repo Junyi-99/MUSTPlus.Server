@@ -22,7 +22,7 @@ def calc_sign(get_data: dict, post_data: dict) -> dict:
     print(params)
     return hashlib.md5(params.encode('utf-8')).hexdigest()
     
-def t(intake, week):
+def test(intake, week):
     data = {
         'token': TOKEN,
         'time': int(time.time()),
@@ -30,15 +30,12 @@ def t(intake, week):
         'week':week,
     }
     data['sign'] = calc_sign(data, {})
-    # print(data)
     r = requests.get("http://mp.junyi.pw:8000/timetable", params=data)
-    #print(r.text)
     print(r.text)
-    # print(json.loads(r.text))
 
 
-# t(1709, 0)
-# t(1802, 0)
-t(1809, 0)
-t(1902, 0)
-t(1909, 0)
+# test(1709, 0)
+# test(1802, 0)
+# test(1809, 0)
+# test(1902, 0)
+# test(1909, 0)

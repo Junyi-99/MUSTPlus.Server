@@ -54,17 +54,11 @@ def login(username, password, token, cookies, captcha='0000'):
         headers = urls.headers
         headers['Cookie'] = cookies
         ret = requests.post(url=url, data=data, headers=headers, verify=False)
-        # print(r.text)
-        # with open("login_record.html", 'wb') as file:
-        #     file.write(ret.text.encode('utf-8'))
-        #     file.close()
-
         trait = '- Inbox'
         if trait in ret.text:
             # pos1 = ret.text.find(trait) + len(trait)
             # pos2 = ret.text.find('-->', pos1)
-            # print("Login Successful!")
-            # print("coes Version: ", ret.text[pos1:pos2])
+            # coes Version: ", ret.text[pos1:pos2]
             return LOGIN_SUCCESSFUL
         if '驗證碼不相同' in ret.text:
             logout(cookies)
@@ -82,7 +76,7 @@ def login(username, password, token, cookies, captcha='0000'):
 
 
 def logout(cookies):
-    print("Trying to logout", cookies)
-    # headers = URLS.headers
-    # headers['Cookie'] = cookies
-    # requests.post(url=URLS.COES_LOGOUT, headers=headers)
+    pass
+    #headers = urls.headers
+    #headers['Cookie'] = cookies
+    #requests.post(url=urls.COES_LOGOUT, headers=headers)

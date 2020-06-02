@@ -70,8 +70,3 @@ def process_course_list(html_source: str) -> list:
             'faculty': FACULTIES[record[4]]
         })
     return result
-
-# with open("save2.html", 'rb') as f:
-#     s = f.read()
-#     f.close()
-# process_course_list(s)

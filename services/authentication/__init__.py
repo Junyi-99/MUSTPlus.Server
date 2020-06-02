@@ -16,7 +16,6 @@ try:
     PRIVATE_KEY_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'private_key.pem')
     with open(PUBLIC_KEY_PATH, 'r') as f:
         PUBLIC_KEY_CONTENT = f.read()
-        #PUBLIC_KEY = rsa.PublicKey.load_pkcs1(PUBLIC_KEY_CONTENT.encode())
     with open(PRIVATE_KEY_PATH, 'r') as f:
         PRIVATE_KEY = rsa.PrivateKey.load_pkcs1(f.read().encode())
     print("RSA Key Loaded.")

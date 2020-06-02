@@ -64,5 +64,5 @@ def news_department(department_id, begin, count):
 # print(json.dumps(j))
 # print(j, len(j['news']))
 # print(news_department('圖書館', 1, 2))
-print(news_faculty('商學院', 1, 2))
+# print(news_faculty('商學院', 1, 2))
 # news_faculty()
