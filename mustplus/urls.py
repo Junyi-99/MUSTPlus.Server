@@ -34,6 +34,7 @@ urlpatterns = [
     path('news/', include('services.news.urls')),
     path('teacher/', include('services.teacher.urls')),
     path('timetable/', include('services.timetable.urls')),
+    path('bordergate/', include('services.bordergate.urls')),
 ]
 
 

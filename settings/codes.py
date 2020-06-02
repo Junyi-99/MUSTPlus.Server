@@ -40,6 +40,10 @@ COURSE_FTP_PASSWORD_ILLEGAL = -4103  # FTP 密码非法
 
 NEWS_UNKNOWN_ERROR = -4200  # 资讯 未知错误
 
+# /bordergate/id
+
+BORDERGATE_ERROR_PORT_ID = -4300 # 口岸ID错误
+
 # GET /teacher
 TEACHER_ID_NOT_FOUNT = -5000  # 未找到教师
 
@@ -68,3 +72,5 @@ TIMETABLE_COOKIE_EXPIRED = -7003  # timetable 请求中发现 coes Cookie 过期
 SPACE_USERNAME_INVALID = -8000  # 用户名无效
 
 OTHER_ARGUMENT_INVALID = -9000  # 其它类型参数错误
+
+

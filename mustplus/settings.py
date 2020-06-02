@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'services.student',
     'services.teacher',
     'services.timetable',
+    'services.bordergate',
     'mustplus',
     'spider',
 ]

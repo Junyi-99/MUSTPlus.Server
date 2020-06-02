@@ -40,6 +40,8 @@ COURSE_FTP_PASSWORD_ILLEGAL = "FTP 密码非法"
 
 NEWS_UNKNOWN_ERROR = '资讯 未知错误'
 
+BORDERGATE_ERROR_PORT_ID = '错误的口岸编号'
+
 # GET /teacher
 TEACHER_ID_NOT_FOUNT = "未找到教师"
 

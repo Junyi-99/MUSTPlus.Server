@@ -73,7 +73,7 @@ GRANT ALL PRIVILEGES ON must_plus.* TO 'must_plus'@'%' WITH GRANT OPTION;
 CREATE DATABASE must_plus CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ```
 
-## Step 4 添加用户
+## Step 4 添加用户~~~~
 
 在这一步里，你应该创建一个名为 must_plus 的新**普通用户**，并且牢牢限定它的用户权限，以保证安全
 
