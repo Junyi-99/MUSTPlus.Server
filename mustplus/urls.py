@@ -34,7 +34,7 @@ urlpatterns = [
     path('news/', include('services.news.urls')),
     path('teacher/', include('services.teacher.urls')),
     path('timetable/', include('services.timetable.urls')),
-    path('bordergate/', include('services.bordergate.urls')),
+    path('border/', include('services.border.urls')),
 ]
 
 
@@ -44,8 +44,7 @@ def handle_500(request, *args, **kwargs):
             "code": codes.INTERNAL_ERROR,
             "msg": messages.INTERNAL_ERROR
         }
-    ),
-        status=500)
+    ), status=500)
 
 
 def handle_404(request, *args, **kwargs):
@@ -54,8 +53,7 @@ def handle_404(request, *args, **kwargs):
             "code": codes.PAGE_NOT_FOUND,
             "msg": messages.PAGE_NOT_FOUND
         }
-    ),
-        status=404)
+    ), status=404)
 
 
 handler404 = handle_404

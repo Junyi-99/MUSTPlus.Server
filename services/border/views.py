@@ -16,7 +16,7 @@ import json
 # port 0 关闸
 # port 1 横琴
 # 由 caller 来做判断
-def __bordergate(port: int):
+def __border_gate(port: int):
     info_list = []
     if port == 0:
         response = requests.post(
@@ -83,10 +83,10 @@ def __bordergate(port: int):
         return info_list
 
 @require_get
-@validate
-def api_bordergate(request, port):
+#@validate
+def api_border(request, port):
     if port == 0:  # 关闸
-        ret = __bordergate(0)
+        ret = __border_gate(0)
         print(ret)
         return JsonResponse({
             "code": codes.OK,
@@ -96,7 +96,7 @@ def api_bordergate(request, port):
             "time": ret[1]
         })
     elif port == 1:  # 横琴
-        ret = __bordergate(1)
+        ret = __border_gate(1)
         print(ret)
         return JsonResponse({
             "code": codes.OK,

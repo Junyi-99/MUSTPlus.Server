@@ -40,7 +40,7 @@ COURSE_FTP_PASSWORD_ILLEGAL = -4103  # FTP 密码非法
 
 NEWS_UNKNOWN_ERROR = -4200  # 资讯 未知错误
 
-# /bordergate/id
+# /border/id
 
 BORDERGATE_ERROR_PORT_ID = -4300 # 口岸ID错误
 
