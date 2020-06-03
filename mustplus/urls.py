@@ -23,6 +23,12 @@ from django.urls import include, path
 from settings import codes, messages
 from spider import intranet
 
+from services.bus.views import api_bus
+from services.setting.views import api_setting
+from services.timetable.views import api_timetable
+from services.gpa.views import api_gpa
+
+
 urlpatterns = [
     url('admin/', admin.site.urls),
     path('intranet/update/normal', intranet.intranet_update_normal),
@@ -32,11 +38,14 @@ urlpatterns = [
     path('basic/', include('services.basic.urls')),
     path('course/', include('services.course.urls')),
     path('news/', include('services.news.urls')),
-    path('teacher/', include('services.teacher.urls')),
-    path('timetable/', include('services.timetable.urls')),
-    path('border/', include('services.border.urls')),
+    path('teacher/', include('services.teacher.urls'), name='教师信息'),
+    path('border/', include('services.border.urls'), name='关闸信息'),
+    path('lost/', include('services.border.urls'), name='失物招领'),
+    path('timetable', api_timetable, name='课程表'),
+    path('setting', api_setting, name='用户设置'),
+    path('bus', api_bus, name='巴士报站'),
+    path('gpa', api_gpa, name='学生GPA'),
 ]
-
 
 def handle_500(request, *args, **kwargs):
     return HttpResponse(content=json.dumps(

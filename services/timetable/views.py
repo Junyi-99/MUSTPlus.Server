@@ -21,7 +21,7 @@ TIMETABLE_INTAKE = 1902
 
 @csrf_exempt
 @validate
-def timetable(request):
+def api_timetable(request):
     ret = []
     stu = utility.get_student_object(request)
 

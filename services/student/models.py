@@ -41,7 +41,8 @@ class TakeCourse(models.Model):
     intake = models.IntegerField(default=0)
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     course = models.ForeignKey("course.Course", on_delete=models.CASCADE)
-    grade = models.CharField(max_length=16, null=True)
+    grade = models.CharField(max_length=16, null=True) # 忘了是干啥的字段了
+    grade_point = models.FloatField(null=True) # 科目绩点
     exam_datetime = models.DateTimeField(null=True)
     exam_classroom = models.ForeignKey(ClassRoom, on_delete=models.CASCADE, null=True)
     exam_seat = models.CharField(max_length=16, null=True)
