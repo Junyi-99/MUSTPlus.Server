@@ -11,3 +11,5 @@ class GPA(models.Model):
     gpa = models.FloatField(default=0) # 学期 GPA
     accum_gpa = models.FloatField(default=0) # 累计 GPA
     update_time = models.DateTimeField(auto_now_add=True)  # 最后更新时间
+    def __str__(self):
+        return str(self.student) + " 在 " + str(self.intake) + " 的 GPA 是 " + str(self.gpa)

@@ -4,6 +4,7 @@ WARNING = "警告（一般可忽略）"
 INTERNAL_ERROR = "内部错误"
 PAGE_NOT_FOUND = "页面未找到 （404）"
 MISSING_FIELD = "缺少字段"
+INVALID_PARAM = "别瞎几把传数据"
 
 LOGIN_OTHER_ERROR = "其他错误"
 LOGIN_RSA_ERROR = "登录 RSA 校验失败"
@@ -59,6 +60,10 @@ PROFILE_REFRESH_USER_NOT_FOUND = "从COES获取最新信息失败：找不到用
 PROFILE_REFRESH_COOKIES_EXPIRED = "从COES获取最新信息失败：用户Cookie失效"
 
 STUDENT_INVALID = "获取学生信息失败"
+
+SETTING_NO_SUCH_SETTING = "没有这个设置"
+SETTING_VALUE_TYPE_ERROR= "值类型错误"
+
 
 # GET /my/timetable.py
 TIMETABLE_UNKNOWN_EXCEPTION = "未知异常"

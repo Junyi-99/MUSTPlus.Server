@@ -10,6 +10,7 @@ from services.basic.models import Major as basicMajor
 from services.basic.models import Program as basicProgram
 from services.basic.models import ClassRoom as basicClassRoom
 from services.course.models import Course, Ftp, Schedule
+from services.gpa.models import GPA
 from services.moments.models import Moment, MomentView
 from services.setting.models import Setting as settingSetting
 from services.news.models import Document, Announcement, Attachment
@@ -26,6 +27,7 @@ admin.site.register(Announcement)
 admin.site.register(Attachment)
 
 admin.site.register(Course)
+admin.site.register(GPA)
 admin.site.register(Ftp)
 admin.site.register(Schedule)
 #admin.site.register(Comment)

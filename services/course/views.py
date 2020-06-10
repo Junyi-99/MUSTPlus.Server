@@ -26,7 +26,7 @@ from settings import codes, messages
 @validate
 def init(request):
     try:
-
+        stu = get_student_object(request)
         token = stu.coes_token
         cookie = stu.coes_cookie
 

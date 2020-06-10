@@ -273,6 +273,5 @@ sudo apt install git python3-dev python3-pip python3-venv default-libmysqlclient
 
 # 然后将下面这两行复制进去就好了
 ```
-[global]
-index-url = https://pypi.tuna.tsinghua.edu.cn/simple
+np
 ```

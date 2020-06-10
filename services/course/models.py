@@ -11,7 +11,7 @@ class Course(models.Model):
     faculty = models.ForeignKey('basic.Faculty', on_delete=models.CASCADE, null=True)
 
     def __str__(self):
-        return self.course_code + ' ' + self.name_zh
+        return str(self.id)+' '+self.course_code + ' ' + self.name_zh
 
     class Meta:
         unique_together = (('course_code', 'course_class'),)
