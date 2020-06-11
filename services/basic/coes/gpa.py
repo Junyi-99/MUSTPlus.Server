@@ -37,7 +37,7 @@ def get_html(cookies: str) -> Optional[str]:
         data = {}
         headers = urls.headers
         headers['Cookie'] = cookies
-        ret = requests.post(url=url, headers=headers, data=data, verify=False, timeout=5)
+        ret = requests.post(url=url, headers=headers, data=data, verify=False, timeout=3)
         if 'GPA' in ret.text:
             return ret.text
         return None

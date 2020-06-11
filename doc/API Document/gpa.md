@@ -42,6 +42,8 @@
 
 - **调用成功返回样例 Response Example**
 
+`exam_datetime` 为 UTC+0 的时间，前端注意转换
+
 如果数据库中有用户成绩缓存：
 
 ```JSON
@@ -55,26 +57,62 @@
             "pass_credit": 23.0,
             "fail_credit": 0.0,
             "gpa_credit": 23.0,
-            "gpa": 3.71,
-            "accum_gpa": 3.71,
+            "gpa": 3.31,
+            "accum_gpa": 3.28,
             "details": [
                 {
                     "course_code": "CN103",
                     "course_name_zh": "計算機程序設計 I",
                     "credit": "4.0",
                     "grade": "A+",
-                    "exam_datetime": null,
+                    "exam_datetime": "2020-06-11 14:20 UTC+0",
                     "exam_classroom": "C304",
                     "exam_seat": "1045"
+                },
+                {
+                    "course_code": "GMS001",
+                    "course_name_zh": "科技大師講座",
+                    "credit": "2.0",
+                    "grade": "A-",
+                    "exam_datetime": "",
+                    "exam_classroom": "N320",
+                    "exam_seat": "2197"
                 },
                 {
                     "course_code": "GSER111",
                     "course_name_zh": "大學英語 (精讀 I)",
                     "credit": "6.0",
                     "grade": "B",
-                    "exam_datetime": null,
+                    "exam_datetime": "",
                     "exam_classroom": "C308",
                     "exam_seat": "1226"
+                },
+                {
+                    "course_code": "GSLS111",
+                    "course_name_zh": "大學英語 (聽說 I)",
+                    "credit": "4.0",
+                    "grade": "A",
+                    "exam_datetime": "",
+                    "exam_classroom": "",
+                    "exam_seat": ""
+                },
+                {
+                    "course_code": "GWC001",
+                    "course_name_zh": "西方文化通論",
+                    "credit": "2.0",
+                    "grade": "A+",
+                    "exam_datetime": "",
+                    "exam_classroom": "N219",
+                    "exam_seat": "1862"
+                },
+                {
+                    "course_code": "MA101",
+                    "course_name_zh": "微積分 I",
+                    "credit": "5.0",
+                    "grade": "A",
+                    "exam_datetime": "",
+                    "exam_classroom": "C304",
+                    "exam_seat": "1037"
                 }
             ]
         },
@@ -84,17 +122,71 @@
             "pass_credit": 30.0,
             "fail_credit": 0.0,
             "gpa_credit": 30.0,
-            "gpa": 3.9,
-            "accum_gpa": 3.82,
+            "gpa": 3.55,
+            "accum_gpa": 3.43,
             "details": [
                 {
                     "course_code": "CHN301",
                     "course_name_zh": "大學語文",
                     "credit": "3.0",
                     "grade": "A-",
-                    "exam_datetime": null,
+                    "exam_datetime": "",
                     "exam_classroom": "N418",
                     "exam_seat": "2280"
+                },
+                {
+                    "course_code": "CN104",
+                    "course_name_zh": "計算機程序設計 II",
+                    "credit": "4.0",
+                    "grade": "A",
+                    "exam_datetime": "",
+                    "exam_classroom": "B202a",
+                    "exam_seat": "183"
+                },
+                {
+                    "course_code": "GCH001",
+                    "course_name_zh": "中國文化通論",
+                    "credit": "3.0",
+                    "grade": "A-",
+                    "exam_datetime": "",
+                    "exam_classroom": "N416",
+                    "exam_seat": "2179"
+                },
+                {
+                    "course_code": "GSER112",
+                    "course_name_zh": "大學英語 (精讀 II)",
+                    "credit": "4.0",
+                    "grade": "A",
+                    "exam_datetime": "",
+                    "exam_classroom": "O401",
+                    "exam_seat": "2807"
+                },
+                {
+                    "course_code": "GSLS112",
+                    "course_name_zh": "大學英語 (聽說 II)",
+                    "credit": "6.0",
+                    "grade": "A",
+                    "exam_datetime": "",
+                    "exam_classroom": "",
+                    "exam_seat": ""
+                },
+                {
+                    "course_code": "MA006",
+                    "course_name_zh": "離散數學",
+                    "credit": "4.0",
+                    "grade": "A-",
+                    "exam_datetime": "",
+                    "exam_classroom": "B202a",
+                    "exam_seat": "177"
+                },
+                {
+                    "course_code": "MA102",
+                    "course_name_zh": "微積分 II",
+                    "credit": "6.0",
+                    "grade": "A+",
+                    "exam_datetime": "",
+                    "exam_classroom": "B303",
+                    "exam_seat": "260"
                 }
             ]
         },
@@ -104,15 +196,24 @@
             "pass_credit": 14.0,
             "fail_credit": 0.0,
             "gpa_credit": 14.0,
-            "gpa": 3.96,
-            "accum_gpa": 3.85,
+            "gpa": 3.7,
+            "accum_gpa": 3.65,
             "details": [
                 {
                     "course_code": "GLL026-30",
                     "course_name_zh": "語言文字專題項目 (一) 之「葡語入門」",
                     "credit": "2.0",
                     "grade": "A+",
-                    "exam_datetime": null,
+                    "exam_datetime": "",
+                    "exam_classroom": "",
+                    "exam_seat": ""
+                },
+                {
+                    "course_code": "GSH018-20",
+                    "course_name_zh": "社會科學專題項目 (三) 之「行政學」",
+                    "credit": "2.0",
+                    "grade": "A-",
+                    "exam_datetime": "",
                     "exam_classroom": "",
                     "exam_seat": ""
                 },
@@ -121,7 +222,7 @@
                     "course_name_zh": "數據結構",
                     "credit": "4.0",
                     "grade": "A+",
-                    "exam_datetime": null,
+                    "exam_datetime": "",
                     "exam_classroom": "C302",
                     "exam_seat": "856"
                 },
@@ -130,7 +231,7 @@
                     "course_name_zh": "線性代數與概率統計",
                     "credit": "4.0",
                     "grade": "A",
-                    "exam_datetime": null,
+                    "exam_datetime": "",
                     "exam_classroom": "B202a",
                     "exam_seat": "176"
                 },
@@ -139,7 +240,7 @@
                     "course_name_zh": "少林養身功",
                     "credit": "1.0",
                     "grade": "A+",
-                    "exam_datetime": null,
+                    "exam_datetime": "",
                     "exam_classroom": "",
                     "exam_seat": ""
                 },
@@ -148,7 +249,7 @@
                     "course_name_zh": "太極拳",
                     "credit": "1.0",
                     "grade": "A+",
-                    "exam_datetime": null,
+                    "exam_datetime": "",
                     "exam_classroom": "",
                     "exam_seat": ""
                 }
@@ -160,15 +261,15 @@
             "pass_credit": 17.0,
             "fail_credit": 0.0,
             "gpa_credit": 17.0,
-            "gpa": 3.93,
-            "accum_gpa": 3.86,
+            "gpa": 3.9,
+            "accum_gpa": 3.8,
             "details": [
                 {
                     "course_code": "CE107",
                     "course_name_zh": "數字電路基礎",
                     "credit": "4.0",
                     "grade": "A-",
-                    "exam_datetime": null,
+                    "exam_datetime": "",
                     "exam_classroom": "C302",
                     "exam_seat": "792"
                 },
@@ -177,7 +278,7 @@
                     "course_name_zh": "Web技術概論",
                     "credit": "3.0",
                     "grade": "A",
-                    "exam_datetime": null,
+                    "exam_datetime": "",
                     "exam_classroom": "C307",
                     "exam_seat": "946"
                 },
@@ -186,7 +287,7 @@
                     "course_name_zh": "數據庫系統",
                     "credit": "4.0",
                     "grade": "A",
-                    "exam_datetime": null,
+                    "exam_datetime": "",
                     "exam_classroom": "C308",
                     "exam_seat": "1006"
                 },
@@ -195,7 +296,7 @@
                     "course_name_zh": "面向對象程序設計",
                     "credit": "6.0",
                     "grade": "A+",
-                    "exam_datetime": null,
+                    "exam_datetime": "",
                     "exam_classroom": "C307",
                     "exam_seat": "944"
                 }
@@ -215,7 +316,7 @@
                     "course_name_zh": "計算機組成原理",
                     "credit": "5.0",
                     "grade": "A+",
-                    "exam_datetime": null,
+                    "exam_datetime": "",
                     "exam_classroom": "",
                     "exam_seat": ""
                 },
@@ -224,7 +325,7 @@
                     "course_name_zh": "計算機圖形學基礎",
                     "credit": "3.0",
                     "grade": "A+",
-                    "exam_datetime": null,
+                    "exam_datetime": "",
                     "exam_classroom": "C308",
                     "exam_seat": "993"
                 },
@@ -233,7 +334,7 @@
                     "course_name_zh": "編譯原理",
                     "credit": "3.0",
                     "grade": "A+",
-                    "exam_datetime": null,
+                    "exam_datetime": "",
                     "exam_classroom": "C302",
                     "exam_seat": "787"
                 },
@@ -242,7 +343,7 @@
                     "course_name_zh": "數據庫系統進階",
                     "credit": "4.0",
                     "grade": "A+",
-                    "exam_datetime": null,
+                    "exam_datetime": "",
                     "exam_classroom": "",
                     "exam_seat": ""
                 },
@@ -251,7 +352,7 @@
                     "course_name_zh": "電子商務",
                     "credit": "3.0",
                     "grade": "A+",
-                    "exam_datetime": null,
+                    "exam_datetime": "",
                     "exam_classroom": "",
                     "exam_seat": ""
                 }
@@ -271,7 +372,7 @@
                     "course_name_zh": "數據安全",
                     "credit": "3.0",
                     "grade": "",
-                    "exam_datetime": null,
+                    "exam_datetime": "",
                     "exam_classroom": "",
                     "exam_seat": ""
                 },
@@ -280,7 +381,7 @@
                     "course_name_zh": "計算機網絡",
                     "credit": "5.0",
                     "grade": "",
-                    "exam_datetime": null,
+                    "exam_datetime": "",
                     "exam_classroom": "",
                     "exam_seat": ""
                 },
@@ -289,7 +390,7 @@
                     "course_name_zh": "操作系統",
                     "credit": "5.0",
                     "grade": "",
-                    "exam_datetime": null,
+                    "exam_datetime": "",
                     "exam_classroom": "",
                     "exam_seat": ""
                 },
@@ -298,7 +399,7 @@
                     "course_name_zh": "操作系統實踐",
                     "credit": "4.0",
                     "grade": "",
-                    "exam_datetime": null,
+                    "exam_datetime": "",
                     "exam_classroom": "",
                     "exam_seat": ""
                 },
@@ -307,7 +408,7 @@
                     "course_name_zh": "人工智能基礎",
                     "credit": "3.0",
                     "grade": "",
-                    "exam_datetime": null,
+                    "exam_datetime": "",
                     "exam_classroom": "",
                     "exam_seat": ""
                 },
@@ -316,7 +417,7 @@
                     "course_name_zh": "計算機新技術專題",
                     "credit": "3.0",
                     "grade": "",
-                    "exam_datetime": null,
+                    "exam_datetime": "",
                     "exam_classroom": "",
                     "exam_seat": ""
                 }
@@ -336,7 +437,7 @@
                     "course_name_zh": "計算機網絡應用技術",
                     "credit": "2.0",
                     "grade": "",
-                    "exam_datetime": null,
+                    "exam_datetime": "",
                     "exam_classroom": "",
                     "exam_seat": ""
                 },
@@ -345,7 +446,7 @@
                     "course_name_zh": "計算機網絡應用技術實踐",
                     "credit": "3.0",
                     "grade": "",
-                    "exam_datetime": null,
+                    "exam_datetime": "",
                     "exam_classroom": "",
                     "exam_seat": ""
                 },
@@ -354,7 +455,7 @@
                     "course_name_zh": "軟件工程實踐",
                     "credit": "4.0",
                     "grade": "",
-                    "exam_datetime": null,
+                    "exam_datetime": "",
                     "exam_classroom": "",
                     "exam_seat": ""
                 },
@@ -363,7 +464,7 @@
                     "course_name_zh": "軟件工程",
                     "credit": "4.0",
                     "grade": "",
-                    "exam_datetime": null,
+                    "exam_datetime": "",
                     "exam_classroom": "",
                     "exam_seat": ""
                 },
@@ -372,7 +473,7 @@
                     "course_name_zh": "網絡程序設計",
                     "credit": "4.0",
                     "grade": "",
-                    "exam_datetime": null,
+                    "exam_datetime": "",
                     "exam_classroom": "",
                     "exam_seat": ""
                 }

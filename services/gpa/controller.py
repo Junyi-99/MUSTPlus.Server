@@ -62,12 +62,17 @@ def __gpa(student: Student) -> JsonResponse:
         gp_detail = []
         for gp in course_gp:
             #print(gp, gp.course.credit)
+            dt_str = ''
+            if gp.exam_datetime is None:
+                dt_str = ''
+            else:
+                dt_str = datetime.strftime(gp.exam_datetime, '%Y-%m-%d %H:%M UTC+0')
             gp_detail.append({
                 "course_code": gp.course.course_code,
                 "course_name_zh": gp.course.name_zh,
                 "credit": gp.course.credit,
                 "grade": gp.grade,
-                "exam_datetime": gp.exam_datetime,
+                "exam_datetime": dt_str,
                 "exam_classroom": gp.exam_classroom.name_zh,
                 "exam_seat": gp.exam_seat,
             })
