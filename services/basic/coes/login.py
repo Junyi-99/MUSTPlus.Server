@@ -1,5 +1,8 @@
 # 这个文件主要是与COES连接的部分，现在包括COES的登录
 # 个人信息和课程表的获取
+import sys
+import traceback
+
 import requests
 # 移除安全警告
 import urllib3
@@ -18,26 +21,36 @@ LOGIN_OTHER_ERROR = 10
 
 # 获取 token 和 cookie
 def get_token_cookies():
-    headers = urls.headers
-    headers['Cookie'] = ''
-    ret = requests.get(url="https://coes-stud.must.edu.mo/coes/login.do", headers=headers, verify=False)
-    pos1 = ret.text.find('org.apache.struts.taglib.html.TOKEN') + 44  # 44 代表 这里面一大串和外面的value=" 的长度
-    pos2 = ret.text.find('">', pos1)
+    try:
+        headers = urls.headers
+        headers['Cookie'] = ''
+        ret = requests.get(url="https://coes-stud.must.edu.mo/coes/login.do", headers=headers, verify=False, timeout=5)
+        pos1 = ret.text.find('org.apache.struts.taglib.html.TOKEN') + 44  # 44 代表 这里面一大串和外面的value=" 的长度
+        pos2 = ret.text.find('">', pos1)
 
-    cookies = ''
-    for cookie in ret.cookies:
-        print(cookie.name)
-        if cookie.name == "JSESSIONID":
-            cookies = "JSESSIONID=" + cookie.value
+        cookies = ''
+        for cookie in ret.cookies:
+            print(cookie.name)
+            if cookie.name == "JSESSIONID":
+                cookies = "JSESSIONID=" + cookie.value
 
-    return ret.text[pos1:pos2], cookies
+        return ret.text[pos1:pos2], cookies
+    except Exception as exception:
+        print(exception)
+        traceback.print_exc(file=sys.stdout)
+        return '', ''
 
 
 def get_captcha(cookies):
-    headers = urls.headers
-    headers['Cookie'] = cookies
-    ret = requests.get(url='https://coes-stud.must.edu.mo/coes/RandomImgCode.do', headers=headers, verify=False)
-    return ret.content
+    try:
+        headers = urls.headers
+        headers['Cookie'] = cookies
+        ret = requests.get(url='https://coes-stud.must.edu.mo/coes/RandomImgCode.do', headers=headers, verify=False, timeout=5)
+        return ret.content
+    except Exception as exception:
+        print(exception)
+        traceback.print_exc(file=sys.stdout)
+        return ''
 
 
 # 登录COES 成功返回0，密码错误返回1，验证码错误返回2，其他错误返回3
@@ -53,7 +66,7 @@ def login(username, password, token, cookies, captcha='0000'):
         }
         headers = urls.headers
         headers['Cookie'] = cookies
-        ret = requests.post(url=url, data=data, headers=headers, verify=False)
+        ret = requests.post(url=url, data=data, headers=headers, verify=False, timeout=5)
         trait = '- Inbox'
         if trait in ret.text:
             # pos1 = ret.text.find(trait) + len(trait)
@@ -73,6 +86,7 @@ def login(username, password, token, cookies, captcha='0000'):
     except Exception as exception:
         print(exception)
         logout(cookies)
+        return ''
 
 
 def logout(cookies):

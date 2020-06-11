@@ -1,3 +1,6 @@
+import sys
+import traceback
+
 import re
 
 # 移除安全警告
@@ -39,20 +42,25 @@ def get_all_pages(html_source) -> int:
 
 
 def make_request(token: str, page: int, faculty: str, cookies: str) -> str:
-    url = "https://coes-stud.must.edu.mo/coes/CourseSearchForm.do"
-    headers = {
-        'Cookie': cookies
-    }
-    data = {
-        'org.apache.struts.taglib.html.TOKEN': token,
-        'page': page,
-        'formAction': 'FORM_INIT',
-        'faculty': faculty,
-        'courseCode': ""
-    }
+    try:
+        url = "https://coes-stud.must.edu.mo/coes/CourseSearchForm.do"
+        headers = {
+            'Cookie': cookies
+        }
+        data = {
+            'org.apache.struts.taglib.html.TOKEN': token,
+            'page': page,
+            'formAction': 'FORM_INIT',
+            'faculty': faculty,
+            'courseCode': ""
+        }
 
-    ret = requests.post(url=url, data=data, headers=headers, verify=False)
-    return ret.text
+        ret = requests.post(url=url, data=data, headers=headers, verify=False, timeout=5)
+        return ret.text
+    except Exception as exception:
+        print(exception)
+        traceback.print_exc(file=sys.stdout)
+        return ''
 
 
 def process_course_list(html_source: str) -> list:

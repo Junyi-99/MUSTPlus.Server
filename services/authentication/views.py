@@ -187,18 +187,22 @@ def username_check(username: str):
 # 刷新用户信息
 # Feature: 自动更新 Faculty Program Major 之间的关系（不存在自动创建，且保证依赖关系正确）
 def refresh_student_information(student: Student):
-    print(student.coes_cookie)
-    ret = stu_info.student_information(student.coes_cookie)
-    print(ret)
-    student.name_zh = ret['name_zh']
-    student.name_en = ret['name_en']
-    student.gender = (ret['gender'] == '男')
-    student.birthday = datetime.strptime(ret['birthday'], '%d/%m/%Y')
-    student.birthplace = ret['birthplace']
-    student.nationality = ret['nationality']
+    try:
+        print(student.coes_cookie)
+        ret = stu_info.student_information(student.coes_cookie)
+        print(ret)
+        student.name_zh = ret['name_zh']
+        student.name_en = ret['name_en']
+        student.gender = (ret['gender'] == '男')
+        student.birthday = datetime.strptime(ret['birthday'], '%d/%m/%Y')
+        student.birthplace = ret['birthplace']
+        student.nationality = ret['nationality']
 
-    # 检查faculty、program、major是否存在，不存在则自动创建
-    student.faculty = get_faculty(ret['faculty'], True)
-    student.program = get_program(ret['program'], True, student.faculty)
-    student.major = get_major(ret['major'], True, student.program)
-    student.save()
+        # 检查faculty、program、major是否存在，不存在则自动创建
+        student.faculty = get_faculty(ret['faculty'], True)
+        student.program = get_program(ret['program'], True, student.faculty)
+        student.major = get_major(ret['major'], True, student.program)
+        student.save()
+    except Exception as exception:
+        print(exception)
+        traceback.print_exc(file=sys.stdout)

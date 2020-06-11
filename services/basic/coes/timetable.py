@@ -16,23 +16,28 @@ from settings import urls
 
 # 获取网页源代码（COES_Token, COES_Cookies, 学期，周）
 def get_html(token: str, cookies: str, intake: int, week: int = 0) -> Optional[str]:
-    url = 'https://coes-stud.must.edu.mo/coes/AcademicRecordsForm.do'
-    data = {
-        'org.apache.struts.taglib.html.TOKEN': token,
-        'formAction': 'Timetable',
-        'intake': intake,
-        'x': 53,
-        'y': 12,
-    }
-    headers = urls.headers
-    headers['Cookie'] = cookies
+    try:
+        url = 'https://coes-stud.must.edu.mo/coes/AcademicRecordsForm.do'
+        data = {
+            'org.apache.struts.taglib.html.TOKEN': token,
+            'formAction': 'Timetable',
+            'intake': intake,
+            'x': 53,
+            'y': 12,
+        }
+        headers = urls.headers
+        headers['Cookie'] = cookies
 
-    if week > 0:  # 如果 week 大于 0，data 里才应该有 week
-        data['week'] = week
-    ret = requests.post(url=url, headers=headers, data=data, verify=False)
-    if 'timetable.add' in ret.text:
-        return ret.text
-    return None
+        if week > 0:  # 如果 week 大于 0，data 里才应该有 week
+            data['week'] = week
+        ret = requests.post(url=url, headers=headers, data=data, verify=False, timeout=5)
+        if 'timetable.add' in ret.text:
+            return ret.text
+        return None
+    except Exception as exception:
+        print(exception)
+        traceback.print_exc(file=sys.stdout)
+        return None
 
 
 # 获取周列表（网页源代码）：可选择的周列表

@@ -30,7 +30,7 @@ def news_all(begin, count):
         'count': count
     }
     get_data['sign'] = calc_sign(get_data, {})
-    r = requests.get("http://mp.junyi.pw:8000/news/all", params=get_data)
+    r = requests.get("http://mp.junyi.pw:8000/news/all", params=get_data, )
     return r.text
 
 

@@ -74,4 +74,7 @@ TIMETABLE_COOKIE_EXPIRED = "timetable 请求中发现 coes Cookie 过期"
 # GET /user/space
 SPACE_USERNAME_INVALID = "用户名无效"
 
+LOST_AND_FOUND_NO_SUCH_RECORD =  "无挂失记录"
+LOST_AND_FOUND_PERMISSION_DENIED = "权限不足"
+
 OTHER_ARGUMENT_INVALID = "其它类型参数错误"

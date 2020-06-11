@@ -60,7 +60,8 @@ def __border_gate(port: int):
                      'Referer': 'http://www.fsm.gov.mo/psp/pspmonitor/mobile/Cotai.aspx',
                      'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36',
                      'X-Requested-With': 'XMLHttpRequest'},
-            data={}
+            data={},
+            timeout=5
         )
 
         j = json.loads(response.text)
