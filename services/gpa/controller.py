@@ -11,13 +11,17 @@ from django.http import JsonResponse
 from services.student.models import Student, TakeCourse
 
 # 获取并更新 GPA
+from services.timetable.controller import __timetable_update
 from settings import codes, messages
 
 
+# 获取及更新 GPA，如果有更新放到缓存里
 def __gpa(student: Student) -> JsonResponse:
     gpa_list = get_gpa_list(student.coes_cookie)  # 获取最新数据
+
     # 更新数据库内的数据 BEGIN
     for g in gpa_list:
+        __timetable_update(student, g['course_intake'], 0)
         GPA.objects.update_or_create(student=student, intake=g['course_intake'],
                                      defaults={
                                          'total_credit': g["total_credit"],
@@ -33,7 +37,7 @@ def __gpa(student: Student) -> JsonResponse:
             c, created = Course.objects.update_or_create(course_code=d['course_code'], course_class=d['course_class'],
                                                          defaults={
                                                              'credit': d['course_credit'],
-                                                             'name_zh':d['course_name_zh']
+                                                             'name_zh': d['course_name_zh']
                                                          })
             clsrm, created = ClassRoom.objects.get_or_create(name_zh=d['exam_classroom'])
             TakeCourse.objects.update_or_create(
@@ -56,12 +60,11 @@ def __gpa(student: Student) -> JsonResponse:
     # 返回数据库内的数据
     result = []
     gpa_list_db = GPA.objects.filter(student=student)  # 获取数据库内的数据
-
     for g in gpa_list_db:
         course_gp = TakeCourse.objects.filter(student=student, intake=g.intake)
         gp_detail = []
         for gp in course_gp:
-            #print(gp, gp.course.credit)
+            # print(gp, gp.course.credit)
             dt_str = ''
             if gp.exam_datetime is None:
                 dt_str = ''
@@ -86,6 +89,7 @@ def __gpa(student: Student) -> JsonResponse:
             "accum_gpa": g.accum_gpa,
             "details": gp_detail
         })
+    # 返回数据库内的数据
 
     return JsonResponse({
         'code': codes.OK,

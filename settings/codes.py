@@ -4,7 +4,8 @@ WARNING = 1  # 警告（一般可忽略）
 INTERNAL_ERROR = 2  # 内部错误
 PAGE_NOT_FOUND = 3  # 页面未找到 （404）
 MISSING_FIELD = 4  # 缺少字段
-INVALID_PARAM = 5
+INVALID_PARAM = 5 # 别瞎几把写参数
+SYSTEM_MAINTENANCE = 6 # 系统维护
 
 LOGIN_OTHER_ERROR = -900  # 其他错误
 LOGIN_RSA_ERROR = -901  # 登录 RSA 校验失败

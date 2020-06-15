@@ -9,7 +9,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from services.authentication import utility
 from services.authentication.decorators import validate
-from services.lost.controller import __lost_update_status, __lost_delete, __lost_publish, __lost_get
+from services.lost.controller import __lost_update_status, __lost_delete, __lost_publish, __lost_get, __lost_search
 from services.lost.models import LostRecord
 from settings import codes, messages
 
@@ -55,11 +55,21 @@ def api_lost_specify(request, lost_record_id):
         return __lost_update_status(stu, lost_record_id, target)  # 内部执行权限检查
 
     if request.method == "DELETE":
-        stu = utility.get_student_object(request)
         # 删除一条挂失记录，一般是删除自己的
         # 虽然说是删除，其实是 visible = false
         # 记得检测是否有权限 DELETE
         stu = utility.get_student_object(request)
+        if stu is None:
+            return JsonResponse({'code': codes.LOST_AND_FOUND_PERMISSION_DENIED, 'msg': messages.LOST_AND_FOUND_PERMISSION_DENIED})
         return __lost_delete(stu, lost_record_id)  # 内部执行权限检查
 
+    return JsonResponse({'code': codes.AUTH_REQUEST_METHOD_ERROR, 'msg': messages.AUTH_REQUEST_METHOD_ERROR})
+
+
+@csrf_exempt
+# @validate
+def api_lost_search(request):
+    if request.method == "GET":
+        keywords = request.GET.get('keyword', '')
+        return __lost_search(keywords)
     return JsonResponse({'code': codes.AUTH_REQUEST_METHOD_ERROR, 'msg': messages.AUTH_REQUEST_METHOD_ERROR})

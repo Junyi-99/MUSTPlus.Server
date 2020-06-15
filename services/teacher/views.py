@@ -8,7 +8,7 @@ from settings import codes, messages
 
 
 @require_get
-@validate
+#@validate
 def api_teacher(request, name_zh):
     try:
         teacher = Teacher.objects.get(name_zh=name_zh)

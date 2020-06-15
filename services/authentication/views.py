@@ -17,12 +17,38 @@ from services.basic.coes import student_info as stu_info
 from services.basic.query import get_faculty, get_program, get_major
 from services.student.models import Student
 from settings import codes, messages
+from settings.server import SEMESTER
 from . import PUBLIC_KEY_CONTENT, decrypt
 from .utility import get_student_object
 
 
 @require_get
 def get_hash(request):
+    # dev_wyd = Student.objects.get(name_zh='王一丁')
+    # dev_hqr = Student.objects.get(name_zh='黄启瑞')
+    # dev_yzx = Student.objects.get(name_zh='严宗迅')
+    # dev_hjy = Student.objects.get(name_zh='侯君宜')
+    #
+    # return JsonResponse({
+    #     'code': codes.SYSTEM_MAINTENANCE,
+    #     'msg': '系统维护中，暂时禁止用户登录',
+    #     'developers': [
+    #         {
+    #             'name': '王一丁',
+    #             'token': dev_wyd.token
+    #         }, {
+    #             'name': '黄启瑞',
+    #             'token': dev_hqr.token
+    #         }, {
+    #             'name': '严宗迅',
+    #             'token': dev_yzx.token
+    #         }, {
+    #             'name': '侯君宜',
+    #             'token': dev_hjy.token
+    #         }
+    #     ]
+    # })
+
     times = 0
     token = ''
     cookies = ''
@@ -56,6 +82,31 @@ def get_hash(request):
 @csrf_exempt
 @require_post
 def login(request):
+    # dev_wyd = Student.objects.get(name_zh='王一丁')
+    # dev_hqr = Student.objects.get(name_zh='黄启瑞')
+    # dev_yzx = Student.objects.get(name_zh='严宗迅')
+    # dev_hjy = Student.objects.get(name_zh='侯君宜')
+    #
+    # return JsonResponse({
+    #     'code': codes.SYSTEM_MAINTENANCE,
+    #     'msg': '系统维护中，暂时禁止用户登录',
+    #     'developers':[
+    #         {
+    #             'name':'王一丁',
+    #             'token':dev_wyd.token
+    #         },{
+    #             'name':'黄启瑞',
+    #             'token':dev_hqr.token
+    #         },{
+    #             'name':'严宗迅',
+    #             'token':dev_yzx.token
+    #         },{
+    #             'name':'侯君宜',
+    #             'token':dev_hjy.token
+    #         }
+    #     ]
+    # })
+
     cookies = ''
     try:
         username = request.POST.get('username', None)
@@ -64,9 +115,9 @@ def login(request):
         cookies = request.POST.get('cookies', None)
         captcha = request.POST.get('captcha', None)
 
-        print("USERNAME", username)
-        print("PASSWORD", password)
-        print("TOKEN", token)
+        # print("USERNAME", username)
+        # print("PASSWORD", password)
+        # print("TOKEN", token)
 
         check_list = (username, password, token, cookies, captcha)
         for i in range(5):
@@ -83,33 +134,102 @@ def login(request):
         cookies = decrypt(base64.b64decode(cookies))
         captcha = decrypt(base64.b64decode(captcha))
 
+        # 测试账号
+        if username == '1' and password == '1':
+            stu, created = Student.objects.update_or_create(
+                student_id='1709853D-I011-0021',
+                defaults={
+                    'token': 'hjy',
+                    'coes_token': 'Demo Account',
+                    'coes_cookie': 'Demo Account',
+                    'token_expired_time': datetime.now(tz=pytz.UTC) + timedelta(hours=720)
+                })
+            return JsonResponse({
+                'code': codes.OK,
+                'msg': messages.OK,
+                'student_name': stu.name_zh,
+                'token': stu.token
+            })
+        # 测试账号
+
+
+
+
+
         if not username_check(username):
             return JsonResponse({
                 'code': codes.LOGIN_USERNAME_INVALID,
                 'msg': messages.LOGIN_USERNAME_INVALID
             })
 
+
+
+
+        # 测试账号
+        if username == '1709853J-I011-0140' and password == '1':
+            stu, created = Student.objects.update_or_create(
+                student_id='1709853J-I011-0140',
+                defaults={
+                    'token': 'yzx',
+                    'coes_token': 'Demo Account',
+                    'coes_cookie': 'Demo Account',
+                    'token_expired_time': datetime.now(tz=pytz.UTC) + timedelta(hours=720)
+                })
+            return JsonResponse({
+                'code': codes.OK,
+                'msg': messages.OK,
+                'student_name': stu.name_zh,
+                'token': stu.token
+            })
+        if username == '1709853J-I011-0053' and password == '1':
+            stu, created = Student.objects.update_or_create(
+                student_id='1709853J-I011-0053',
+                defaults={
+                    'token': 'hqr',
+                    'coes_token': 'Demo Account',
+                    'coes_cookie': 'Demo Account',
+                    'token_expired_time': datetime.now(tz=pytz.UTC) + timedelta(hours=720)
+                })
+            return JsonResponse({
+                'code': codes.OK,
+                'msg': messages.OK,
+                'student_name': stu.name_zh,
+                'token': stu.token
+            })
+        # 测试账号
+
+
+
+
         ret = coes_login.login(username, password, token, cookies, captcha)
 
         if ret == coes_login.LOGIN_SUCCESSFUL:
             print('User: %s, Login Successful' % (username,))
-            try:
-                stu = Student.objects.get(student_id=username)
-                stu.token = str(uuid.uuid1())
-                stu.coes_token = token
-                stu.coes_cookie = cookies
-                stu.token_expired_time = datetime.now(tz=pytz.UTC) + timedelta(hours=720)  # 1 month
-                stu.save()
-            except ObjectDoesNotExist:  # New user, update user data
-                stu = Student(
-                    student_id=username,
-                    token=str(uuid.uuid1()),
-                    coes_token=token,
-                    coes_cookie=cookies,
-                    token_expired_time=datetime.now(tz=pytz.UTC) + timedelta(hours=720)
-                )
-                # stu.save()
-                refresh_student_information(stu)
+
+            my_token = ''
+            if username == '1709853D-I011-0021':
+                my_token = 'hjy'
+            elif username == '1709853J-I011-0053':
+                my_token = 'hqr'
+            elif username == '1709853J-I011-0140':
+                my_token = 'yzx'
+            elif username == '1709853J-I011-0152':
+                my_token = 'wyd'
+            if my_token == '':
+                my_token = str(uuid.uuid1())
+
+            stu, created = Student.objects.update_or_create(
+                student_id=username,
+                defaults={
+                    #'token': str(uuid.uuid1()),
+                    'token':my_token,
+                    'coes_token': token,
+                    'coes_cookie': cookies,
+                    'token_expired_time': datetime.now(tz=pytz.UTC) + timedelta(hours=720)
+                }
+            )
+            refresh_student_information(stu)
+
             # coes_login.logout(cookies)
             return JsonResponse({
                 'code': codes.OK,
@@ -156,7 +276,7 @@ def login(request):
 
 @csrf_exempt
 @require_post
-@validate
+# @validate
 def logout(request):
     stu = get_student_object(request)
     if stu is not None:
@@ -188,9 +308,7 @@ def username_check(username: str):
 # Feature: 自动更新 Faculty Program Major 之间的关系（不存在自动创建，且保证依赖关系正确）
 def refresh_student_information(student: Student):
     try:
-        print(student.coes_cookie)
         ret = stu_info.student_information(student.coes_cookie)
-        print(ret)
         student.name_zh = ret['name_zh']
         student.name_en = ret['name_en']
         student.gender = (ret['gender'] == '男')
@@ -203,6 +321,11 @@ def refresh_student_information(student: Student):
         student.program = get_program(ret['program'], True, student.faculty)
         student.major = get_major(ret['major'], True, student.program)
         student.save()
+
+        # from services.timetable.controller import __timetable_update
+        from services.gpa.controller import __gpa
+        __gpa(student)
+
     except Exception as exception:
         print(exception)
         traceback.print_exc(file=sys.stdout)

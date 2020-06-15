@@ -23,7 +23,7 @@ from services.teacher.models import TeachCourse
 from settings import codes, messages
 
 
-@validate
+#@validate
 def init(request):
     try:
         stu = get_student_object(request)
@@ -59,7 +59,7 @@ def init(request):
     return HttpResponse()
 
 
-@validate
+#@validate
 def api_ftp(request, course_id):
     # TODO: FTP功能
     # 无论如何都要先判断一下 course_id 是否正确
@@ -80,7 +80,7 @@ def api_ftp(request, course_id):
 
 
 @csrf_exempt
-@validate
+#@validate
 def api_comment(request, course_id):
     # 无论如何都要先判断一下 course_id 是否正确
     try:
@@ -119,7 +119,7 @@ def api_comment(request, course_id):
 
 
 @require_post
-@validate
+#@validate
 def api_thumbs_up(request):
     if request.method == "POST":
         comment_id = int(request.GET.get("id", -1))
@@ -137,7 +137,7 @@ def api_thumbs_up(request):
     })
 
 
-@validate
+#@validate
 def api_thumbs_down(request):
     if request.method == "POST":
         comment_id = int(request.GET.get("id", -1))
@@ -156,7 +156,7 @@ def api_thumbs_down(request):
 
 
 @require_get
-@validate
+#@validate
 def api_course(request, course_id):
     # 无论如何都要先判断一下 course_id 是否正确
     try:

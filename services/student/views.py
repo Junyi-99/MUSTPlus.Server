@@ -13,7 +13,7 @@ from settings import codes, messages
 
 
 @require_get
-@validate
+#@validate
 def student_me(request):
     stu = get_student_object(request)
     if stu is None:
@@ -45,6 +45,6 @@ def student_me(request):
 
 
 @require_get
-@validate
+#@validate
 def student_get(request, student_id):
     pass

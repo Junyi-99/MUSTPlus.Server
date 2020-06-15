@@ -5,6 +5,7 @@ INTERNAL_ERROR = "内部错误"
 PAGE_NOT_FOUND = "页面未找到 （404）"
 MISSING_FIELD = "缺少字段"
 INVALID_PARAM = "别瞎几把传数据"
+SYSTEM_MAINTENANCE = "系统维护"
 
 LOGIN_OTHER_ERROR = "其他错误"
 LOGIN_RSA_ERROR = "登录 RSA 校验失败"

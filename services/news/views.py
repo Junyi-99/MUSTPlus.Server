@@ -142,7 +142,7 @@ def news_argument(begin: int, count: int, department: str = None, faculty: str =
 
 
 @require_get
-@validate
+#@validate
 def api_news_department(request, department_name_zh):
     try:
         begin = int(request.GET['from'])
@@ -162,7 +162,7 @@ def api_news_department(request, department_name_zh):
 
 
 @require_get
-@validate
+#@validate
 def api_news_faculty(request, faculty_name_zh):
     try:
         begin = int(request.GET.get('from', 1))
@@ -182,7 +182,7 @@ def api_news_faculty(request, faculty_name_zh):
 
 
 @require_get
-@validate
+#@validate
 def api_news_documents(request):
     try:
         begin = int(request.GET.get('from', 1))
@@ -202,7 +202,7 @@ def api_news_documents(request):
 
 
 @require_get
-@validate
+#@validate
 def api_news_announcements(request):
     try:
         begin = int(request.GET.get('from', 1))
@@ -214,6 +214,7 @@ def api_news_announcements(request):
         ret = news_argument(begin, count, None, None, REQUEST_TYPE_ANNOUNCEMENT)
         return JsonResponse(ret)
     except Exception as exception:
+        print(exception)
         traceback.print_exc(file=sys.stdout)
         return JsonResponse({
             "code": codes.NEWS_UNKNOWN_ERROR,
@@ -222,7 +223,7 @@ def api_news_announcements(request):
 
 
 @require_get
-@validate
+#@validate
 def api_news_all(request):
     try:
         begin = int(request.GET.get('from', 1))
@@ -242,7 +243,7 @@ def api_news_all(request):
 
 
 @require_get
-@validate
+#@validate
 def api_news_banners(request):
     print(type(request))
     return JsonResponse({

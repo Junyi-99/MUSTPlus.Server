@@ -51,6 +51,13 @@ def __lost_get(f, c):
 
 def __lost_publish(student, description):
     try:
+
+        if student is None:
+            return JsonResponse({
+                'code': codes.AUTH_TOKEN_INVALID,
+                'msg':codes.AUTH_TOKEN_INVALID
+            })
+
         record = LostRecord(student=student, content=description, status=LOST_STATUS_FINDING,
                             publish_time=datetime.now(tz=pytz.UTC), visible=True)
         record.save()
@@ -105,3 +112,41 @@ def __lost_delete(student, lost_id):
     except ObjectDoesNotExist:
         return JsonResponse(
             {'code': codes.LOST_AND_FOUND_NO_SUCH_RECORD, 'msg': '没有编号为'+str(lost_id)+'的挂失记录'})
+
+# 最多只返回最近的20条数据
+# 防止一次返回太多卡死前端
+
+def __lost_search(keywords : str):
+
+    try:
+        lost = []
+        losts = LostRecord.objects.filter(content__contains=keywords).order_by('-publish_time')[:20]
+        for r in losts:
+            lost.append({
+                'id': r.id,
+                'student_nickname': r.student.nickname,
+                'student_name_zh': r.student.name_zh,
+                'student_avatar_url': r.student.avatar_url,
+                'publish_time': datetime.strftime(r.publish_time, '%Y-%m-%d %H:%M UTC+0'),
+                # 'f_time': datetime.strftime(datetime.utcfromtimestamp(f), '%Y-%m-%d %H:%M UTC+0'),
+                # 'current_time': datetime.strftime(datetime.utcfromtimestamp(current_time), '%Y-%m-%d %H:%M UTC+0'),
+                'content': r.content,
+                'status': r.status
+            })
+        return JsonResponse({
+            'code': codes.OK,
+            'msg': messages.OK,
+            'lost': lost
+        })
+    except ObjectDoesNotExist:
+        return JsonResponse({
+            'code': codes.OK,
+            'msg': messages.OK,
+            'lost': []
+        })
+    except Exception as exception:
+        return JsonResponse({
+            'code': codes.OK,
+            'msg': messages.OK,
+            'lost': []
+        })

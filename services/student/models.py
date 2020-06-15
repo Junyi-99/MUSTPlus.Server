@@ -15,7 +15,7 @@ class Student(models.Model):
     birthday = models.DateField(null=True)
     birthplace = models.TextField(null=True)
     nationality = models.TextField(null=True)
-    avatar_url = models.TextField(null=True)
+    avatar_url = models.TextField(null=True, default='https://mustplusstatic-1251716034.cos.ap-guangzhou.myqcloud.com/images/default_avatar.JPG')
     experience = models.IntegerField(null=True)  # 用户经验
     token = models.CharField(max_length=36)  # MUST+ token
     coes_token = models.TextField()  # coes org.apache.struts.taglib.html.TOKEN

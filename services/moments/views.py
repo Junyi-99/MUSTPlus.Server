@@ -9,7 +9,7 @@ from settings import codes, messages
 
 # 获取 Moment 列表
 @require_get
-@validate
+#@validate
 def api_moment(request):
     try:
         try:
@@ -55,7 +55,7 @@ def api_moment(request):
 
 # 获取单条 Moment 详情
 @require_get
-@validate
+#@validate
 def api_moment_id(request, moment_id):
     try:
         moment = Moment.objects.get(id=moment_id, visible=True)  # 只能看到 visible 为 True 的

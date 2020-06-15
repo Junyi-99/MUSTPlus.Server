@@ -14,7 +14,7 @@ from settings import codes, messages
 
 
 @csrf_exempt
-@validate
+# @validate
 def api_setting(request):
     if request.method == "GET":
         stu = get_student_object(request)
