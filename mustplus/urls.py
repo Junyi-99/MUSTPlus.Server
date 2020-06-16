@@ -14,6 +14,8 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 import json
+import sys
+import traceback
 
 from django.conf.urls import url
 from django.contrib import admin
@@ -48,6 +50,7 @@ urlpatterns = [
 ]
 
 def handle_500(request, *args, **kwargs):
+    traceback.print_exc(file=sys.stdout)
     return HttpResponse(content=json.dumps(
         {
             "code": codes.INTERNAL_ERROR,

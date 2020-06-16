@@ -50,10 +50,6 @@ class TakeCourse(models.Model):
     def __str__(self):
         return str(self.student) + " Enroll " + str(self.course) + " At " + str(self.intake)
 
-    # class Meta:
-    #     unique_together = (("intake", "teacher", "course"),)
-
-
 # student Login Attempt Records
 class LoginRecord(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)

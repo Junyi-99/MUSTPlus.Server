@@ -49,17 +49,26 @@ def get_html(cookies: str) -> Optional[str]:
 def get_gpa_list(coes_cookie: str) -> list:
     try:
         html_source = get_html(coes_cookie)
+
+
+
         if html_source is None:
+            # print("GPA Source is none")
             return []
 
+
+
         html = etree.HTML(html_source)
+        #with open("test_gpa.html", "w") as f:
+        #    f.write(html_source)
+        #    f.close()
 
         # 注意这里是 table/tr 而不是 table/tbody，学校 coes 没有按照标准 html 写 （妈的）
         tables = html.xpath("//td[@class='data']/table[@class='main']/tr")
 
         result = []
         for i in range(0, len(tables), 2):
-            print(i, i + 1)
+            #print(i, i + 1)
             course_gp_list = []
 
             course_list = tables[i + 1].xpath("./td/table/tr[@class='blackfont']")

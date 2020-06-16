@@ -73,7 +73,7 @@ def get_timetable(html_source: str) -> list:
             # 将中文月份转换到数字 这里要反向迭代，因为 '十二月' 会在正向迭代的时候 被 '二月' 先替换
             for i in range(len(month) - 1, -1, -1):
                 sp2[-1] = sp2[-1].replace(month[i], "%d-" % (i + 1))
-            print(sp2)
+            #print(sp2)
             pos_plus = sp2[-1].find('+')
 
             # Multi-teacher condition

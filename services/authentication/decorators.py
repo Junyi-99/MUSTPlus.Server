@@ -26,9 +26,9 @@ def validate(func):
             time_get = int(args[0].GET.get('time', 0))
             sign_get = str(args[0].GET.get('sign', ""))
 
-            print("token_get=", token_get)
-            print("time_get", time_get)
-            print("sign_get=", sign_get)
+            #print("token_get=", token_get)
+            #print("time_get", time_get)
+            #print("sign_get=", sign_get)
 
             if (token_get == "") or (time_get == 0) or (sign_get == ""):
                 raise ValueError
@@ -50,12 +50,12 @@ def validate(func):
             # calculate sign
             param_list = get_params + post_params + AUTH_SECRET
             sign_calc = hashlib.md5(param_list.encode('utf-8')).hexdigest()
-            print("param_list:", param_list)
-            print("sign_calc:", sign_calc)
+            #print("param_list:", param_list)
+            #print("sign_calc:", sign_calc)
 
             # check sign
             if sign_calc != sign_get:
-                print("Sign invalid!", "get:", sign_get, "require:", sign_calc)
+                #print("Sign invalid!", "get:", sign_get, "require:", sign_calc)
                 return JsonResponse({
                     "code": codes.AUTH_SIGN_VERIFICATION_FAILED,
                     "msg": messages.AUTH_SIGN_VERIFICATION_FAILED
@@ -63,7 +63,7 @@ def validate(func):
 
             # check time
             if abs(int(time.time()) - int(time_get)) > 5 * 60:
-                print("Time invalid!", "now:", int(time.time()), "get:", time_get)
+                #print("Time invalid!", "now:", int(time.time()), "get:", time_get)
                 return JsonResponse({
                     "code": codes.AUTH_TIME_INVALID,
                     "msg": messages.AUTH_TIME_INVALID

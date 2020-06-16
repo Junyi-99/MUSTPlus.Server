@@ -24,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = server.SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 #
 ALLOWED_HOSTS = ['mp.junyi.pw', 'zh.junyi.pw', 'localhost', '127.0.0.1', '192.168.50.45', 'api.newmustplus.top', 'www.newmustplus.top', '134.175.227.16']
@@ -96,6 +96,7 @@ DATABASES = {
         'PASSWORD': database.PASSWORD,
         'HOST': database.HOST,
         'PORT': database.PORT,
+        'OPTIONS': {'charset':'utf8mb4'}
     }
 }
 

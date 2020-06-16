@@ -44,11 +44,7 @@ def get_major(name: str, auto_create: bool = False, belongs: Program = None) -> 
         if auto_create:
             major = Major(name_zh=name, program=belongs)
             major.save()
-            print(
-                "Create a new Major [%s] belongs to Program [%s]"
-                %
-                (major.name_zh, major.program.name_zh)
-            )
+            print("Create a new Major [%s] belongs to Program [%s]" % (major.name_zh, major.program.name_zh))
             return major
         return None
     except Exception as exception:

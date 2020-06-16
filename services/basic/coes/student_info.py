@@ -26,7 +26,7 @@ def student_information(cookies) -> dict:
         html2 = etree.HTML(ret2.text)
         info1 = html1.xpath("//td[@class='data']/table[1]")
         info2 = html2.xpath("//td[@class='data']/table[1]")
-        print(info1, info2)
+        #print(info1, info2)
         # 注意这里是table[1]而不是table[1]/tbody，学校coes没有按照标准html写（妈的）
         for i in range(1, 8):
             text_list = info1[0].xpath("./tr[%d]/td[2]/text()" % (i,))

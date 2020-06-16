@@ -20,7 +20,7 @@ REQUEST_TYPE_DOCUMENT = 2  # 只获取document
 # department 和 faculty 谁不为 None 表示选择谁
 # 如果二者都为 None 说明选择的是全部
 def news_argument(begin: int, count: int, department: str = None, faculty: str = None, request_type: int = 0) -> dict:
-    print("news_argument", begin, count, department, faculty, request_type)
+    #print("news_argument", begin, count, department, faculty, request_type)
     ann = []
     doc = []
     if department is not None:
@@ -95,7 +95,7 @@ def news_argument(begin: int, count: int, department: str = None, faculty: str =
     if begin + count > len(result):
         count = len(result) - begin + 1
 
-    print("proc result")
+    #print("proc result")
 
     news_list = []  # 存放结果
     for i in range(begin - 1, begin - 1 + count):
@@ -130,7 +130,7 @@ def news_argument(begin: int, count: int, department: str = None, faculty: str =
                 "type": False,  # True: viewDownload
                 "url": ret.url,
             })
-    print("return result")
+    #print("return result")
     last_update = RobotUpdate.objects.all().first()
     return {
         "code": codes.OK,
@@ -245,7 +245,7 @@ def api_news_all(request):
 @require_get
 #@validate
 def api_news_banners(request):
-    print(type(request))
+    #print(type(request))
     return JsonResponse({
         "code": codes.OK,
         "msg": messages.OK,

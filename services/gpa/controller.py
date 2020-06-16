@@ -18,7 +18,7 @@ from settings import codes, messages
 # 获取及更新 GPA，如果有更新放到缓存里
 def __gpa(student: Student) -> JsonResponse:
     gpa_list = get_gpa_list(student.coes_cookie)  # 获取最新数据
-
+    # print(student.name_zh, gpa_list)
     # 更新数据库内的数据 BEGIN
     for g in gpa_list:
         __timetable_update(student, g['course_intake'], 0)
@@ -39,22 +39,29 @@ def __gpa(student: Student) -> JsonResponse:
                                                              'credit': d['course_credit'],
                                                              'name_zh': d['course_name_zh']
                                                          })
+            if created:
+                print('Create a new Course [%s %s %s]' % (c.course_code, c.course_class, c.name_zh))
+
             clsrm, created = ClassRoom.objects.get_or_create(name_zh=d['exam_classroom'])
-            TakeCourse.objects.update_or_create(
+            if created:
+                print('Create a new ClassRoom [%s]' % (clsrm.name_zh))
+
+            takecourse, created = TakeCourse.objects.update_or_create(
                 intake=int(g["course_intake"]),
                 student=student,
                 course=c,
                 defaults={
                     'grade': d['grade'],
-                    'course_code': d['course_code'],
-                    'course_class': d['course_class'],
-                    'course_credit': d['course_credit'],
+                    'course': c,
                     'exam_datetime': None,
                     'exam_seat': d['exam_seat'],
                     'exam_classroom': clsrm,
                     # 时间关系，不写 exam_classroom 相关的东西了
                     # 时间关系，不写 grade_point 转换相关的东西了
                 })
+            if created:
+                print('Create a new TakeCourse [%s take %s %s]' % (takecourse.student.name_zh, takecourse.course.course_code, takecourse.course.name_zh))
+
     # 更新数据库内的数据 END
 
     # 返回数据库内的数据

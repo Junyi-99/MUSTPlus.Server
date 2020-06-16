@@ -32,7 +32,7 @@ def __timetable_cache(student: Student, intake: int, week: int):
             teacher_str = teacher_str + each_teacher.teacher.name_zh + "; "
 
         for each_schedule in schedules:
-            print(each_schedule.day_of_week, each_schedule.time_begin, each_schedule.time_end)
+            #print(each_schedule.day_of_week, each_schedule.time_begin, each_schedule.time_end)
             timetable.append({
                 # TODO: 其实 teacher 应该放到 schedule 里的
                 "day": each_schedule.day_of_week,

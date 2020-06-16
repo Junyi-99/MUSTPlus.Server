@@ -31,12 +31,12 @@ def init(request):
         cookie = stu.coes_cookie
 
         for faculty in FACULTIES:
-            print("Now faculty: ", faculty)
+            #print("Now faculty: ", faculty)
             html = make_request(token, 1, faculty, cookie)
             pages = get_all_pages(html)
 
             for page in range(1, pages + 1):  # 这里为什么要多循环一次（从1开始不从2开始）呢，因为少循环一次会让代码变丑很多
-                print("Page", page)
+                #print("Page", page)
                 html_source = make_request(token, page, faculty, cookie)
                 course_list = process_course_list(html_source)
                 for course in course_list:

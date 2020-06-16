@@ -30,7 +30,7 @@ def get_token_cookies():
 
         cookies = ''
         for cookie in ret.cookies:
-            print(cookie.name)
+            #print(cookie.name)
             if cookie.name == "JSESSIONID":
                 cookies = "JSESSIONID=" + cookie.value
 
