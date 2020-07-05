@@ -1,4 +1,5 @@
 import base64
+import os
 import re
 import sys
 import traceback
@@ -8,6 +9,7 @@ from datetime import datetime, timedelta
 import pytz
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse, JsonResponse
+from django.templatetags.static import static
 from django.views.decorators.csrf import csrf_exempt
 
 from mustplus.decorators import require_get, require_post
@@ -49,9 +51,13 @@ def get_hash(request):
     #     ]
     # })
 
-    times = 0
-    token = ''
-    cookies = ''
+    times = 999 # default is 0
+    token = 'COES维护中'
+    cookies = 'COES维护中'
+
+
+
+
     while times < 5 and not cookies:
         token, cookies = coes_login.get_token_cookies()
         times = times + 1
@@ -63,14 +69,17 @@ def get_hash(request):
             'msg': '获取基本信息失败'
         }
     else:
-        captcha = coes_login.get_captcha(cookies)
+        # captcha = coes_login.get_captcha(cookies)
+        captcha = 'COES维护'
+        with open(os.path.dirname(os.path.realpath(__file__))+'/captcha.png', 'rb') as f:
+            captcha = f.read()
         ret = {
             'code': codes.OK,
             'msg': messages.OK,
             'key': PUBLIC_KEY_CONTENT,
             'token': token,
             'cookies': cookies,
-            'captcha': base64.b64encode(captcha).decode('utf-8')
+            'captcha': base64.b64encode(captcha).decode('utf-8'),
         }
 
     return JsonResponse(ret)

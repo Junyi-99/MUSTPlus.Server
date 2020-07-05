@@ -38,7 +38,7 @@ admin.site.register(MomentView)
 
 admin.site.register(Student)
 admin.site.register(TakeCourse)
-admin.site.register(LoginRecord)
+#admin.site.register(LoginRecord)
 admin.site.register(Teacher)
 admin.site.register(TeachCourse)
 # admin.site.register(FTP)
