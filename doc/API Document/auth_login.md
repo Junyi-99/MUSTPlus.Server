@@ -1,4 +1,4 @@
-## **登录**
+## **登录（DEPRECATED）**
 
   该 API 用于登录 MUSTPlus，为保证安全，采用 POST 请求，并且请求参数全部使用 RSA 加密
 

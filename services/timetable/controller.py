@@ -54,8 +54,8 @@ def __timetable_cache(student: Student, intake: int, week: int):
 def __timetable_update(student: Student, intake: int, week: int):
     from services.basic.coes.timetable import get_html, get_timetable
     # Get HTML source code
-    source = get_html('', student.coes_cookie, intake, week)
-
+    # source = get_html('', student.coes_cookie, intake, week)
+    source = None
     if source is None:
         tmtb = __timetable_cache(student, intake, week)
         if tmtb is None:

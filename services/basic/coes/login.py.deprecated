@@ -1,5 +1,11 @@
 # 这个文件主要是与COES连接的部分，现在包括COES的登录
 # 个人信息和课程表的获取
+
+#  !!! DEPRECATED !!!
+# UPDATED BY Junyi, Oct 12, 2020
+# PLEASE USING login2.py
+
+
 import sys
 import traceback
 
